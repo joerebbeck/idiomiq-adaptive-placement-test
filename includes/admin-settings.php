@@ -533,7 +533,6 @@ function adaptive_test_register_settings() {
     register_setting( 'adaptive_test_during_options', 'adaptive_test_during_dyslexic_enabled', $int );
     register_setting( 'adaptive_test_during_options', 'adaptive_test_during_dyslexic_off',     $str );
     register_setting( 'adaptive_test_during_options', 'adaptive_test_during_dyslexic_on',      $str );
-    register_setting( 'adaptive_test_during_options', 'adaptive_test_encouragement_enabled',  $int );
 
     // After — content
     register_setting( 'adaptive_test_after_options', 'adaptive_test_show_error_rate',  [ 'default' => 1, 'sanitize_callback' => 'absint' ] );
@@ -1272,23 +1271,6 @@ function adaptive_test_settings_page_html() {
                             $pv_body_color         = get_option( 'adaptive_test_after_body_color',       '#6b7280' ) ?: '#6b7280';
                             $pv_body_size          = absint( get_option( 'adaptive_test_after_body_size',        14 ) );
                             $pv_body_weight        = get_option( 'adaptive_test_after_body_weight',      '400' ) ?: '400';
-                            $pv_share_enabled      = false;
-                            $pv_share_heading      = get_option( 'adaptive_test_after_share_heading',  __( 'Share your result!', 'adaptive-level-test' ) );
-                            $pv_share_body         = get_option( 'adaptive_test_after_share_body',     __( 'Let your friends and colleagues know your English level.', 'adaptive-level-test' ) );
-                            $pv_share_whatsapp     = get_option( 'adaptive_test_after_share_whatsapp', 'WhatsApp' );
-                            $pv_share_facebook     = get_option( 'adaptive_test_after_share_facebook', 'Facebook' );
-                            $pv_share_native       = get_option( 'adaptive_test_after_share_native',   __( 'TikTok / Instagram', 'adaptive-level-test' ) );
-                            $pv_share_copy         = get_option( 'adaptive_test_after_share_copy',     __( 'Copy Link', 'adaptive-level-test' ) );
-                            $pv_share_head_color   = get_option( 'adaptive_test_after_share_heading_color',  '#1f2937' ) ?: '#1f2937';
-                            $pv_share_head_size    = absint( get_option( 'adaptive_test_after_share_heading_size',  16 ) );
-                            $pv_share_head_weight  = get_option( 'adaptive_test_after_share_heading_weight', '600' ) ?: '600';
-                            $pv_share_body_color   = get_option( 'adaptive_test_after_share_body_color',  '#6b7280' ) ?: '#6b7280';
-                            $pv_share_body_size    = absint( get_option( 'adaptive_test_after_share_body_size',  13 ) );
-                            $pv_share_body_weight  = get_option( 'adaptive_test_after_share_body_weight', '400' ) ?: '400';
-                            $pv_share_copy_bg      = get_option( 'adaptive_test_after_share_copy_bg',    '#f3f4f6' ) ?: '#f3f4f6';
-                            $pv_share_copy_color   = get_option( 'adaptive_test_after_share_copy_color', '#374151' ) ?: '#374151';
-                            $pv_share_native_bg    = get_option( 'adaptive_test_after_share_native_bg',  '#000000' ) ?: '#000000';
-                            $pv_share_native_color = get_option( 'adaptive_test_after_share_native_color', '#ffffff' ) ?: '#ffffff';
                         ?>
                         <div style="background:#f3f4f6; padding:16px; border-radius:8px;">
                             <div id="esl-prev-card" style="background:<?php echo esc_attr( $pv_bg ); ?>; border-radius:<?php echo absint( $pv_radius ); ?>px; border:<?php echo esc_attr( $pv_card_bdr ); ?>; box-shadow:<?php echo esc_attr( $pv_shadow ); ?>; padding:28px; box-sizing:border-box; text-align:center; color:<?php echo esc_attr( $pv_text ); ?>;">
@@ -1314,16 +1296,6 @@ function adaptive_test_settings_page_html() {
                                 ?>
                                 <p id="esl-prev-error-margin" style="font-size:0.85em; color:#6b7280; margin:0 0 14px;<?php echo $pv_show_err ? '' : 'display:none;'; ?>"><?php echo wp_kses_post( $pv_err_label_text ); ?></p>
                                 <p id="esl-prev-after-body" style="color:<?php echo esc_attr( $pv_body_color ); ?>; font-size:<?php echo absint( $pv_body_size ); ?>px; font-weight:<?php echo esc_attr( $pv_body_weight ); ?>; margin:0 0 16px;"><?php echo wp_kses_post( $pv_after_body ); ?></p>
-                                <div id="esl-prev-share-section" style="<?php echo $pv_share_enabled ? '' : 'display:none;'; ?> margin: 16px 0;">
-                                    <p id="esl-prev-share-heading" style="color:<?php echo esc_attr( $pv_share_head_color ); ?>; font-size:<?php echo absint( $pv_share_head_size ); ?>px; font-weight:<?php echo esc_attr( $pv_share_head_weight ); ?>; margin:0 0 4px;"><?php echo esc_html( $pv_share_heading ); ?></p>
-                                    <p id="esl-prev-share-body" style="color:<?php echo esc_attr( $pv_share_body_color ); ?>; font-size:<?php echo absint( $pv_share_body_size ); ?>px; font-weight:<?php echo esc_attr( $pv_share_body_weight ); ?>; margin:0 0 10px;"><?php echo esc_html( $pv_share_body ); ?></p>
-                                    <div style="display:flex; gap:5px; justify-content:center; flex-wrap:wrap;">
-                                        <span style="background:#25D366; color:#fff; padding:5px 10px; border-radius:6px; font-size:0.75em; font-weight:600;" id="esl-prev-share-wa"><?php echo esc_html( $pv_share_whatsapp ); ?></span>
-                                        <span style="background:#1877F2; color:#fff; padding:5px 10px; border-radius:6px; font-size:0.75em; font-weight:600;" id="esl-prev-share-fb"><?php echo esc_html( $pv_share_facebook ); ?></span>
-                                        <span style="background:<?php echo esc_attr( $pv_share_native_bg ); ?>; color:<?php echo esc_attr( $pv_share_native_color ); ?>; padding:5px 10px; border-radius:6px; font-size:0.75em; font-weight:600;" id="esl-prev-share-native"><?php echo esc_html( $pv_share_native ); ?></span>
-                                        <span style="background:<?php echo esc_attr( $pv_share_copy_bg ); ?>; color:<?php echo esc_attr( $pv_share_copy_color ); ?>; border:1px solid #e5e7eb; padding:5px 10px; border-radius:6px; font-size:0.75em; font-weight:600;" id="esl-prev-share-copy"><?php echo esc_html( $pv_share_copy ); ?></span>
-                                    </div>
-                                </div>
                                 <button type="button" id="esl-prev-retake" disabled style="background:<?php echo esc_attr( $pv_retake_color ); ?>; color:<?php echo esc_attr( $pv_retake_text ); ?>; border:<?php echo absint( $pv_retake_bdw ); ?>px solid <?php echo esc_attr( $pv_retake_bdc ); ?>; border-radius:<?php echo absint( $pv_retake_bdr_val ); ?>px; padding:10px 22px; font-weight:600; cursor:default; font-size:0.85em;">Retake Test</button>
                             </div>
                         </div>

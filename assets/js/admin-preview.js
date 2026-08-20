@@ -39,7 +39,6 @@ function eslTogglePreview(id) {
     eslConsentAccordion('esl-counter-cb', 'esl-counter-format-row');
     eslConsentAccordion('esl-show-error-rate-cb', 'esl-error-rate-cell');
     eslConsentAccordionDiv('esl-dyslexic-cb', 'esl-dyslexic-details');
-    eslConsentAccordionDiv('esl-share-enabled-cb', 'esl-share-details');
 })();
 
 // Primary colour from General Settings — used as fallback for any accent colour not explicitly overridden
@@ -327,42 +326,6 @@ function eslBind(selectors, update) {
     update();
 })();
 
-// Encouragement preview demo — eye button on During preview
-(function() {
-    var eyeBtn = document.getElementById('esl-encouragement-eye');
-    if (!eyeBtn) return;
-    eyeBtn.addEventListener('click', function() {
-        var card = document.getElementById('esl-prev-card');
-        if (!card) return;
-        // Toggle off if already running
-        var existing = document.getElementById('esl-prev-encouragement');
-        if (existing) { existing.remove(); return; }
-        var p   = eslPrimary || '#2563eb';
-        var tri = 'width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;';
-        var demo = document.createElement('div');
-        demo.id = 'esl-prev-encouragement';
-        demo.style.cssText = 'position:absolute;inset:0;background:rgba(255,255,255,0.96);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20;border-radius:inherit;transition:opacity 0.3s ease;';
-        demo.innerHTML =
-            '<div style="width:90%;height:28px;position:relative;margin-bottom:20px;">' +
-                '<div id="esl-demo-l" style="position:absolute;top:50%;left:0%;transform:translateY(-50%);transition:left 1.2s ease;' + tri + 'border-left:16px solid ' + p + ';"></div>' +
-                '<div id="esl-demo-dot" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:#f59e0b;border:2px solid #d97706;box-sizing:border-box;transition:transform 0.5s ease,opacity 0.5s ease;"></div>' +
-                '<div id="esl-demo-r" style="position:absolute;top:50%;right:0%;transform:translateY(-50%);transition:right 1.2s ease;' + tri + 'border-right:16px solid ' + p + ';"></div>' +
-            '</div>' +
-            '<p style="font-size:0.88em;color:#6b7280;font-style:italic;margin:0;">Mapping your ability…</p>';
-        card.appendChild(demo);
-        var L   = demo.querySelector('#esl-demo-l');
-        var R   = demo.querySelector('#esl-demo-r');
-        var dot = demo.querySelector('#esl-demo-dot');
-        setTimeout(function() { L.style.left = '35%'; R.style.right = '35%'; }, 80);
-        setTimeout(function() {
-            dot.style.transform = 'translate(-50%,-50%) scale(3.5)';
-            dot.style.opacity   = '0';
-        }, 1600);
-        setTimeout(function() { demo.style.opacity = '0'; }, 2100);
-        setTimeout(function() { if (demo.parentNode) demo.remove(); }, 2450);
-    });
-})();
-
 // Live Preview — After the Quiz
 (function() {
     var prevCard          = document.getElementById('esl-prev-card');
@@ -375,13 +338,6 @@ function eslBind(selectors, update) {
     var prevAfterTitle    = document.getElementById('esl-prev-after-title');
     var prevAfterSub      = document.getElementById('esl-prev-after-subheading');
     var prevAfterBody     = document.getElementById('esl-prev-after-body');
-    var prevShareSection  = document.getElementById('esl-prev-share-section');
-    var prevShareHeading  = document.getElementById('esl-prev-share-heading');
-    var prevShareBody     = document.getElementById('esl-prev-share-body');
-    var prevShareWa       = document.getElementById('esl-prev-share-wa');
-    var prevShareFb       = document.getElementById('esl-prev-share-fb');
-    var prevShareNative   = document.getElementById('esl-prev-share-native');
-    var prevShareCopy     = document.getElementById('esl-prev-share-copy');
 
     function update() {
         // Title content + styling
@@ -449,45 +405,6 @@ function eslBind(selectors, update) {
         }
 
         if (prevCard) eslApplyBox(prevCard, 'adaptive_test_after');
-
-        // Share section (Pro only)
-        if (prevShareSection) {
-            prevShareSection.style.display = 'none';
-            if (prevShareHeading) {
-                var shIn = document.querySelector('[name="adaptive_test_after_share_heading"]');
-                if (shIn) prevShareHeading.textContent = shIn.value;
-                prevShareHeading.style.color      = eslVal('adaptive_test_after_share_heading_color',  '#1f2937');
-                prevShareHeading.style.fontSize   = eslVal('adaptive_test_after_share_heading_size',   '16') + 'px';
-                prevShareHeading.style.fontWeight = eslVal('adaptive_test_after_share_heading_weight', '600');
-            }
-            if (prevShareBody) {
-                var sbIn = document.querySelector('[name="adaptive_test_after_share_body"]');
-                if (sbIn) prevShareBody.textContent = sbIn.value;
-                prevShareBody.style.color      = eslVal('adaptive_test_after_share_body_color',  '#6b7280');
-                prevShareBody.style.fontSize   = eslVal('adaptive_test_after_share_body_size',   '13') + 'px';
-                prevShareBody.style.fontWeight = eslVal('adaptive_test_after_share_body_weight', '400');
-            }
-            if (prevShareWa) {
-                var waIn = document.querySelector('[name="adaptive_test_after_share_whatsapp"]');
-                if (waIn && waIn.value.trim()) prevShareWa.textContent = waIn.value;
-            }
-            if (prevShareFb) {
-                var fbIn = document.querySelector('[name="adaptive_test_after_share_facebook"]');
-                if (fbIn && fbIn.value.trim()) prevShareFb.textContent = fbIn.value;
-            }
-            if (prevShareNative) {
-                var ntIn = document.querySelector('[name="adaptive_test_after_share_native"]');
-                if (ntIn && ntIn.value.trim()) prevShareNative.textContent = ntIn.value;
-                prevShareNative.style.background = eslVal('adaptive_test_after_share_native_bg',    '#000000');
-                prevShareNative.style.color      = eslVal('adaptive_test_after_share_native_color', '#ffffff');
-            }
-            if (prevShareCopy) {
-                var cpIn = document.querySelector('[name="adaptive_test_after_share_copy"]');
-                if (cpIn && cpIn.value.trim()) prevShareCopy.textContent = cpIn.value;
-                prevShareCopy.style.background = eslVal('adaptive_test_after_share_copy_bg',    '#f3f4f6');
-                prevShareCopy.style.color      = eslVal('adaptive_test_after_share_copy_color', '#374151');
-            }
-        }
     }
 
     ['esl-after-title','esl-after-subheading','esl-after-body'].forEach(function(id) {
@@ -505,13 +422,7 @@ function eslBind(selectors, update) {
         '[name="adaptive_test_after_retake_color"],[name="adaptive_test_after_retake_text_color"],[name="adaptive_test_after_retake_size"],[name="adaptive_test_after_retake_weight"],' +
         '[name="adaptive_test_after_retake_border_color"],[name="adaptive_test_after_retake_border_width"],[name="adaptive_test_after_retake_border_radius"],' +
         '[name="adaptive_test_after_box_bg"],[name="adaptive_test_after_box_text_color"],[name="adaptive_test_after_box_border_radius"],' +
-        '[name="adaptive_test_after_box_border_width"],[name="adaptive_test_after_box_border_color"],[name="adaptive_test_after_box_shadow"],' +
-        '[name="adaptive_test_after_share_enabled"],' +
-        '[name="adaptive_test_after_share_heading"],[name="adaptive_test_after_share_heading_color"],[name="adaptive_test_after_share_heading_size"],[name="adaptive_test_after_share_heading_weight"],' +
-        '[name="adaptive_test_after_share_body"],[name="adaptive_test_after_share_body_color"],[name="adaptive_test_after_share_body_size"],[name="adaptive_test_after_share_body_weight"],' +
-        '[name="adaptive_test_after_share_whatsapp"],[name="adaptive_test_after_share_facebook"],' +
-        '[name="adaptive_test_after_share_native"],[name="adaptive_test_after_share_native_bg"],[name="adaptive_test_after_share_native_color"],' +
-        '[name="adaptive_test_after_share_copy"],[name="adaptive_test_after_share_copy_bg"],[name="adaptive_test_after_share_copy_color"]',
+        '[name="adaptive_test_after_box_border_width"],[name="adaptive_test_after_box_border_color"],[name="adaptive_test_after_box_shadow"]',
         update
     );
 

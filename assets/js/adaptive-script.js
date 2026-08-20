@@ -11,10 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
             optionsContainer:  document.getElementById('esl-options-container'),
             progressContainer:  document.getElementById('esl-progress-container'),
             progressBar:        document.getElementById('esl-progress-bar'),
-            cv2L:              document.getElementById('esl-cv2-l'),
-            cv2R:              document.getElementById('esl-cv2-r'),
-            analysingOverlay:  document.getElementById('esl-analysing-overlay'),
-            analysingText:     document.getElementById('esl-analysing-text'),
             counterEl:         document.getElementById('esl-counter'),
             nextBtn:           document.getElementById('esl-next-btn'),
             questionText:      document.getElementById('esl-question-text'),
@@ -41,8 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
             answerLog: [],   // [{n, id, chosen, ms}] across all batches — for student report
             questionCount: 0,
             startedAt: null,          // ms timestamp when first question rendered
-            questionStartedAt: null,  // ms timestamp when current question rendered
-            analysingShownAt: 0       // ms timestamp when analysing overlay was shown
+            questionStartedAt: null   // ms timestamp when current question rendered
         },
 
         /**
@@ -256,9 +251,6 @@ document.addEventListener('DOMContentLoaded', function() {
             this.state.questionStartedAt = null;
 
             this.updateProgressBar(0);
-            if (this.elements.cv2L) { this.elements.cv2L.style.left  = '0%'; }
-            if (this.elements.cv2R) { this.elements.cv2R.style.right = '0%'; }
-            this.hideAnalysing();
             this.elements.questionText.style.cssText = '';
             this.elements.questionText.textContent = adaptive_test_ajax.i18n.loading || 'Loading...';
             this.elements.optionsContainer.innerHTML = '';
@@ -321,8 +313,8 @@ document.addEventListener('DOMContentLoaded', function() {
          * Submit the current batch of answers
          */
         submitBatch: function() {
-            // Show analysing overlay (card dimensions unchanged — overlay is absolute)
-            this.showAnalysing();
+            // Notify add-ons that a batch is being analysed (Pro renders an overlay here)
+            this.dispatch('analysing-start', { card: this.elements.appContainer, batchNumber: this.state.batchNumber });
             if (this.elements.counterEl) { this.elements.counterEl.style.display = 'none'; }
             if (this.elements.nextBtn)   { this.elements.nextBtn.classList.add('adaptive-hidden'); }
 
@@ -358,17 +350,13 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => {
                 if (response.success) {
+                    const targetError = parseFloat(adaptive_test_ajax.target_error) || 8;
                     if (response.data.finished) {
-                        // Force bars to centre, then wait for minimum overlay time + bar animation
-                        this.updateConfidenceBar(parseFloat(adaptive_test_ajax.target_error) || 8);
-                        var self = this;
-                        var finData = response.data;
-                        this.analysingDelay(function() {
-                            self.renderResults(finData.level, finData.theta, finData.error_rate);
-                        });
+                        this.dispatch('analysing-update', { card: this.elements.appContainer, errorRate: targetError, targetError: targetError, finished: true });
+                        this.renderResults(response.data.level, response.data.theta, response.data.error_rate);
+                        this.dispatch('analysing-end', { card: this.elements.appContainer, finished: true });
                     } else {
-                        this.updateConfidenceBar(response.data.error_rate);
-                        // Load next batch — wait for minimum overlay time before revealing
+                        this.dispatch('analysing-update', { card: this.elements.appContainer, errorRate: response.data.error_rate, targetError: targetError, finished: false });
                         this.state.questions = response.data.questions;
                         this.state.currentIndex = 0;
                         this.state.answers = {};
@@ -377,8 +365,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         this.state.shownIds = response.data.pool_reset
                             ? newIds
                             : this.state.shownIds.concat(newIds);
-                        var self2 = this;
-                        this.analysingDelay(function() { self2.renderQuestion(); });
+                        this.renderQuestion();
+                        this.dispatch('analysing-end', { card: this.elements.appContainer, finished: false });
                     }
                 } else {
                     const msg = response.data || adaptive_test_ajax.i18n.unknown_error;
@@ -446,17 +434,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const retakeBorderWidth  = (adaptive_test_ajax.retake_border_width  ?? 2) + 'px';
             const retakeBorderRadius = (adaptive_test_ajax.retake_border_radius ?? 8) + 'px';
 
-            const shareHeadColor  = adaptive_test_ajax.share_heading_color  || '#1f2937';
-            const shareHeadSize   = (adaptive_test_ajax.share_heading_size  || 16) + 'px';
-            const shareHeadWeight = adaptive_test_ajax.share_heading_weight || '600';
-            const shareBodyColor  = adaptive_test_ajax.share_body_color     || '#6b7280';
-            const shareBodySize   = (adaptive_test_ajax.share_body_size     || 13) + 'px';
-            const shareBodyWeight = adaptive_test_ajax.share_body_weight    || '400';
-            const shareCopyBg     = adaptive_test_ajax.share_copy_bg        || '#f3f4f6';
-            const shareCopyColor  = adaptive_test_ajax.share_copy_color     || '#374151';
-            const shareNativeBg   = adaptive_test_ajax.share_native_bg      || '#000';
-            const shareNativeColor= adaptive_test_ajax.share_native_color   || '#fff';
-
             const i18n = adaptive_test_ajax.i18n || {};
 
             this.setCardState('after');
@@ -471,16 +448,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     ${scaleHtml}
                     ${showErrorRate ? '<p id="esl-result-margin" style="font-size: 0.9rem; color: var(--esl-text-muted); margin-top: 10px;"></p>' : ''}
                     <p id="esl-result-email" style="color: ${bodyColor}; font-size: ${bodySize}; font-weight: ${bodyWeight}; margin: 0 0 16px;"></p>
-                    ${adaptive_test_ajax.share_enabled ? `<div class="esl-share-section" style="margin: 24px 0 0;">
-                        <p id="esl-share-heading" style="color: ${shareHeadColor}; font-size: ${shareHeadSize}; font-weight: ${shareHeadWeight}; margin: 0 0 6px;"></p>
-                        <p id="esl-share-body" style="color: ${shareBodyColor}; font-size: ${shareBodySize}; font-weight: ${shareBodyWeight}; margin: 0 0 12px;"></p>
-                        <div class="esl-share-buttons">
-                            <a id="esl-share-whatsapp" class="esl-share-btn esl-share-whatsapp" target="_blank" rel="noopener noreferrer"></a>
-                            <a id="esl-share-facebook" class="esl-share-btn esl-share-facebook" target="_blank" rel="noopener noreferrer"></a>
-                            <button type="button" id="esl-share-native" class="esl-share-btn esl-share-native" style="background:${shareNativeBg};color:${shareNativeColor};"></button>
-                            <button type="button" id="esl-share-copy" class="esl-share-btn esl-share-copy" style="background:${shareCopyBg};color:${shareCopyColor};"></button>
-                        </div>
-                    </div>` : ''}
                     <button type="button" id="esl-retake-btn" class="adaptive-option-btn" style="margin-top: 24px; width: auto; display: inline-block; background-color: ${retakeColor}; color: ${retakeTextColor}; font-size: ${retakeSize}; font-weight: ${retakeWeight}; border: ${retakeBorderWidth} solid ${retakeBorderColor}; border-radius: ${retakeBorderRadius};"></button>
                 </div>
             `;
@@ -495,63 +462,17 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('esl-result-email').innerHTML = i18n.email_sent;
             document.getElementById('esl-retake-btn').textContent = i18n.retake_test;
 
-            if (adaptive_test_ajax.share_enabled) {
-                document.getElementById('esl-share-heading').textContent = i18n.share_heading || 'Share your result!';
-                document.getElementById('esl-share-body').textContent    = i18n.share_body    || 'Let your friends and colleagues know your English level.';
-
-                const pageUrl    = window.location.href;
-                const msgTpl     = adaptive_test_ajax.share_message || 'I just scored {level} on an English level test! 🎓 What\'s your level? {url}';
-                const shareText  = msgTpl.replace('{level}', level).replace('{url}', pageUrl);
-
-                const whatsappBtn = document.getElementById('esl-share-whatsapp');
-                whatsappBtn.textContent = i18n.share_whatsapp || 'WhatsApp';
-                whatsappBtn.href = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
-
-                const facebookBtn = document.getElementById('esl-share-facebook');
-                facebookBtn.textContent = i18n.share_facebook || 'Facebook';
-                facebookBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`;
-
-                const nativeLabel = i18n.share_native || 'TikTok / Instagram';
-                const nativeBtn   = document.getElementById('esl-share-native');
-                nativeBtn.textContent = nativeLabel;
-                if (navigator.share) {
-                    nativeBtn.addEventListener('click', function() {
-                        navigator.share({ text: shareText, url: pageUrl }).catch(function() {});
-                    });
-                } else {
-                    nativeBtn.style.display = 'none';
-                }
-
-                const copyLabel   = i18n.share_copy   || 'Copy Link';
-                const copiedLabel = i18n.share_copied  || 'Copied!';
-                const copyBtn     = document.getElementById('esl-share-copy');
-                copyBtn.textContent = copyLabel;
-                copyBtn.addEventListener('click', function() {
-                    navigator.clipboard.writeText(pageUrl).then(function() {
-                        copyBtn.textContent = copiedLabel;
-                        setTimeout(function() { copyBtn.textContent = copyLabel; }, 2000);
-                    }).catch(function() {
-                        const el = document.createElement('textarea');
-                        el.value = pageUrl;
-                        document.body.appendChild(el);
-                        el.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(el);
-                        copyBtn.textContent = copiedLabel;
-                        setTimeout(function() { copyBtn.textContent = copyLabel; }, 2000);
-                    });
-                });
-            }
-
             this.updateProgressBar(100);
 
-            // Burst the centre dot then fade the overlay out to reveal results
-            var self = this;
-            var overlay = this.elements.analysingOverlay;
-            if (overlay && overlay.classList.contains('esl-av-on')) {
-                overlay.classList.add('esl-av-complete');
-                setTimeout(function() { self.hideAnalysing(); }, 650);
-            }
+            // Notify add-ons that the results screen has been rendered (Pro adds share buttons here)
+            this.dispatch('results', {
+                card:         this.elements.appContainer,
+                container:    this.elements.optionsContainer,
+                retakeButton: document.getElementById('esl-retake-btn'),
+                level:        level,
+                theta:        theta,
+                errorRate:    errorRate
+            });
         },
 
         /**
@@ -564,9 +485,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Track timing
             if (this.state.startedAt === null) { this.state.startedAt = Date.now(); }
             this.state.questionStartedAt = Date.now();
-
-            // Hide the analysing overlay (if shown between batches)
-            this.hideAnalysing();
 
             // 1. Update Question Text
             this.elements.questionText.textContent = question.question_text;
@@ -633,42 +551,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
 
-        updateConfidenceBar: function(errorRate) {
-            const startError  = 37.5; // prior SE=1.5 → 1.5/4*100
-            const targetError = parseFloat(adaptive_test_ajax.target_error) || 8;
-            const remaining   = Math.max(0, Math.min(1, (errorRate - targetError) / (startError - targetError)));
-            const pct         = ((1 - remaining) * 46) + '%';
-
-            if (this.elements.cv2L) this.elements.cv2L.style.left  = pct;
-            if (this.elements.cv2R) this.elements.cv2R.style.right = pct;
-        },
-
-        showAnalysing: function() {
-            if (!adaptive_test_ajax.encouragement) return;
-            var messages = [
-                'Mapping your ability…',
-                'Adjusting the difficulty…',
-                'Homing in…',
-                'Almost calibrated…',
-                'Refining the estimate…',
-            ];
-            var msg = messages[Math.min(this.state.batchNumber - 1, messages.length - 1)];
-            if (this.elements.analysingText)    { this.elements.analysingText.textContent = msg; }
-            if (this.elements.analysingOverlay) { this.elements.analysingOverlay.classList.add('esl-av-on'); }
-            this.state.analysingShownAt = Date.now();
-        },
-
-        hideAnalysing: function() {
-            if (this.elements.analysingOverlay) {
-                this.elements.analysingOverlay.classList.remove('esl-av-on', 'esl-av-complete');
-            }
-        },
-
-        analysingDelay: function(then) {
-            if (!adaptive_test_ajax.encouragement) { then(); return; }
-            var elapsed = Date.now() - (this.state.analysingShownAt || 0);
-            var wait    = Math.max(0, 1200 - elapsed);
-            setTimeout(then, wait);
+        /**
+         * Dispatch a namespaced CustomEvent on document so add-ons (e.g. Pro)
+         * can hook into the quiz lifecycle (batch transitions, results screen).
+         */
+        dispatch: function(name, detail) {
+            document.dispatchEvent(new CustomEvent('adaptive_test:' + name, { detail: detail || {} }));
         }
     };
 

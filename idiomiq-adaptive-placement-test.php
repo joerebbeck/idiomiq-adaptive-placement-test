@@ -155,10 +155,8 @@ function adaptive_test_enqueue_scripts() {
         'ajax_url'         => admin_url( 'admin-ajax.php' ),
         'nonce'            => wp_create_nonce( 'adaptive_level_test_nonce' ),
         'target_error'     => max( 1, (int) get_option( 'adaptive_test_target_error', 8 ) ),
-        'encouragement'    => false,
         'show_error_rate'  => (int) get_option( 'adaptive_test_show_error_rate', 1 ),
         'error_rate_label' => wp_kses_post( get_option( 'adaptive_test_error_rate_label', '' ) ),
-        'share_enabled'    => false,
         'i18n'             => [
             'valid_email'      => __( 'Please enter a valid email address.', 'adaptive-level-test' ),
             'error_loading'    => __( 'Error loading test.', 'adaptive-level-test' ),

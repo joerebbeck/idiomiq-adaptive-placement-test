@@ -65,78 +65,6 @@
     overflow: hidden;
 }
 
-/* ── Analysing Overlay ── */
-.esl-analysing-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(255, 255, 255, 0.96);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 20;
-    border-radius: var(--esl-radius);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-}
-.esl-analysing-overlay.esl-av-on {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* Pincer inside overlay */
-.esl-av-pincer {
-    width: 90%;
-    height: 28px;
-    position: relative;
-    margin-bottom: 28px;
-}
-.esl-cv2-l {
-    position: absolute; top: 50%; left: 0%;
-    transform: translateY(-50%);
-    transition: left 0.9s ease;
-    width: 0; height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 16px solid var(--esl-primary);
-}
-.esl-cv2-r {
-    position: absolute; top: 50%; right: 0%;
-    transform: translateY(-50%);
-    transition: right 0.9s ease;
-    width: 0; height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-right: 16px solid var(--esl-primary);
-}
-.esl-cv2-target {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 12px; height: 12px;
-    border-radius: 50%;
-    background: #f59e0b;
-    border: 2px solid #d97706;
-    box-sizing: border-box;
-}
-.esl-analysing-overlay.esl-av-complete .esl-cv2-target {
-    animation: esl-target-burst 0.55s ease-out forwards;
-}
-@keyframes esl-target-burst {
-    0%   { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
-    45%  { transform: translate(-50%, -50%) scale(3.5); opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(5);   opacity: 0; }
-}
-
-.esl-analysing-text {
-    font-size: 0.88em;
-    color: var(--esl-text-muted);
-    font-style: italic;
-    text-align: center;
-    margin: 0;
-    letter-spacing: 0.01em;
-}
-
 /* Progress Bar */
 .adaptive-progress-container {
     width: 100%;
@@ -286,32 +214,6 @@
     transition: all 1s ease-out;
     box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
 }
-
-/* Share buttons */
-.esl-share-buttons {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 24px;
-}
-
-.esl-share-btn {
-    display: inline-block;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    border: none;
-    line-height: 1.4;
-}
-
-.esl-share-whatsapp  { background: #25D366; color: #fff; }
-.esl-share-facebook  { background: #1877F2; color: #fff; }
-.esl-share-native    { background: #000;    color: #fff; }
-.esl-share-copy      { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; }
 
 /* Dyslexia-friendly mode — questions only, not start or results screens */
 .adaptive-wrapper.esl-dyslexic .esl-state-during .adaptive-question,

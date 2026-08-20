@@ -88,15 +88,5 @@ $opt_align     = get_option( 'adaptive_test_during_options_align', 'center' );
             </div>
         </div>
 
-        <!-- Analysing Overlay — covers the whole card, shown between batches -->
-        <div id="esl-analysing-overlay" class="esl-analysing-overlay">
-            <div class="esl-av-pincer">
-                <div id="esl-cv2-l" class="esl-cv2-l"></div>
-                <div class="esl-cv2-target"></div>
-                <div id="esl-cv2-r" class="esl-cv2-r"></div>
-            </div>
-            <p id="esl-analysing-text" class="esl-analysing-text"></p>
-        </div>
-
     </div>
 </div>
