@@ -158,25 +158,25 @@ function adaptive_test_enqueue_scripts() {
         'show_error_rate'  => (int) get_option( 'adaptive_test_show_error_rate', 1 ),
         'error_rate_label' => wp_kses_post( get_option( 'adaptive_test_error_rate_label', '' ) ),
         'i18n'             => [
-            'valid_email'      => __( 'Please enter a valid email address.', 'adaptive-level-test' ),
-            'error_loading'    => __( 'Error loading test.', 'adaptive-level-test' ),
-            'connection_error' => __( 'Connection Error', 'adaptive-level-test' ),
-            'analyzing'        => get_option( 'adaptive_test_during_analysing', __( 'Analysing your answers...', 'adaptive-level-test' ) ),
-            'test_complete'    => wp_kses_post( get_option( 'adaptive_test_after_title',      __( 'Test Complete', 'adaptive-level-test' ) ) ),
-            'estimated_level'  => wp_kses_post( get_option( 'adaptive_test_after_subheading', __( 'Your estimated English level is:', 'adaptive-level-test' ) ) ),
-            'email_sent'       => wp_kses_post( get_option( 'adaptive_test_after_body',       __( 'A copy of your results has been sent to your email.', 'adaptive-level-test' ) ) ),
-            'error_submitting' => __( 'Error submitting answers.', 'adaptive-level-test' ),
-            'refresh_retry'    => __( 'Please refresh the page and try again.', 'adaptive-level-test' ),
-            'retry'            => __( 'Please try again.', 'adaptive-level-test' ),
-            'unknown_error'    => __( 'Unknown error occurred.', 'adaptive-level-test' ),
-            'retake_test'      => __( 'Retake Test', 'adaptive-level-test' ),
-            'loading'          => get_option( 'adaptive_test_during_loading', __( 'Loading question...', 'adaptive-level-test' ) ),
-            'dyslexic_off'     => get_option( 'adaptive_test_during_dyslexic_off', __( 'Change to dyslexia friendly font', 'adaptive-level-test' ) ),
-            'dyslexic_on'      => get_option( 'adaptive_test_during_dyslexic_on',  __( 'Change to regular font', 'adaptive-level-test' ) ),
+            'valid_email'      => __( 'Please enter a valid email address.', 'idiomiq-adaptive-placement-test' ),
+            'error_loading'    => __( 'Error loading test.', 'idiomiq-adaptive-placement-test' ),
+            'connection_error' => __( 'Connection Error', 'idiomiq-adaptive-placement-test' ),
+            'analyzing'        => get_option( 'adaptive_test_during_analysing', __( 'Analysing your answers...', 'idiomiq-adaptive-placement-test' ) ),
+            'test_complete'    => wp_kses_post( get_option( 'adaptive_test_after_title',      __( 'Test Complete', 'idiomiq-adaptive-placement-test' ) ) ),
+            'estimated_level'  => wp_kses_post( get_option( 'adaptive_test_after_subheading', __( 'Your estimated English level is:', 'idiomiq-adaptive-placement-test' ) ) ),
+            'email_sent'       => wp_kses_post( get_option( 'adaptive_test_after_body',       __( 'A copy of your results has been sent to your email.', 'idiomiq-adaptive-placement-test' ) ) ),
+            'error_submitting' => __( 'Error submitting answers.', 'idiomiq-adaptive-placement-test' ),
+            'refresh_retry'    => __( 'Please refresh the page and try again.', 'idiomiq-adaptive-placement-test' ),
+            'retry'            => __( 'Please try again.', 'idiomiq-adaptive-placement-test' ),
+            'unknown_error'    => __( 'Unknown error occurred.', 'idiomiq-adaptive-placement-test' ),
+            'retake_test'      => __( 'Retake Test', 'idiomiq-adaptive-placement-test' ),
+            'loading'          => get_option( 'adaptive_test_during_loading', __( 'Loading question...', 'idiomiq-adaptive-placement-test' ) ),
+            'dyslexic_off'     => get_option( 'adaptive_test_during_dyslexic_off', __( 'Change to dyslexia friendly font', 'idiomiq-adaptive-placement-test' ) ),
+            'dyslexic_on'      => get_option( 'adaptive_test_during_dyslexic_on',  __( 'Change to regular font', 'idiomiq-adaptive-placement-test' ) ),
         ],
     ];
 
-    // Allow the pro plugin to add its own data (styling, share config, encouragement).
+    // Allow add-ons to inject additional script data via this filter.
     $data = apply_filters( 'adaptive_test_script_data', $data );
 
     wp_localize_script( 'adaptive-script', 'adaptive_test_ajax', $data );
@@ -184,7 +184,7 @@ function adaptive_test_enqueue_scripts() {
 add_action( 'wp_enqueue_scripts', 'adaptive_test_enqueue_scripts' );
 
 function adaptive_test_plugin_action_links( $links ) {
-    $settings_link = '<a href="' . esc_url( admin_url( 'options-general.php?page=adaptive-level-test' ) ) . '">' . esc_html__( 'Settings', 'adaptive-level-test' ) . '</a>';
+    $settings_link = '<a href="' . esc_url( admin_url( 'options-general.php?page=adaptive-level-test' ) ) . '">' . esc_html__( 'Settings', 'idiomiq-adaptive-placement-test' ) . '</a>';
     array_unshift( $links, $settings_link );
     return $links;
 }

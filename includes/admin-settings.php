@@ -94,7 +94,7 @@ function adaptive_test_handle_question_actions() {
         if ( $question ) {
             $is_default_bank = $wpdb->get_var( $wpdb->prepare( "SELECT is_default FROM {$banks_table} WHERE id = %d", $question->bank_id ) );
             if ( $is_default_bank ) {
-                wp_die( esc_html__( 'Questions in the Default Question Bank cannot be deleted. You can edit them or duplicate the bank to create a custom set.', 'adaptive-level-test' ) );
+                wp_die( esc_html__( 'Questions in the Default Question Bank cannot be deleted. You can edit them or duplicate the bank to create a custom set.', 'idiomiq-adaptive-placement-test' ) );
             }
         }
 
@@ -126,7 +126,7 @@ function adaptive_test_handle_question_actions() {
         // Check if default
         $is_default = $wpdb->get_var($wpdb->prepare("SELECT is_default FROM $banks_table WHERE id = %d", $id));
         if ($is_default) {
-            wp_die( esc_html__( 'Cannot delete the default question bank.', 'adaptive-level-test' ) );
+            wp_die( esc_html__( 'Cannot delete the default question bank.', 'idiomiq-adaptive-placement-test' ) );
         }
 
         // Check usage in posts (simple check)
@@ -135,7 +135,7 @@ function adaptive_test_handle_question_actions() {
         
         if ($in_use) {
             // translators: %d is the WordPress post ID that uses this question bank.
-            wp_die( esc_html( sprintf( __( 'Cannot delete this bank. It is currently used on post ID %d.', 'adaptive-level-test' ), absint( $in_use ) ) ) );
+            wp_die( esc_html( sprintf( __( 'Cannot delete this bank. It is currently used on post ID %d.', 'idiomiq-adaptive-placement-test' ), absint( $in_use ) ) ) );
         }
 
         $wpdb->delete($banks_table, ['id' => $id]);
@@ -261,7 +261,7 @@ function adaptive_test_handle_tool_actions() {
         if (!empty($_FILES['csv_file']['tmp_name'])) {
             $file_check = wp_check_filetype( sanitize_file_name( $_FILES['csv_file']['name'] ), [ 'csv' => 'text/csv' ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- ['name'] is always present when ['tmp_name'] is non-empty; the enclosing if(!empty($_FILES['csv_file']['tmp_name'])) confirms the upload exists
             if ( empty( $file_check['ext'] ) ) {
-                wp_die( esc_html__( 'Only CSV files are allowed.', 'adaptive-level-test' ) );
+                wp_die( esc_html__( 'Only CSV files are allowed.', 'idiomiq-adaptive-placement-test' ) );
             }
 
             global $wpdb;
@@ -545,66 +545,66 @@ function adaptive_test_register_settings() {
 
     // Before tab — content
     add_settings_section( 'adaptive_test_before_section', '', null, 'adaptive-level-test-before' );
-    add_settings_field( 'adaptive_test_start_title',             __( 'Title', 'adaptive-level-test' ),                   'adaptive_test_start_title_cb',             'adaptive-level-test-before', 'adaptive_test_before_section' );
-    add_settings_field( 'adaptive_test_start_subtitle',          __( 'Subtitle', 'adaptive-level-test' ),                'adaptive_test_start_subtitle_cb',          'adaptive-level-test-before', 'adaptive_test_before_section' );
-    add_settings_field( 'adaptive_test_start_body',              __( 'Body', 'adaptive-level-test' ),                    'adaptive_test_start_body_cb',              'adaptive-level-test-before', 'adaptive_test_before_section' );
-    add_settings_field( 'adaptive_test_start_email_placeholder', __( 'Email Placeholder', 'adaptive-level-test' ),       'adaptive_test_start_email_placeholder_cb', 'adaptive-level-test-before', 'adaptive_test_before_section' );
-    add_settings_field( 'adaptive_test_start_gdpr2_enabled',     __( 'Follow-up Consent', 'adaptive-level-test' ),       'adaptive_test_start_gdpr2_enabled_cb',     'adaptive-level-test-before', 'adaptive_test_before_section' );
-    add_settings_field( 'adaptive_test_start_gdpr2_message',     __( 'Follow-up Consent Message', 'adaptive-level-test' ),'adaptive_test_start_gdpr2_message_cb',    'adaptive-level-test-before', 'adaptive_test_before_section' );
-    add_settings_field( 'adaptive_test_start_button_text',       __( 'Button Text', 'adaptive-level-test' ),             'adaptive_test_start_button_text_cb',       'adaptive-level-test-before', 'adaptive_test_before_section' );
+    add_settings_field( 'adaptive_test_start_title',             __( 'Title', 'idiomiq-adaptive-placement-test' ),                   'adaptive_test_start_title_cb',             'adaptive-level-test-before', 'adaptive_test_before_section' );
+    add_settings_field( 'adaptive_test_start_subtitle',          __( 'Subtitle', 'idiomiq-adaptive-placement-test' ),                'adaptive_test_start_subtitle_cb',          'adaptive-level-test-before', 'adaptive_test_before_section' );
+    add_settings_field( 'adaptive_test_start_body',              __( 'Body', 'idiomiq-adaptive-placement-test' ),                    'adaptive_test_start_body_cb',              'adaptive-level-test-before', 'adaptive_test_before_section' );
+    add_settings_field( 'adaptive_test_start_email_placeholder', __( 'Email Placeholder', 'idiomiq-adaptive-placement-test' ),       'adaptive_test_start_email_placeholder_cb', 'adaptive-level-test-before', 'adaptive_test_before_section' );
+    add_settings_field( 'adaptive_test_start_gdpr2_enabled',     __( 'Follow-up Consent', 'idiomiq-adaptive-placement-test' ),       'adaptive_test_start_gdpr2_enabled_cb',     'adaptive-level-test-before', 'adaptive_test_before_section' );
+    add_settings_field( 'adaptive_test_start_gdpr2_message',     __( 'Follow-up Consent Message', 'idiomiq-adaptive-placement-test' ),'adaptive_test_start_gdpr2_message_cb',    'adaptive-level-test-before', 'adaptive_test_before_section' );
+    add_settings_field( 'adaptive_test_start_button_text',       __( 'Button Text', 'idiomiq-adaptive-placement-test' ),             'adaptive_test_start_button_text_cb',       'adaptive-level-test-before', 'adaptive_test_before_section' );
 
 
     // During tab — content/layout
     add_settings_section( 'adaptive_test_during_section', '', null, 'adaptive-level-test-during' );
-    add_settings_field( 'adaptive_test_during_loading',        __( 'Loading Text',      'adaptive-level-test' ), 'adaptive_test_during_loading_cb',        'adaptive-level-test-during', 'adaptive_test_during_section' );
-    add_settings_field( 'adaptive_test_during_analysing',      __( 'Analysing Text',    'adaptive-level-test' ), 'adaptive_test_during_analysing_cb',      'adaptive-level-test-during', 'adaptive_test_during_section' );
-    add_settings_field( 'adaptive_test_during_show_progress',  __( 'Progress Bar',      'adaptive-level-test' ), 'adaptive_test_during_show_progress_cb',  'adaptive-level-test-during', 'adaptive_test_during_section' );
-    add_settings_field( 'adaptive_test_during_show_counter',   __( 'Question Counter',  'adaptive-level-test' ), 'adaptive_test_during_show_counter_cb',   'adaptive-level-test-during', 'adaptive_test_during_section' );
-    add_settings_field( 'adaptive_test_during_counter_format', __( 'Counter Format',    'adaptive-level-test' ), 'adaptive_test_during_counter_format_cb', 'adaptive-level-test-during', 'adaptive_test_during_section' );
-    add_settings_field( 'adaptive_test_during_question_align', __( 'Question Alignment','adaptive-level-test' ), 'adaptive_test_during_question_align_cb', 'adaptive-level-test-during', 'adaptive_test_during_section' );
-    add_settings_field( 'adaptive_test_during_options_align',  __( 'Options Alignment', 'adaptive-level-test' ), 'adaptive_test_during_options_align_cb',  'adaptive-level-test-during', 'adaptive_test_during_section' );
-    add_settings_field( 'adaptive_test_during_dyslexic',    __( 'Dyslexia Toggle', 'adaptive-level-test' ), 'adaptive_test_during_dyslexic_cb',    'adaptive-level-test-during', 'adaptive_test_during_section' );
+    add_settings_field( 'adaptive_test_during_loading',        __( 'Loading Text',      'idiomiq-adaptive-placement-test' ), 'adaptive_test_during_loading_cb',        'adaptive-level-test-during', 'adaptive_test_during_section' );
+    add_settings_field( 'adaptive_test_during_analysing',      __( 'Analysing Text',    'idiomiq-adaptive-placement-test' ), 'adaptive_test_during_analysing_cb',      'adaptive-level-test-during', 'adaptive_test_during_section' );
+    add_settings_field( 'adaptive_test_during_show_progress',  __( 'Progress Bar',      'idiomiq-adaptive-placement-test' ), 'adaptive_test_during_show_progress_cb',  'adaptive-level-test-during', 'adaptive_test_during_section' );
+    add_settings_field( 'adaptive_test_during_show_counter',   __( 'Question Counter',  'idiomiq-adaptive-placement-test' ), 'adaptive_test_during_show_counter_cb',   'adaptive-level-test-during', 'adaptive_test_during_section' );
+    add_settings_field( 'adaptive_test_during_counter_format', __( 'Counter Format',    'idiomiq-adaptive-placement-test' ), 'adaptive_test_during_counter_format_cb', 'adaptive-level-test-during', 'adaptive_test_during_section' );
+    add_settings_field( 'adaptive_test_during_question_align', __( 'Question Alignment','idiomiq-adaptive-placement-test' ), 'adaptive_test_during_question_align_cb', 'adaptive-level-test-during', 'adaptive_test_during_section' );
+    add_settings_field( 'adaptive_test_during_options_align',  __( 'Options Alignment', 'idiomiq-adaptive-placement-test' ), 'adaptive_test_during_options_align_cb',  'adaptive-level-test-during', 'adaptive_test_during_section' );
+    add_settings_field( 'adaptive_test_during_dyslexic',    __( 'Dyslexia Toggle', 'idiomiq-adaptive-placement-test' ), 'adaptive_test_during_dyslexic_cb',    'adaptive-level-test-during', 'adaptive_test_during_section' );
 
 
 
     // After tab — content
     add_settings_section( 'adaptive_test_after_section', '', null, 'adaptive-level-test-after' );
-    add_settings_field( 'adaptive_test_after_title',      __( 'Title',          'adaptive-level-test' ), 'adaptive_test_after_title_cb',      'adaptive-level-test-after', 'adaptive_test_after_section' );
-    add_settings_field( 'adaptive_test_after_subheading', __( 'Subheading',     'adaptive-level-test' ), 'adaptive_test_after_subheading_cb', 'adaptive-level-test-after', 'adaptive_test_after_section' );
-    add_settings_field( 'adaptive_test_after_body',       __( 'Body',           'adaptive-level-test' ), 'adaptive_test_after_body_cb',       'adaptive-level-test-after', 'adaptive_test_after_section' );
-    add_settings_field( 'adaptive_test_show_error_rate',  __( 'Error Rate Display', 'adaptive-level-test' ), 'adaptive_test_show_error_rate_cb',  'adaptive-level-test-after', 'adaptive_test_after_section' );
-    add_settings_field( 'adaptive_test_error_rate',       __( 'Error Rate Label', 'adaptive-level-test' ), 'adaptive_test_error_rate_cb',       'adaptive-level-test-after', 'adaptive_test_after_section' );
+    add_settings_field( 'adaptive_test_after_title',      __( 'Title',          'idiomiq-adaptive-placement-test' ), 'adaptive_test_after_title_cb',      'adaptive-level-test-after', 'adaptive_test_after_section' );
+    add_settings_field( 'adaptive_test_after_subheading', __( 'Subheading',     'idiomiq-adaptive-placement-test' ), 'adaptive_test_after_subheading_cb', 'adaptive-level-test-after', 'adaptive_test_after_section' );
+    add_settings_field( 'adaptive_test_after_body',       __( 'Body',           'idiomiq-adaptive-placement-test' ), 'adaptive_test_after_body_cb',       'adaptive-level-test-after', 'adaptive_test_after_section' );
+    add_settings_field( 'adaptive_test_show_error_rate',  __( 'Error Rate Display', 'idiomiq-adaptive-placement-test' ), 'adaptive_test_show_error_rate_cb',  'adaptive-level-test-after', 'adaptive_test_after_section' );
+    add_settings_field( 'adaptive_test_error_rate',       __( 'Error Rate Label', 'idiomiq-adaptive-placement-test' ), 'adaptive_test_error_rate_cb',       'adaptive-level-test-after', 'adaptive_test_after_section' );
 
 
 
     add_settings_section( 'adaptive_test_general_section',    '',                                              null, 'adaptive-level-test-general-settings' );
-    add_settings_field( 'adaptive_test_max_batches',         __( 'Max Batches',         'adaptive-level-test' ), 'adaptive_test_max_batches_cb',         'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
-    add_settings_field( 'adaptive_test_target_error',        __( 'Target Confidence',   'adaptive-level-test' ), 'adaptive_test_target_error_cb',        'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
-    add_settings_field( 'adaptive_test_strong_label',        __( 'Strong Label',        'adaptive-level-test' ), 'adaptive_test_strong_label_cb',        'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
-    add_settings_field( 'adaptive_test_borderline_label',    __( 'Borderline Label',    'adaptive-level-test' ), 'adaptive_test_borderline_label_cb',    'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
-    add_settings_field( 'adaptive_test_primary_color',       __( 'Primary Colour',      'adaptive-level-test' ), 'adaptive_test_primary_color_cb',       'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
+    add_settings_field( 'adaptive_test_max_batches',         __( 'Max Batches',         'idiomiq-adaptive-placement-test' ), 'adaptive_test_max_batches_cb',         'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
+    add_settings_field( 'adaptive_test_target_error',        __( 'Target Confidence',   'idiomiq-adaptive-placement-test' ), 'adaptive_test_target_error_cb',        'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
+    add_settings_field( 'adaptive_test_strong_label',        __( 'Strong Label',        'idiomiq-adaptive-placement-test' ), 'adaptive_test_strong_label_cb',        'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
+    add_settings_field( 'adaptive_test_borderline_label',    __( 'Borderline Label',    'idiomiq-adaptive-placement-test' ), 'adaptive_test_borderline_label_cb',    'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
+    add_settings_field( 'adaptive_test_primary_color',       __( 'Primary Colour',      'idiomiq-adaptive-placement-test' ), 'adaptive_test_primary_color_cb',       'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
     add_settings_section( 'adaptive_test_general_misc_section', '', null, 'adaptive-level-test-general-settings' );
-    add_settings_field( 'adaptive_test_log_retention_days',  __( 'Log Retention',       'adaptive-level-test' ), 'adaptive_test_log_retention_days_cb',  'adaptive-level-test-general-settings', 'adaptive_test_general_misc_section' );
-    add_settings_field( 'adaptive_test_rate_limit',          __( 'Rate Limit',          'adaptive-level-test' ), 'adaptive_test_rate_limit_cb',          'adaptive-level-test-general-settings', 'adaptive_test_general_misc_section' );
-    add_settings_field( 'adaptive_test_delete_on_uninstall', __( 'Uninstall',           'adaptive-level-test' ), 'adaptive_test_delete_on_uninstall_cb', 'adaptive-level-test-general-settings', 'adaptive_test_general_misc_section' );
+    add_settings_field( 'adaptive_test_log_retention_days',  __( 'Log Retention',       'idiomiq-adaptive-placement-test' ), 'adaptive_test_log_retention_days_cb',  'adaptive-level-test-general-settings', 'adaptive_test_general_misc_section' );
+    add_settings_field( 'adaptive_test_rate_limit',          __( 'Rate Limit',          'idiomiq-adaptive-placement-test' ), 'adaptive_test_rate_limit_cb',          'adaptive-level-test-general-settings', 'adaptive_test_general_misc_section' );
+    add_settings_field( 'adaptive_test_delete_on_uninstall', __( 'Uninstall',           'idiomiq-adaptive-placement-test' ), 'adaptive_test_delete_on_uninstall_cb', 'adaptive-level-test-general-settings', 'adaptive_test_general_misc_section' );
 
     // Messages tab
     add_settings_section( 'adaptive_test_msg_student_section', '', null, 'adaptive-level-test-msg-student' );
-    add_settings_field( 'adaptive_test_email_subject', __( 'Subject', 'adaptive-level-test' ), 'adaptive_test_email_subject_cb', 'adaptive-level-test-msg-student', 'adaptive_test_msg_student_section' );
-    add_settings_field( 'adaptive_test_email_body',    __( 'Body',    'adaptive-level-test' ), 'adaptive_test_email_body_cb',    'adaptive-level-test-msg-student', 'adaptive_test_msg_student_section' );
+    add_settings_field( 'adaptive_test_email_subject', __( 'Subject', 'idiomiq-adaptive-placement-test' ), 'adaptive_test_email_subject_cb', 'adaptive-level-test-msg-student', 'adaptive_test_msg_student_section' );
+    add_settings_field( 'adaptive_test_email_body',    __( 'Body',    'idiomiq-adaptive-placement-test' ), 'adaptive_test_email_body_cb',    'adaptive-level-test-msg-student', 'adaptive_test_msg_student_section' );
 
     add_settings_section( 'adaptive_test_msg_admin_section', '', null, 'adaptive-level-test-msg-admin' );
-    add_settings_field( 'adaptive_test_admin_email',         __( 'Recipients', 'adaptive-level-test' ), 'adaptive_test_admin_email_cb',         'adaptive-level-test-msg-admin', 'adaptive_test_msg_admin_section' );
-    add_settings_field( 'adaptive_test_admin_email_subject', __( 'Subject',    'adaptive-level-test' ), 'adaptive_test_admin_email_subject_cb', 'adaptive-level-test-msg-admin', 'adaptive_test_msg_admin_section' );
-    add_settings_field( 'adaptive_test_admin_email_body',    __( 'Body',       'adaptive-level-test' ), 'adaptive_test_admin_email_body_cb',    'adaptive-level-test-msg-admin', 'adaptive_test_msg_admin_section' );
+    add_settings_field( 'adaptive_test_admin_email',         __( 'Recipients', 'idiomiq-adaptive-placement-test' ), 'adaptive_test_admin_email_cb',         'adaptive-level-test-msg-admin', 'adaptive_test_msg_admin_section' );
+    add_settings_field( 'adaptive_test_admin_email_subject', __( 'Subject',    'idiomiq-adaptive-placement-test' ), 'adaptive_test_admin_email_subject_cb', 'adaptive-level-test-msg-admin', 'adaptive_test_msg_admin_section' );
+    add_settings_field( 'adaptive_test_admin_email_body',    __( 'Body',       'idiomiq-adaptive-placement-test' ), 'adaptive_test_admin_email_body_cb',    'adaptive-level-test-msg-admin', 'adaptive_test_msg_admin_section' );
 
     add_settings_section( 'adaptive_test_msg_footer_section', '', null, 'adaptive-level-test-msg-footer' );
-    add_settings_field( 'adaptive_test_email_footer', __( 'Footer HTML', 'adaptive-level-test' ), 'adaptive_test_email_footer_cb', 'adaptive-level-test-msg-footer', 'adaptive_test_msg_footer_section' );
+    add_settings_field( 'adaptive_test_email_footer', __( 'Footer HTML', 'idiomiq-adaptive-placement-test' ), 'adaptive_test_email_footer_cb', 'adaptive-level-test-msg-footer', 'adaptive_test_msg_footer_section' );
 }
 add_action('admin_init', 'adaptive_test_register_settings');
 
 function adaptive_test_email_subject_cb() {
-    $default = __( 'Your English Level Test Results', 'adaptive-level-test' );
+    $default = __( 'Your English Level Test Results', 'idiomiq-adaptive-placement-test' );
     $subject = get_option( 'adaptive_test_email_subject' ) ?: $default;
     echo '<input type="text" name="adaptive_test_email_subject" value="' . esc_attr( $subject ) . '" class="large-text">';
 }
@@ -613,7 +613,7 @@ function adaptive_test_html_textarea( $name, $value, $rows, $field_id ) {
     $has_content    = '' !== trim( $value );
     $textarea_style = $has_content ? 'display:none;' : '';
     $preview_style  = $has_content ? '' : 'display:none;';
-    $btn_label      = $has_content ? __( 'Edit HTML', 'adaptive-level-test' ) : __( 'Preview', 'adaptive-level-test' );
+    $btn_label      = $has_content ? __( 'Edit HTML', 'idiomiq-adaptive-placement-test' ) : __( 'Preview', 'idiomiq-adaptive-placement-test' );
     echo '<div style="display:flex; align-items:flex-start; gap:8px;">';
     echo '<div style="flex:1;">';
     echo '<textarea id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $name ) . '" rows="' . esc_attr( $rows ) . '" cols="50" class="large-text" style="width:100%; ' . esc_attr( $textarea_style ) . '">' . esc_textarea( $value ) . '</textarea>';
@@ -651,7 +651,7 @@ function adaptive_test_email_body_cb() {
     $body    = get_option( 'adaptive_test_email_body' ) ?: $default;
     adaptive_test_html_textarea( 'adaptive_test_email_body', $body, 8, 'esl-email-body' );
     // translators: %s is a CEFR level code such as B1 or C2.
-    echo '<p class="description">' . esc_html__( 'Use %s as a placeholder for the student\'s CEFR level (e.g. B1). HTML is supported.', 'adaptive-level-test' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'Use %s as a placeholder for the student\'s CEFR level (e.g. B1). HTML is supported.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
 function adaptive_test_sort_link( $column, $label, $current_orderby, $current_order, $bank_filter, $email_filter = '' ) {
@@ -691,11 +691,11 @@ function adaptive_test_admin_email_cb() {
     $value   = ( false === $stored ) ? $default : $stored;
     echo '<input type="text" name="adaptive_test_admin_email" value="' . esc_attr( $value ) . '" class="large-text">';
     // translators: %s is the site admin email address.
-    echo '<p class="description">' . sprintf( esc_html__( 'Comma-separated list of notification recipients. Defaults to the site admin (%s). Clear to disable all notifications.', 'adaptive-level-test' ), esc_html( $default ) ) . '</p>';
+    echo '<p class="description">' . sprintf( esc_html__( 'Comma-separated list of notification recipients. Defaults to the site admin (%s). Clear to disable all notifications.', 'idiomiq-adaptive-placement-test' ), esc_html( $default ) ) . '</p>';
 }
 
 function adaptive_test_admin_email_subject_cb() {
-    $default = __( 'New Level Test Completed', 'adaptive-level-test' );
+    $default = __( 'New Level Test Completed', 'idiomiq-adaptive-placement-test' );
     $subject = get_option( 'adaptive_test_admin_email_subject' ) ?: $default;
     echo '<input type="text" name="adaptive_test_admin_email_subject" value="' . esc_attr( $subject ) . '" class="large-text">';
 }
@@ -705,31 +705,31 @@ function adaptive_test_admin_email_body_cb() {
     $body    = get_option( 'adaptive_test_admin_email_body' ) ?: $default;
     adaptive_test_html_textarea( 'adaptive_test_admin_email_body', $body, 8, 'esl-admin-email-body' );
     // translators: %email%, %level%, %bank% are literal template tokens users type in the email body, not printf format specifiers.
-    echo '<p class="description">' . esc_html__( 'Placeholders: %email%, %level%, %bank%. HTML is supported.', 'adaptive-level-test' ) . '</p>'; // phpcs:ignore WordPress.WP.I18n.UnorderedPlaceholdersText
+    echo '<p class="description">' . esc_html__( 'Placeholders: %email%, %level%, %bank%. HTML is supported.', 'idiomiq-adaptive-placement-test' ) . '</p>'; // phpcs:ignore WordPress.WP.I18n.UnorderedPlaceholdersText
 }
 
 function adaptive_test_email_footer_cb() {
     $default = "<hr style=\"margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;\">\n<p style=\"font-size: 0.85em; color: #6b7280;\">You are receiving this email because you completed a level test on our website.</p>";
     $footer  = get_option( 'adaptive_test_email_footer' ) ?: $default;
     adaptive_test_html_textarea( 'adaptive_test_email_footer', $footer, 5, 'esl-email-footer' );
-    echo '<p class="description">' . esc_html__( 'Appended to all emails (student and admin). Accepts plain text or HTML. Clear to disable.', 'adaptive-level-test' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'Appended to all emails (student and admin). Accepts plain text or HTML. Clear to disable.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
 function adaptive_test_start_title_cb() {
-    $value = get_option( 'adaptive_test_start_title', __( 'Start Your Level Test', 'adaptive-level-test' ) );
+    $value = get_option( 'adaptive_test_start_title', __( 'Start Your Level Test', 'idiomiq-adaptive-placement-test' ) );
     adaptive_test_html_textarea( 'adaptive_test_start_title', $value, 2, 'esl-start-title' );
 }
 
 function adaptive_test_start_subtitle_cb() {
-    $value = get_option( 'adaptive_test_start_subtitle', __( 'Enter your email address to begin the test.', 'adaptive-level-test' ) );
+    $value = get_option( 'adaptive_test_start_subtitle', __( 'Enter your email address to begin the test.', 'idiomiq-adaptive-placement-test' ) );
     adaptive_test_html_textarea( 'adaptive_test_start_subtitle', $value, 2, 'esl-start-subtitle' );
 }
 
 function adaptive_test_start_body_cb() {
-    $default = __( 'By starting the test, you agree for your results to be sent to the email address that you provide.', 'adaptive-level-test' );
+    $default = __( 'By starting the test, you agree for your results to be sent to the email address that you provide.', 'idiomiq-adaptive-placement-test' );
     $value   = get_option( 'adaptive_test_start_body', $default );
     adaptive_test_html_textarea( 'adaptive_test_start_body', $value, 5, 'esl-start-body' );
-    echo '<p class="description">' . esc_html__( 'Optional. Displayed above the email input. HTML is supported.', 'adaptive-level-test' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'Optional. Displayed above the email input. HTML is supported.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
 function adaptive_test_start_email_placeholder_cb() {
@@ -739,54 +739,54 @@ function adaptive_test_start_email_placeholder_cb() {
 
 function adaptive_test_start_gdpr2_enabled_cb() {
     $enabled = get_option( 'adaptive_test_start_gdpr2_enabled', 0 );
-    echo '<label><input type="checkbox" id="esl-gdpr2-cb" name="adaptive_test_start_gdpr2_enabled" value="1" ' . checked( 1, $enabled, false ) . '> ' . esc_html__( 'Show a follow-up contact consent checkbox (optional for the user)', 'adaptive-level-test' ) . '</label>';
+    echo '<label><input type="checkbox" id="esl-gdpr2-cb" name="adaptive_test_start_gdpr2_enabled" value="1" ' . checked( 1, $enabled, false ) . '> ' . esc_html__( 'Show a follow-up contact consent checkbox (optional for the user)', 'idiomiq-adaptive-placement-test' ) . '</label>';
 }
 
 function adaptive_test_start_gdpr2_message_cb() {
-    $default = __( "I'd like to receive information about English courses and relevant offers. I understand I can withdraw this consent at any time.", 'adaptive-level-test' );
+    $default = __( "I'd like to receive information about English courses and relevant offers. I understand I can withdraw this consent at any time.", 'idiomiq-adaptive-placement-test' );
     $value   = get_option( 'adaptive_test_start_gdpr2_message', $default );
     echo '<div id="esl-gdpr2-msg-cell">';
     adaptive_test_html_textarea( 'adaptive_test_start_gdpr2_message', $value, 3, 'esl-start-gdpr2' );
-    echo '<p class="description">' . esc_html__( 'Optional — user can tick or skip.', 'adaptive-level-test' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'Optional — user can tick or skip.', 'idiomiq-adaptive-placement-test' ) . '</p>';
     echo '</div>';
 }
 
 function adaptive_test_start_button_text_cb() {
-    $value = get_option( 'adaptive_test_start_button_text', __( 'Start Test', 'adaptive-level-test' ) );
+    $value = get_option( 'adaptive_test_start_button_text', __( 'Start Test', 'idiomiq-adaptive-placement-test' ) );
     echo '<input type="text" name="adaptive_test_start_button_text" value="' . esc_attr( $value ) . '" class="regular-text">';
 }
 
 function adaptive_test_during_loading_cb() {
-    $value = get_option( 'adaptive_test_during_loading', __( 'Loading question...', 'adaptive-level-test' ) );
+    $value = get_option( 'adaptive_test_during_loading', __( 'Loading question...', 'idiomiq-adaptive-placement-test' ) );
     echo '<input type="text" name="adaptive_test_during_loading" value="' . esc_attr( $value ) . '" class="regular-text">';
 }
 
 function adaptive_test_during_analysing_cb() {
-    $value = get_option( 'adaptive_test_during_analysing', __( 'Analysing your answers...', 'adaptive-level-test' ) );
+    $value = get_option( 'adaptive_test_during_analysing', __( 'Analysing your answers...', 'idiomiq-adaptive-placement-test' ) );
     echo '<input type="text" name="adaptive_test_during_analysing" value="' . esc_attr( $value ) . '" class="regular-text">';
 }
 
 function adaptive_test_during_show_progress_cb() {
     $value = get_option( 'adaptive_test_during_show_progress', 1 );
-    echo '<label><input type="checkbox" name="adaptive_test_during_show_progress" value="1" ' . checked( 1, $value, false ) . '> ' . esc_html__( 'Show progress bar during the quiz', 'adaptive-level-test' ) . '</label>';
+    echo '<label><input type="checkbox" name="adaptive_test_during_show_progress" value="1" ' . checked( 1, $value, false ) . '> ' . esc_html__( 'Show progress bar during the quiz', 'idiomiq-adaptive-placement-test' ) . '</label>';
 }
 
 function adaptive_test_during_show_counter_cb() {
     $value = get_option( 'adaptive_test_during_show_counter', 0 );
-    echo '<label><input type="checkbox" id="esl-counter-cb" name="adaptive_test_during_show_counter" value="1" ' . checked( 1, $value, false ) . '> ' . esc_html__( 'Show question counter (e.g. Question 3 of 5)', 'adaptive-level-test' ) . '</label>';
+    echo '<label><input type="checkbox" id="esl-counter-cb" name="adaptive_test_during_show_counter" value="1" ' . checked( 1, $value, false ) . '> ' . esc_html__( 'Show question counter (e.g. Question 3 of 5)', 'idiomiq-adaptive-placement-test' ) . '</label>';
 }
 
 function adaptive_test_during_counter_format_cb() {
     $value = get_option( 'adaptive_test_during_counter_format', 'Question %n% of %total%' );
     echo '<div id="esl-counter-format-row">';
     echo '<input type="text" name="adaptive_test_during_counter_format" value="' . esc_attr( $value ) . '" class="regular-text">';
-    echo '<p class="description">' . esc_html__( 'Placeholders: %n% = current question number, %total% = questions per batch (5).', 'adaptive-level-test' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'Placeholders: %n% = current question number, %total% = questions per batch (5).', 'idiomiq-adaptive-placement-test' ) . '</p>';
     echo '</div>';
 }
 
 function adaptive_test_during_question_align_cb() {
     $value   = get_option( 'adaptive_test_during_question_align', 'center' );
-    $options = [ 'left' => __( 'Left', 'adaptive-level-test' ), 'center' => __( 'Center', 'adaptive-level-test' ), 'right' => __( 'Right', 'adaptive-level-test' ) ];
+    $options = [ 'left' => __( 'Left', 'idiomiq-adaptive-placement-test' ), 'center' => __( 'Center', 'idiomiq-adaptive-placement-test' ), 'right' => __( 'Right', 'idiomiq-adaptive-placement-test' ) ];
     echo '<select name="adaptive_test_during_question_align">';
     foreach ( $options as $val => $label ) {
         echo '<option value="' . esc_attr( $val ) . '" ' . selected( $value, $val, false ) . '>' . esc_html( $label ) . '</option>';
@@ -796,7 +796,7 @@ function adaptive_test_during_question_align_cb() {
 
 function adaptive_test_during_options_align_cb() {
     $value   = get_option( 'adaptive_test_during_options_align', 'center' );
-    $options = [ 'left' => __( 'Left', 'adaptive-level-test' ), 'center' => __( 'Center', 'adaptive-level-test' ), 'right' => __( 'Right', 'adaptive-level-test' ) ];
+    $options = [ 'left' => __( 'Left', 'idiomiq-adaptive-placement-test' ), 'center' => __( 'Center', 'idiomiq-adaptive-placement-test' ), 'right' => __( 'Right', 'idiomiq-adaptive-placement-test' ) ];
     echo '<select name="adaptive_test_during_options_align">';
     foreach ( $options as $val => $label ) {
         echo '<option value="' . esc_attr( $val ) . '" ' . selected( $value, $val, false ) . '>' . esc_html( $label ) . '</option>';
@@ -806,44 +806,44 @@ function adaptive_test_during_options_align_cb() {
 
 function adaptive_test_show_error_rate_cb() {
     $enabled = get_option( 'adaptive_test_show_error_rate', 1 );
-    echo '<label><input type="checkbox" id="esl-show-error-rate-cb" name="adaptive_test_show_error_rate" value="1" ' . checked( 1, $enabled, false ) . '> ' . esc_html__( 'Show error rate margin on the results scale', 'adaptive-level-test' ) . '</label>';
+    echo '<label><input type="checkbox" id="esl-show-error-rate-cb" name="adaptive_test_show_error_rate" value="1" ' . checked( 1, $enabled, false ) . '> ' . esc_html__( 'Show error rate margin on the results scale', 'idiomiq-adaptive-placement-test' ) . '</label>';
 }
 
 function adaptive_test_error_rate_cb() {
-    $default_label = __( 'Margin of Error: ±{rate}%', 'adaptive-level-test' );
+    $default_label = __( 'Margin of Error: ±{rate}%', 'idiomiq-adaptive-placement-test' );
     $label = get_option( 'adaptive_test_error_rate_label', $default_label );
     echo '<div id="esl-error-rate-cell">';
     adaptive_test_html_textarea( 'adaptive_test_error_rate_label', $label, 2, 'esl-error-rate-label' );
-    echo '<p class="description">' . esc_html__( 'Use {rate} for the computed error percentage from the test result.', 'adaptive-level-test' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'Use {rate} for the computed error percentage from the test result.', 'idiomiq-adaptive-placement-test' ) . '</p>';
     echo '</div>';
 }
 
 function adaptive_test_after_title_cb() {
-    $value = get_option( 'adaptive_test_after_title', __( 'Test Complete', 'adaptive-level-test' ) );
+    $value = get_option( 'adaptive_test_after_title', __( 'Test Complete', 'idiomiq-adaptive-placement-test' ) );
     adaptive_test_html_textarea( 'adaptive_test_after_title', $value, 2, 'esl-after-title' );
 }
 
 function adaptive_test_after_subheading_cb() {
-    $value = get_option( 'adaptive_test_after_subheading', __( 'Your estimated level is:', 'adaptive-level-test' ) );
+    $value = get_option( 'adaptive_test_after_subheading', __( 'Your estimated level is:', 'idiomiq-adaptive-placement-test' ) );
     adaptive_test_html_textarea( 'adaptive_test_after_subheading', $value, 2, 'esl-after-subheading' );
 }
 
 function adaptive_test_after_body_cb() {
-    $default = __( 'A copy of your result has been emailed to you.', 'adaptive-level-test' );
+    $default = __( 'A copy of your result has been emailed to you.', 'idiomiq-adaptive-placement-test' );
     $value   = get_option( 'adaptive_test_after_body', $default );
     adaptive_test_html_textarea( 'adaptive_test_after_body', $value, 3, 'esl-after-body' );
-    echo '<p class="description">' . esc_html__( 'Displayed below the scale and above the retake button. HTML is supported.', 'adaptive-level-test' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'Displayed below the scale and above the retake button. HTML is supported.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
 function adaptive_test_during_dyslexic_cb() {
     $enabled = get_option( 'adaptive_test_during_dyslexic_enabled', 1 );
-    $off     = get_option( 'adaptive_test_during_dyslexic_off', __( 'Change to dyslexia friendly font', 'adaptive-level-test' ) );
-    $on      = get_option( 'adaptive_test_during_dyslexic_on',  __( 'Change to regular font',           'adaptive-level-test' ) );
-    echo '<p><label><input type="checkbox" id="esl-dyslexic-cb" name="adaptive_test_during_dyslexic_enabled" value="1" ' . checked( 1, $enabled, false ) . '> ' . esc_html__( 'Show dyslexia-friendly font toggle during the test', 'adaptive-level-test' ) . '</label></p>';
+    $off     = get_option( 'adaptive_test_during_dyslexic_off', __( 'Change to dyslexia friendly font', 'idiomiq-adaptive-placement-test' ) );
+    $on      = get_option( 'adaptive_test_during_dyslexic_on',  __( 'Change to regular font',           'idiomiq-adaptive-placement-test' ) );
+    echo '<p><label><input type="checkbox" id="esl-dyslexic-cb" name="adaptive_test_during_dyslexic_enabled" value="1" ' . checked( 1, $enabled, false ) . '> ' . esc_html__( 'Show dyslexia-friendly font toggle during the test', 'idiomiq-adaptive-placement-test' ) . '</label></p>';
     echo '<div id="esl-dyslexic-details" style="' . ( $enabled ? '' : 'display:none;' ) . '">';
-    echo '<p style="margin-top:8px;"><label>' . esc_html__( 'Button label (off):', 'adaptive-level-test' ) . ' <input type="text" name="adaptive_test_during_dyslexic_off" value="' . esc_attr( $off ) . '" class="regular-text"></label></p>';
-    echo '<p><label>' . esc_html__( 'Button label (on):',  'adaptive-level-test' ) . ' <input type="text" name="adaptive_test_during_dyslexic_on"  value="' . esc_attr( $on  ) . '" class="regular-text"></label></p>';
-    echo '<p class="description">' . esc_html__( 'Text shown on the font-toggle button before and after switching to the dyslexia-friendly font.', 'adaptive-level-test' ) . '</p>';
+    echo '<p style="margin-top:8px;"><label>' . esc_html__( 'Button label (off):', 'idiomiq-adaptive-placement-test' ) . ' <input type="text" name="adaptive_test_during_dyslexic_off" value="' . esc_attr( $off ) . '" class="regular-text"></label></p>';
+    echo '<p><label>' . esc_html__( 'Button label (on):',  'idiomiq-adaptive-placement-test' ) . ' <input type="text" name="adaptive_test_during_dyslexic_on"  value="' . esc_attr( $on  ) . '" class="regular-text"></label></p>';
+    echo '<p class="description">' . esc_html__( 'Text shown on the font-toggle button before and after switching to the dyslexia-friendly font.', 'idiomiq-adaptive-placement-test' ) . '</p>';
     echo '</div>';
 }
 
@@ -851,55 +851,55 @@ function adaptive_test_during_dyslexic_cb() {
 function adaptive_test_primary_color_cb() {
     $value = get_option( 'adaptive_test_primary_color', '' ) ?: '#2563eb';
     echo '<input type="color" name="adaptive_test_primary_color" value="' . esc_attr( $value ) . '">';
-    echo '<p class="description">' . esc_html__( 'Sets the main accent colour used for buttons, progress bars, and highlights. Individual colour overrides in the Customise tab take precedence.', 'adaptive-level-test' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'Sets the main accent colour used for buttons, progress bars, and highlights. Individual colour overrides in the Customise tab take precedence.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
 function adaptive_test_log_retention_days_cb() {
     $value = absint( get_option( 'adaptive_test_log_retention_days', 90 ) );
     echo '<input type="number" name="adaptive_test_log_retention_days" value="' . esc_attr( $value ) . '" min="0" max="3650" style="width:80px;"> ';
-    echo '<span>' . esc_html__( 'days', 'adaptive-level-test' ) . '</span>';
-    echo '<p class="description">' . esc_html__( 'Attempt logs older than this are automatically deleted each day. Set to 0 to keep logs indefinitely.', 'adaptive-level-test' ) . '</p>';
+    echo '<span>' . esc_html__( 'days', 'idiomiq-adaptive-placement-test' ) . '</span>';
+    echo '<p class="description">' . esc_html__( 'Attempt logs older than this are automatically deleted each day. Set to 0 to keep logs indefinitely.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
 function adaptive_test_rate_limit_cb() {
     $value = (int) get_option( 'adaptive_test_rate_limit', 5 );
     echo '<input type="number" name="adaptive_test_rate_limit" value="' . esc_attr( $value ) . '" min="1" max="100" style="width:80px;"> ';
-    echo '<span>' . esc_html__( 'test starts per IP address per hour', 'adaptive-level-test' ) . '</span>';
-    echo '<p class="description">' . esc_html__( 'Limits how many times the same IP address can start the test within one hour. Helps prevent automated abuse. Raise this if you have multiple students sharing the same network connection.', 'adaptive-level-test' ) . '</p>';
+    echo '<span>' . esc_html__( 'test starts per IP address per hour', 'idiomiq-adaptive-placement-test' ) . '</span>';
+    echo '<p class="description">' . esc_html__( 'Limits how many times the same IP address can start the test within one hour. Helps prevent automated abuse. Raise this if you have multiple students sharing the same network connection.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
 function adaptive_test_delete_on_uninstall_cb() {
     $checked = (bool) get_option( 'adaptive_test_delete_on_uninstall', 0 );
     echo '<label>';
     echo '<input type="checkbox" name="adaptive_test_delete_on_uninstall" value="1"' . checked( $checked, true, false ) . '>';
-    echo ' ' . esc_html__( 'Remove all plugin data when the plugin is deleted', 'adaptive-level-test' );
+    echo ' ' . esc_html__( 'Remove all plugin data when the plugin is deleted', 'idiomiq-adaptive-placement-test' );
     echo '</label>';
-    echo '<p class="description" style="color:#b32d2e;">' . esc_html__( 'If checked, deleting this plugin will permanently drop all database tables and settings. This cannot be undone.', 'adaptive-level-test' ) . '</p>';
+    echo '<p class="description" style="color:#b32d2e;">' . esc_html__( 'If checked, deleting this plugin will permanently drop all database tables and settings. This cannot be undone.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
 function adaptive_test_max_batches_cb() {
     $value = max( 1, (int) get_option( 'adaptive_test_max_batches', 10 ) );
     echo '<input type="number" name="adaptive_test_max_batches" value="' . esc_attr( $value ) . '" min="1" max="20" style="width:70px;"> ';
-    echo '<span>' . esc_html__( 'batches of 5 questions', 'adaptive-level-test' ) . '</span>';
-    echo '<p class="description">' . esc_html__( 'The test stops early when the confidence threshold is reached; this is the hard ceiling. Each batch is 5 questions, so 10 batches = up to 50 questions.', 'adaptive-level-test' ) . '</p>';
+    echo '<span>' . esc_html__( 'batches of 5 questions', 'idiomiq-adaptive-placement-test' ) . '</span>';
+    echo '<p class="description">' . esc_html__( 'The test stops early when the confidence threshold is reached; this is the hard ceiling. Each batch is 5 questions, so 10 batches = up to 50 questions.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
 function adaptive_test_target_error_cb() {
     $value = max( 1, (int) get_option( 'adaptive_test_target_error', 8 ) );
     echo '<input type="number" name="adaptive_test_target_error" value="' . esc_attr( $value ) . '" min="1" max="50" style="width:70px;"> %';
-    echo '<p class="description">' . esc_html__( 'The test stops as soon as the ability estimate is accurate to within this margin. Lower values give more precision but a longer test. 8% corresponds to the DIALANG standard (SE ≤ 0.32 logits).', 'adaptive-level-test' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'The test stops as soon as the ability estimate is accurate to within this margin. Lower values give more precision but a longer test. 8% corresponds to the DIALANG standard (SE ≤ 0.32 logits).', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
 function adaptive_test_strong_label_cb() {
-    $value = get_option( 'adaptive_test_strong_label', __( 'Strong', 'adaptive-level-test' ) );
+    $value = get_option( 'adaptive_test_strong_label', __( 'Strong', 'idiomiq-adaptive-placement-test' ) );
     echo '<input type="text" name="adaptive_test_strong_label" value="' . esc_attr( $value ) . '" class="regular-text">';
-    echo '<p class="description">' . esc_html__( 'Prepended to the level in the results log when the student\'s ability is in the upper third of the level segment. e.g. "Strong B2".', 'adaptive-level-test' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'Prepended to the level in the results log when the student\'s ability is in the upper third of the level segment. e.g. "Strong B2".', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
 function adaptive_test_borderline_label_cb() {
-    $value = get_option( 'adaptive_test_borderline_label', __( 'Borderline', 'adaptive-level-test' ) );
+    $value = get_option( 'adaptive_test_borderline_label', __( 'Borderline', 'idiomiq-adaptive-placement-test' ) );
     echo '<input type="text" name="adaptive_test_borderline_label" value="' . esc_attr( $value ) . '" class="regular-text">';
-    echo '<p class="description">' . esc_html__( 'Prepended to the level in the results log when the student\'s ability is in the lower third of the level segment. e.g. "Borderline B2".', 'adaptive-level-test' ) . '</p>';
+    echo '<p class="description">' . esc_html__( 'Prepended to the level in the results log when the student\'s ability is in the lower third of the level segment. e.g. "Borderline B2".', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
 /**
@@ -907,8 +907,8 @@ function adaptive_test_borderline_label_cb() {
  */
 function adaptive_test_add_admin_menu() {
     add_options_page(
-        __('Adaptive Level Test Administration', 'adaptive-level-test'),
-        __('Adaptive Level Test', 'adaptive-level-test'),
+        __('Adaptive Level Test Administration', 'idiomiq-adaptive-placement-test'),
+        __('Adaptive Level Test', 'idiomiq-adaptive-placement-test'),
         'edit_others_posts',
         'adaptive-level-test',
         'adaptive_test_settings_page_html'
@@ -952,8 +952,8 @@ function adaptive_test_admin_enqueue() {
     );
     wp_localize_script( 'adaptive-test-admin-preview', 'eslAdminData', [
         'primaryColor'  => get_option( 'adaptive_test_primary_color', '' ) ?: '#2563eb',
-        'labelEditHtml' => __( 'Edit HTML', 'adaptive-level-test' ),
-        'labelPreview'  => __( 'Preview', 'adaptive-level-test' ),
+        'labelEditHtml' => __( 'Edit HTML', 'idiomiq-adaptive-placement-test' ),
+        'labelPreview'  => __( 'Preview', 'idiomiq-adaptive-placement-test' ),
     ] );
 
     wp_enqueue_script(
@@ -1019,27 +1019,27 @@ function adaptive_test_settings_page_html() {
             <?php if ( 'imported' === $_GET['message'] ) : ?>
                 <div class="notice notice-success is-dismissible"><p><?php
                     // translators: %d is the number of questions imported.
-                    printf( esc_html__( '%d questions imported successfully.', 'adaptive-level-test' ), absint( wp_unslash( $_GET['count'] ?? 0 ) ) ); ?></p></div>
+                    printf( esc_html__( '%d questions imported successfully.', 'idiomiq-adaptive-placement-test' ), absint( wp_unslash( $_GET['count'] ?? 0 ) ) ); ?></p></div>
                 <?php if ( ! empty( $_GET['skipped'] ) ) : ?>
                 <div class="notice notice-warning is-dismissible"><p><?php
                     // translators: %d is the number of questions skipped due to an unrecognised CEFR level.
-                    printf( esc_html__( '%d questions were not imported — they contained an unrecognised CEFR level and were skipped.', 'adaptive-level-test' ), absint( wp_unslash( $_GET['skipped'] ) ) ); ?>
+                    printf( esc_html__( '%d questions were not imported — they contained an unrecognised CEFR level and were skipped.', 'idiomiq-adaptive-placement-test' ), absint( wp_unslash( $_GET['skipped'] ) ) ); ?>
                 </p></div>
                 <?php endif; ?>
             <?php elseif ( 'reseeded' === $_GET['message'] ) : ?>
-                <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Database reset and re-seeded with sample questions.', 'adaptive-level-test' ); ?></p></div>
+                <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Database reset and re-seeded with sample questions.', 'idiomiq-adaptive-placement-test' ); ?></p></div>
             <?php elseif ( 'bank_renamed' === $_GET['message'] ) : ?>
-                <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Question bank renamed successfully.', 'adaptive-level-test' ); ?></p></div>
+                <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Question bank renamed successfully.', 'idiomiq-adaptive-placement-test' ); ?></p></div>
             <?php elseif ( 'bank_duplicated' === $_GET['message'] ) : ?>
-                <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Question bank duplicated successfully.', 'adaptive-level-test' ); ?></p></div>
+                <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Question bank duplicated successfully.', 'idiomiq-adaptive-placement-test' ); ?></p></div>
             <?php elseif ( 'start_screen_reset' === $_GET['message'] ) : ?>
-                <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Quiz start screen reset to defaults.', 'adaptive-level-test' ); ?></p></div>
+                <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Quiz start screen reset to defaults.', 'idiomiq-adaptive-placement-test' ); ?></p></div>
             <?php elseif ( 'during_reset' === $_GET['message'] ) : ?>
-                <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'During the Quiz settings reset to defaults.', 'adaptive-level-test' ); ?></p></div>
+                <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'During the Quiz settings reset to defaults.', 'idiomiq-adaptive-placement-test' ); ?></p></div>
             <?php elseif ( 'after_reset' === $_GET['message'] ) : ?>
-                <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'After the Quiz settings reset to defaults.', 'adaptive-level-test' ); ?></p></div>
+                <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'After the Quiz settings reset to defaults.', 'idiomiq-adaptive-placement-test' ); ?></p></div>
             <?php elseif ( 'emails_reset' === $_GET['message'] ) : ?>
-                <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Email templates reset to defaults.', 'adaptive-level-test' ); ?></p></div>
+                <div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Email templates reset to defaults.', 'idiomiq-adaptive-placement-test' ); ?></p></div>
             <?php endif; ?>
         <?php endif; ?>
 
@@ -1048,20 +1048,20 @@ function adaptive_test_settings_page_html() {
             delete_transient( 'adaptive_test_save_' . get_current_user_id() );
             if ( $adaptive_test_save_info ) :
                 if ( $adaptive_test_save_info['changed'] ) : ?>
-                    <div class="notice notice-success is-dismissible"><p><strong><?php echo esc_html( $adaptive_test_save_info['label'] ); ?></strong> <?php esc_html_e( 'saved.', 'adaptive-level-test' ); ?></p></div>
+                    <div class="notice notice-success is-dismissible"><p><strong><?php echo esc_html( $adaptive_test_save_info['label'] ); ?></strong> <?php esc_html_e( 'saved.', 'idiomiq-adaptive-placement-test' ); ?></p></div>
                 <?php else : ?>
-                    <div class="notice notice-info is-dismissible"><p><strong><?php echo esc_html( $adaptive_test_save_info['label'] ); ?></strong> — <?php esc_html_e( 'no changes detected.', 'adaptive-level-test' ); ?></p></div>
+                    <div class="notice notice-info is-dismissible"><p><strong><?php echo esc_html( $adaptive_test_save_info['label'] ); ?></strong> — <?php esc_html_e( 'no changes detected.', 'idiomiq-adaptive-placement-test' ); ?></p></div>
                 <?php endif;
             endif;
         endif; ?>
 
         <?php if ( $is_admin ) : ?>
         <nav class="nav-tab-wrapper">
-            <a href="?page=adaptive-level-test&tab=general" class="nav-tab <?php echo 'general' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'General Settings', 'adaptive-level-test' ); ?></a>
-            <a href="?page=adaptive-level-test&tab=quiz" class="nav-tab <?php echo 'quiz' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Quiz Settings', 'adaptive-level-test' ); ?></a>
-            <a href="?page=adaptive-level-test&tab=messages" class="nav-tab <?php echo 'messages' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Messages', 'adaptive-level-test' ); ?></a>
-            <a href="?page=adaptive-level-test&tab=questions" class="nav-tab <?php echo 'questions' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Questions', 'adaptive-level-test' ); ?></a>
-            <a href="?page=adaptive-level-test&tab=logs" class="nav-tab <?php echo 'logs' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Attempt Logs', 'adaptive-level-test' ); ?></a>
+            <a href="?page=adaptive-level-test&tab=general" class="nav-tab <?php echo 'general' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'General Settings', 'idiomiq-adaptive-placement-test' ); ?></a>
+            <a href="?page=adaptive-level-test&tab=quiz" class="nav-tab <?php echo 'quiz' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Quiz Settings', 'idiomiq-adaptive-placement-test' ); ?></a>
+            <a href="?page=adaptive-level-test&tab=messages" class="nav-tab <?php echo 'messages' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Messages', 'idiomiq-adaptive-placement-test' ); ?></a>
+            <a href="?page=adaptive-level-test&tab=questions" class="nav-tab <?php echo 'questions' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Questions', 'idiomiq-adaptive-placement-test' ); ?></a>
+            <a href="?page=adaptive-level-test&tab=logs" class="nav-tab <?php echo 'logs' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Attempt Logs', 'idiomiq-adaptive-placement-test' ); ?></a>
         </nav>
         <?php endif; ?>
 
@@ -1071,20 +1071,20 @@ function adaptive_test_settings_page_html() {
 
 
                 <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
-                    <h2 style="margin-top:0;"><?php esc_html_e( 'Plugin Settings', 'adaptive-level-test' ); ?></h2>
+                    <h2 style="margin-top:0;"><?php esc_html_e( 'Plugin Settings', 'idiomiq-adaptive-placement-test' ); ?></h2>
                     <?php do_settings_sections('adaptive-level-test-general-settings'); ?>
                 </div>
 
-                <?php submit_button(__('Save Settings', 'adaptive-level-test')); ?>
+                <?php submit_button(__('Save Settings', 'idiomiq-adaptive-placement-test')); ?>
             </form>
         <?php elseif ($active_tab == 'quiz'):
             $allowed_subs = [ 'before', 'during', 'after' ];
             $active_sub   = ( isset( $_GET['sub'] ) && in_array( $_GET['sub'], $allowed_subs, true ) )
                 ? sanitize_key( wp_unslash( $_GET['sub'] ) ) : 'before';
             $sub_nav = [
-                'before' => __( '1 — Before the Quiz', 'adaptive-level-test' ),
-                'during' => __( '2 — During the Quiz', 'adaptive-level-test' ),
-                'after'  => __( '3 — After the Quiz',  'adaptive-level-test' ),
+                'before' => __( '1 — Before the Quiz', 'idiomiq-adaptive-placement-test' ),
+                'during' => __( '2 — During the Quiz', 'idiomiq-adaptive-placement-test' ),
+                'after'  => __( '3 — After the Quiz',  'idiomiq-adaptive-placement-test' ),
             ];
             ?>
             <div class="esl-subnav" style="margin: 16px 0 0; border-bottom: 1px solid #c3c4c7;">
@@ -1101,45 +1101,45 @@ function adaptive_test_settings_page_html() {
                 <div style="flex:0 0 60%; min-width:0; box-sizing:border-box;">
                     <?php
                     $sub_panel_titles = [
-                        'before' => __( 'Before the Quiz', 'adaptive-level-test' ),
-                        'during' => __( 'During the Quiz', 'adaptive-level-test' ),
-                        'after'  => __( 'After the Quiz',  'adaptive-level-test' ),
+                        'before' => __( 'Before the Quiz', 'idiomiq-adaptive-placement-test' ),
+                        'during' => __( 'During the Quiz', 'idiomiq-adaptive-placement-test' ),
+                        'after'  => __( 'After the Quiz',  'idiomiq-adaptive-placement-test' ),
                     ];
                     ?>
-                    <!-- Content form — free + pro -->
+                    <!-- Content form -->
                     <form action="options.php" method="post">
                         <?php settings_fields( 'adaptive_test_' . $active_sub . '_options' ); ?>
                         <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
                             <h2 style="margin-top:0;"><?php echo esc_html( $sub_panel_titles[ $active_sub ] ); ?></h2>
                             <?php do_settings_sections( 'adaptive-level-test-' . $active_sub ); ?>
                         </div>
-                        <?php submit_button( __( 'Save Settings', 'adaptive-level-test' ) ); ?>
+                        <?php submit_button( __( 'Save Settings', 'idiomiq-adaptive-placement-test' ) ); ?>
                     </form>
 
                     <?php do_action( 'adaptive_test_after_' . $active_sub . '_settings' ); ?>
                     <?php if ( 'before' === $active_sub ) : ?>
                         <hr>
-                        <h3><?php esc_html_e( 'Reset Start Screen', 'adaptive-level-test' ); ?></h3>
+                        <h3><?php esc_html_e( 'Reset Start Screen', 'idiomiq-adaptive-placement-test' ); ?></h3>
                         <form method="post" action="">
                             <input type="hidden" name="adaptive_test_action" value="reset_start_screen">
                             <?php wp_nonce_field( 'adaptive_test_reset_start_screen_nonce' ); ?>
-                            <?php submit_button( __( 'Reset to Defaults', 'adaptive-level-test' ), 'secondary', 'submit', false, [ 'onclick' => "return confirm('" . esc_js( __( 'Reset all Quiz Start Screen settings to their defaults?', 'adaptive-level-test' ) ) . "');" ] ); ?>
+                            <?php submit_button( __( 'Reset to Defaults', 'idiomiq-adaptive-placement-test' ), 'secondary', 'submit', false, [ 'onclick' => "return confirm('" . esc_js( __( 'Reset all Quiz Start Screen settings to their defaults?', 'idiomiq-adaptive-placement-test' ) ) . "');" ] ); ?>
                         </form>
                     <?php elseif ( 'during' === $active_sub ) : ?>
                         <hr>
-                        <h3><?php esc_html_e( 'Reset During the Quiz', 'adaptive-level-test' ); ?></h3>
+                        <h3><?php esc_html_e( 'Reset During the Quiz', 'idiomiq-adaptive-placement-test' ); ?></h3>
                         <form method="post" action="">
                             <input type="hidden" name="adaptive_test_action" value="reset_during">
                             <?php wp_nonce_field( 'adaptive_test_reset_during_nonce' ); ?>
-                            <?php submit_button( __( 'Reset to Defaults', 'adaptive-level-test' ), 'secondary', 'submit', false, [ 'onclick' => "return confirm('" . esc_js( __( 'Reset all During the Quiz settings to their defaults?', 'adaptive-level-test' ) ) . "');" ] ); ?>
+                            <?php submit_button( __( 'Reset to Defaults', 'idiomiq-adaptive-placement-test' ), 'secondary', 'submit', false, [ 'onclick' => "return confirm('" . esc_js( __( 'Reset all During the Quiz settings to their defaults?', 'idiomiq-adaptive-placement-test' ) ) . "');" ] ); ?>
                         </form>
                     <?php elseif ( 'after' === $active_sub ) : ?>
                         <hr>
-                        <h3><?php esc_html_e( 'Reset After the Quiz', 'adaptive-level-test' ); ?></h3>
+                        <h3><?php esc_html_e( 'Reset After the Quiz', 'idiomiq-adaptive-placement-test' ); ?></h3>
                         <form method="post" action="">
                             <input type="hidden" name="adaptive_test_action" value="reset_after">
                             <?php wp_nonce_field( 'adaptive_test_reset_after_nonce' ); ?>
-                            <?php submit_button( __( 'Reset to Defaults', 'adaptive-level-test' ), 'secondary', 'submit', false, [ 'onclick' => "return confirm('" . esc_js( __( 'Reset all After the Quiz settings to their defaults?', 'adaptive-level-test' ) ) . "');" ] ); ?>
+                            <?php submit_button( __( 'Reset to Defaults', 'idiomiq-adaptive-placement-test' ), 'secondary', 'submit', false, [ 'onclick' => "return confirm('" . esc_js( __( 'Reset all After the Quiz settings to their defaults?', 'idiomiq-adaptive-placement-test' ) ) . "');" ] ); ?>
                         </form>
                     <?php endif; ?>
                 </div>
@@ -1152,13 +1152,13 @@ function adaptive_test_settings_page_html() {
                         <?php
                         $pv_primary = get_option( 'adaptive_test_primary_color', '' ) ?: '#2563eb';
                         if ( 'before' === $active_sub ) :
-                            $pv_title        = get_option( 'adaptive_test_start_title',    __( 'Start Your Level Test', 'adaptive-level-test' ) );
-                            $pv_subtitle     = get_option( 'adaptive_test_start_subtitle', __( 'Enter your email address to begin the test.', 'adaptive-level-test' ) );
+                            $pv_title        = get_option( 'adaptive_test_start_title',    __( 'Start Your Level Test', 'idiomiq-adaptive-placement-test' ) );
+                            $pv_subtitle     = get_option( 'adaptive_test_start_subtitle', __( 'Enter your email address to begin the test.', 'idiomiq-adaptive-placement-test' ) );
                             $pv_body         = get_option( 'adaptive_test_start_body', '' );
                             $pv_ph           = get_option( 'adaptive_test_start_email_placeholder', 'name@example.com' );
-                            $pv_btn          = get_option( 'adaptive_test_start_button_text', __( 'Start Test', 'adaptive-level-test' ) );
+                            $pv_btn          = get_option( 'adaptive_test_start_button_text', __( 'Start Test', 'idiomiq-adaptive-placement-test' ) );
                             $pv_gdpr2_on     = (bool) get_option( 'adaptive_test_start_gdpr2_enabled', 0 );
-                            $pv_gdpr2        = get_option( 'adaptive_test_start_gdpr2_message', __( "I'd like to receive information about English courses and relevant offers. I understand I can withdraw this consent at any time.", 'adaptive-level-test' ) );
+                            $pv_gdpr2        = get_option( 'adaptive_test_start_gdpr2_message', __( "I'd like to receive information about English courses and relevant offers. I understand I can withdraw this consent at any time.", 'idiomiq-adaptive-placement-test' ) );
                             $pv_btn_color    = get_option( 'adaptive_test_before_btn_color',         $pv_primary ) ?: $pv_primary;
                             $pv_btn_txt      = get_option( 'adaptive_test_before_btn_text_color',    '#ffffff' ) ?: '#ffffff';
                             $pv_btn_bdc      = get_option( 'adaptive_test_before_btn_border_color',  $pv_primary ) ?: $pv_primary;
@@ -1206,7 +1206,7 @@ function adaptive_test_settings_page_html() {
                             $pv_opt_bc         = get_option( 'adaptive_test_during_option_border_color', '#e5e7eb' ) ?: '#e5e7eb';
                             $pv_ctr_text       = str_replace( [ '%n%', '%total%' ], [ '2', '5' ], $pv_ctr_fmt );
                             $pv_dyslexic_on     = (bool) get_option( 'adaptive_test_during_dyslexic_enabled', 1 );
-                            $pv_dyslexic_label  = get_option( 'adaptive_test_during_dyslexic_off', __( 'Change to dyslexia friendly font', 'adaptive-level-test' ) );
+                            $pv_dyslexic_label  = get_option( 'adaptive_test_during_dyslexic_off', __( 'Change to dyslexia friendly font', 'idiomiq-adaptive-placement-test' ) );
                             $pv_dys_color       = get_option( 'adaptive_test_during_dyslexic_color',  '#6b7280' ) ?: '#6b7280';
                             $pv_dys_bg          = get_option( 'adaptive_test_during_dyslexic_bg',     '#ffffff' ) ?: '#ffffff';
                             $pv_dys_size        = absint( get_option( 'adaptive_test_during_dyslexic_size', 11 ) );
@@ -1259,9 +1259,9 @@ function adaptive_test_settings_page_html() {
                             $pv_retake_bdc       = get_option( 'adaptive_test_after_retake_border_color',  $pv_primary ) ?: $pv_primary;
                             $pv_retake_bdw       = absint( get_option( 'adaptive_test_after_retake_border_width',  2 ) );
                             $pv_retake_bdr_val   = absint( get_option( 'adaptive_test_after_retake_border_radius', 8 ) );
-                            $pv_after_title      = get_option( 'adaptive_test_after_title',      __( 'Test Complete', 'adaptive-level-test' ) );
-                            $pv_after_subheading = get_option( 'adaptive_test_after_subheading', __( 'Your estimated level is:', 'adaptive-level-test' ) );
-                            $pv_after_body       = get_option( 'adaptive_test_after_body',       __( 'A copy of your result has been emailed to you.', 'adaptive-level-test' ) );
+                            $pv_after_title      = get_option( 'adaptive_test_after_title',      __( 'Test Complete', 'idiomiq-adaptive-placement-test' ) );
+                            $pv_after_subheading = get_option( 'adaptive_test_after_subheading', __( 'Your estimated level is:', 'idiomiq-adaptive-placement-test' ) );
+                            $pv_after_body       = get_option( 'adaptive_test_after_body',       __( 'A copy of your result has been emailed to you.', 'idiomiq-adaptive-placement-test' ) );
                             $pv_title_color      = get_option( 'adaptive_test_after_title_color',      '#1f2937' ) ?: '#1f2937';
                             $pv_title_size       = absint( get_option( 'adaptive_test_after_title_size',      24 ) );
                             $pv_title_weight     = get_option( 'adaptive_test_after_title_weight',     '700' ) ?: '700';
@@ -1290,8 +1290,8 @@ function adaptive_test_settings_page_html() {
                                     <span>A2</span><span>B1</span><span id="esl-prev-active-label" style="color:<?php echo esc_attr( $pv_result_color ); ?>; font-weight:800;">B2</span><span>C1</span><span>C2</span>
                                 </div>
                                 <?php
-                                $pv_err_label = get_option( 'adaptive_test_error_rate_label', __( 'Margin of Error: ±{rate}%', 'adaptive-level-test' ) );
-                                $pv_err_label_text = $pv_err_label ?: __( 'Margin of Error: ±{rate}%', 'adaptive-level-test' );
+                                $pv_err_label = get_option( 'adaptive_test_error_rate_label', __( 'Margin of Error: ±{rate}%', 'idiomiq-adaptive-placement-test' ) );
+                                $pv_err_label_text = $pv_err_label ?: __( 'Margin of Error: ±{rate}%', 'idiomiq-adaptive-placement-test' );
                                 $pv_err_label_text = str_replace( '{rate}', $pv_err_rate, $pv_err_label_text );
                                 ?>
                                 <p id="esl-prev-error-margin" style="font-size:0.85em; color:#6b7280; margin:0 0 14px;<?php echo $pv_show_err ? '' : 'display:none;'; ?>"><?php echo wp_kses_post( $pv_err_label_text ); ?></p>
@@ -1310,28 +1310,28 @@ function adaptive_test_settings_page_html() {
                 <?php settings_fields('adaptive_test_msg_options'); ?>
 
                 <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
-                    <h2><?php esc_html_e( 'Student Email', 'adaptive-level-test' ); ?></h2>
+                    <h2><?php esc_html_e( 'Student Email', 'idiomiq-adaptive-placement-test' ); ?></h2>
                     <?php do_settings_sections('adaptive-level-test-msg-student'); ?>
                 </div>
 
                 <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
-                    <h2><?php esc_html_e( 'Admin Notification Email', 'adaptive-level-test' ); ?></h2>
+                    <h2><?php esc_html_e( 'Admin Notification Email', 'idiomiq-adaptive-placement-test' ); ?></h2>
                     <?php do_settings_sections('adaptive-level-test-msg-admin'); ?>
                 </div>
 
                 <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
-                    <h2><?php esc_html_e( 'Email Footer', 'adaptive-level-test' ); ?></h2>
+                    <h2><?php esc_html_e( 'Email Footer', 'idiomiq-adaptive-placement-test' ); ?></h2>
                     <?php do_settings_sections('adaptive-level-test-msg-footer'); ?>
                 </div>
 
-                <?php submit_button(__('Save Settings', 'adaptive-level-test')); ?>
+                <?php submit_button(__('Save Settings', 'idiomiq-adaptive-placement-test')); ?>
 
                 <hr>
-                <h3><?php esc_html_e( 'Reset Templates', 'adaptive-level-test' ); ?></h3>
+                <h3><?php esc_html_e( 'Reset Templates', 'idiomiq-adaptive-placement-test' ); ?></h3>
                 <form method="post" action="">
                     <input type="hidden" name="adaptive_test_action" value="reset_email_templates">
                     <?php wp_nonce_field('adaptive_test_reset_email_nonce'); ?>
-                    <?php submit_button(__('Reset to Defaults', 'adaptive-level-test'), 'secondary', 'submit', false, ['onclick' => "return confirm('" . esc_js(__('Are you sure you want to reset all email templates to default?', 'adaptive-level-test')) . "');"]); ?>
+                    <?php submit_button(__('Reset to Defaults', 'idiomiq-adaptive-placement-test'), 'secondary', 'submit', false, ['onclick' => "return confirm('" . esc_js(__('Are you sure you want to reset all email templates to default?', 'idiomiq-adaptive-placement-test')) . "');"]); ?>
                 </form>
             </form>
         <?php elseif ($active_tab == 'questions'): ?>
@@ -1368,7 +1368,7 @@ function adaptive_test_settings_page_html() {
             ?>
             <div style="display:flex; gap:30px; align-items:flex-start; margin-top:20px;">
             <div style="flex:0 0 60%; min-width:0; box-sizing:border-box; background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px;">
-            <h2><?php esc_html_e( 'Question Banks', 'adaptive-level-test' ); ?></h2>
+            <h2><?php esc_html_e( 'Question Banks', 'idiomiq-adaptive-placement-test' ); ?></h2>
             
             <!-- Bank Management -->
             <div style="background: #fff; padding: 15px; border: 1px solid #ccd0d4; margin-bottom: 20px;">
@@ -1378,15 +1378,15 @@ function adaptive_test_settings_page_html() {
                         <input type="hidden" name="bank_id" value="<?php echo absint( $rename_bank->id ); ?>">
                         <?php wp_nonce_field( 'adaptive_test_rename_bank_nonce' ); ?>
                         <input type="text" name="bank_name" value="<?php echo esc_attr( $rename_bank->name ); ?>" required class="regular-text">
-                        <?php submit_button( __( 'Save Name', 'adaptive-level-test' ), 'primary', 'submit', false ); ?>
-                        <a href="<?php echo esc_url( remove_query_arg( [ 'action', 'id' ] ) ); ?>" class="button"><?php esc_html_e( 'Cancel', 'adaptive-level-test' ); ?></a>
+                        <?php submit_button( __( 'Save Name', 'idiomiq-adaptive-placement-test' ), 'primary', 'submit', false ); ?>
+                        <a href="<?php echo esc_url( remove_query_arg( [ 'action', 'id' ] ) ); ?>" class="button"><?php esc_html_e( 'Cancel', 'idiomiq-adaptive-placement-test' ); ?></a>
                     </form>
                 <?php else : ?>
                     <form method="post" action="" style="display:flex; gap:10px; align-items:center;">
                         <input type="hidden" name="adaptive_test_action" value="save_bank">
                         <?php wp_nonce_field('adaptive_test_save_bank_nonce'); ?>
-                        <input type="text" name="bank_name" placeholder="<?php esc_attr_e( 'New Bank Name', 'adaptive-level-test' ); ?>" required class="regular-text">
-                        <?php submit_button( __( 'Create Bank', 'adaptive-level-test' ), 'secondary', 'submit', false ); ?>
+                        <input type="text" name="bank_name" placeholder="<?php esc_attr_e( 'New Bank Name', 'idiomiq-adaptive-placement-test' ); ?>" required class="regular-text">
+                        <?php submit_button( __( 'Create Bank', 'idiomiq-adaptive-placement-test' ), 'secondary', 'submit', false ); ?>
                     </form>
                 <?php endif; ?>
             </div>
@@ -1394,23 +1394,23 @@ function adaptive_test_settings_page_html() {
             <table class="wp-list-table widefat fixed striped" style="margin-bottom: 30px;">
                 <thead>
                     <tr>
-                        <th><?php esc_html_e( 'ID', 'adaptive-level-test' ); ?></th>
-                        <th><?php esc_html_e( 'Name', 'adaptive-level-test' ); ?></th>
-                        <th><?php esc_html_e( 'Shortcode', 'adaptive-level-test' ); ?></th>
-                        <th><?php esc_html_e( 'Actions', 'adaptive-level-test' ); ?></th>
+                        <th><?php esc_html_e( 'ID', 'idiomiq-adaptive-placement-test' ); ?></th>
+                        <th><?php esc_html_e( 'Name', 'idiomiq-adaptive-placement-test' ); ?></th>
+                        <th><?php esc_html_e( 'Shortcode', 'idiomiq-adaptive-placement-test' ); ?></th>
+                        <th><?php esc_html_e( 'Actions', 'idiomiq-adaptive-placement-test' ); ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ( $banks as $b ) : ?>
                         <tr>
                             <td><?php echo absint( $b->id ); ?></td>
-                            <td><?php echo esc_html( $b->name ); ?><?php if ( $b->is_default ) echo ' <strong>' . esc_html__( '(Default)', 'adaptive-level-test' ) . '</strong>'; ?></td>
+                            <td><?php echo esc_html( $b->name ); ?><?php if ( $b->is_default ) echo ' <strong>' . esc_html__( '(Default)', 'idiomiq-adaptive-placement-test' ) . '</strong>'; ?></td>
                             <td><code>[adaptive_level_test bank="<?php echo absint( $b->id ); ?>"]</code></td>
                             <td>
-                                <a href="<?php echo esc_url( add_query_arg( [ 'action' => 'rename_bank', 'id' => $b->id ] ) ); ?>"><?php esc_html_e( 'Rename', 'adaptive-level-test' ); ?></a> |
-                                <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'duplicate_bank', 'id' => $b->id ] ), 'adaptive_test_duplicate_bank_nonce' ) ); ?>"><?php esc_html_e( 'Duplicate', 'adaptive-level-test' ); ?></a>
+                                <a href="<?php echo esc_url( add_query_arg( [ 'action' => 'rename_bank', 'id' => $b->id ] ) ); ?>"><?php esc_html_e( 'Rename', 'idiomiq-adaptive-placement-test' ); ?></a> |
+                                <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'duplicate_bank', 'id' => $b->id ] ), 'adaptive_test_duplicate_bank_nonce' ) ); ?>"><?php esc_html_e( 'Duplicate', 'idiomiq-adaptive-placement-test' ); ?></a>
                                 <?php if ( ! $b->is_default ) : ?>
-                                    | <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'delete_bank', 'id' => $b->id ] ), 'adaptive_test_delete_bank_nonce' ) ); ?>" style="color: #b32d2e;" onclick="return confirm('<?php echo esc_js( __( 'Delete this bank?', 'adaptive-level-test' ) ); ?>');"><?php esc_html_e( 'Delete', 'adaptive-level-test' ); ?></a>
+                                    | <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'delete_bank', 'id' => $b->id ] ), 'adaptive_test_delete_bank_nonce' ) ); ?>" style="color: #b32d2e;" onclick="return confirm('<?php echo esc_js( __( 'Delete this bank?', 'idiomiq-adaptive-placement-test' ) ); ?>');"><?php esc_html_e( 'Delete', 'idiomiq-adaptive-placement-test' ); ?></a>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -1418,9 +1418,9 @@ function adaptive_test_settings_page_html() {
                 </tbody>
             </table>
 
-            <h2><?php esc_html_e( 'Manage Questions', 'adaptive-level-test' ); ?></h2>
+            <h2><?php esc_html_e( 'Manage Questions', 'idiomiq-adaptive-placement-test' ); ?></h2>
             <div style="margin-bottom: 15px;">
-                <label><?php esc_html_e( 'Select Bank:', 'adaptive-level-test' ); ?></label>
+                <label><?php esc_html_e( 'Select Bank:', 'idiomiq-adaptive-placement-test' ); ?></label>
                 <select onchange="window.location.href='?page=adaptive-level-test&tab=questions&bank_id='+this.value">
                     <?php foreach ( $banks as $b ) : ?>
                         <option value="<?php echo absint( $b->id ); ?>" <?php selected( $current_bank_id, $b->id ); ?>><?php echo esc_html( $b->name ); ?></option>
@@ -1430,7 +1430,7 @@ function adaptive_test_settings_page_html() {
         
         <!-- Add/Edit Form -->
         <div class="card" style="max-width: 100%; padding: 20px; margin-bottom: 20px;">
-            <h3><?php echo $edit_question ? esc_html__( 'Edit Question', 'adaptive-level-test' ) : esc_html__( 'Add New Question', 'adaptive-level-test' ); ?></h3>
+            <h3><?php echo $edit_question ? esc_html__( 'Edit Question', 'idiomiq-adaptive-placement-test' ) : esc_html__( 'Add New Question', 'idiomiq-adaptive-placement-test' ); ?></h3>
             <form method="post" action="">
                 <input type="hidden" name="adaptive_test_action" value="save_question">
                 <?php if ($edit_question): ?>
@@ -1441,23 +1441,23 @@ function adaptive_test_settings_page_html() {
                 <table class="form-table">
                     <tr>
                         <input type="hidden" name="bank_id" value="<?php echo absint( $current_bank_id ); ?>">
-                        <th><label for="question_text"><?php esc_html_e( 'Question', 'adaptive-level-test' ); ?></label></th>
+                        <th><label for="question_text"><?php esc_html_e( 'Question', 'idiomiq-adaptive-placement-test' ); ?></label></th>
                         <td><textarea name="question_text" id="question_text" class="large-text" required><?php echo $edit_question ? esc_textarea( $edit_question->question_text ) : ''; ?></textarea></td>
                     </tr>
                     <tr>
-                        <th><label for="options"><?php esc_html_e( 'Options (comma separated)', 'adaptive-level-test' ); ?></label></th>
+                        <th><label for="options"><?php esc_html_e( 'Options (comma separated)', 'idiomiq-adaptive-placement-test' ); ?></label></th>
                         <td>
                             <?php $opts = $edit_question ? implode( ',', json_decode( $edit_question->options ) ) : ''; ?>
                             <input type="text" name="options" id="options" class="large-text" value="<?php echo esc_attr( $opts ); ?>" required>
-                            <p class="description"><?php esc_html_e( 'Example: go,went,gone,going', 'adaptive-level-test' ); ?></p>
+                            <p class="description"><?php esc_html_e( 'Example: go,went,gone,going', 'idiomiq-adaptive-placement-test' ); ?></p>
                         </td>
                     </tr>
                     <tr>
-                        <th><label for="answer"><?php esc_html_e( 'Correct Answer', 'adaptive-level-test' ); ?></label></th>
+                        <th><label for="answer"><?php esc_html_e( 'Correct Answer', 'idiomiq-adaptive-placement-test' ); ?></label></th>
                         <td><input type="text" name="answer" id="answer" class="regular-text" value="<?php echo $edit_question ? esc_attr( $edit_question->answer ) : ''; ?>" required></td>
                     </tr>
                     <tr>
-                        <th><label for="level"><?php esc_html_e( 'Level', 'adaptive-level-test' ); ?></label></th>
+                        <th><label for="level"><?php esc_html_e( 'Level', 'idiomiq-adaptive-placement-test' ); ?></label></th>
                         <td>
                             <select name="level" id="level">
                                 <?php foreach ( [ 'A2', 'B1', 'B2', 'C1', 'C2' ] as $lvl ) : ?>
@@ -1467,9 +1467,9 @@ function adaptive_test_settings_page_html() {
                         </td>
                     </tr>
                 </table>
-                <?php submit_button( $edit_question ? __( 'Update Question', 'adaptive-level-test' ) : __( 'Add Question', 'adaptive-level-test' ), 'primary', 'submit_question' ); ?>
+                <?php submit_button( $edit_question ? __( 'Update Question', 'idiomiq-adaptive-placement-test' ) : __( 'Add Question', 'idiomiq-adaptive-placement-test' ), 'primary', 'submit_question' ); ?>
                 <?php if ( $edit_question ) : ?>
-                    <a href="<?php echo esc_url( remove_query_arg( [ 'action', 'id' ] ) ); ?>" class="button"><?php esc_html_e( 'Cancel', 'adaptive-level-test' ); ?></a>
+                    <a href="<?php echo esc_url( remove_query_arg( [ 'action', 'id' ] ) ); ?>" class="button"><?php esc_html_e( 'Cancel', 'idiomiq-adaptive-placement-test' ); ?></a>
                 <?php endif; ?>
             </form>
         </div>
@@ -1478,11 +1478,11 @@ function adaptive_test_settings_page_html() {
         <table class="wp-list-table widefat fixed striped">
             <thead>
                 <tr>
-                    <th><?php esc_html_e( 'ID', 'adaptive-level-test' ); ?></th>
-                    <th><?php esc_html_e( 'Question', 'adaptive-level-test' ); ?></th>
-                    <th><?php esc_html_e( 'Level', 'adaptive-level-test' ); ?></th>
-                    <th><?php esc_html_e( 'Options', 'adaptive-level-test' ); ?></th>
-                    <th><?php esc_html_e( 'Actions', 'adaptive-level-test' ); ?></th>
+                    <th><?php esc_html_e( 'ID', 'idiomiq-adaptive-placement-test' ); ?></th>
+                    <th><?php esc_html_e( 'Question', 'idiomiq-adaptive-placement-test' ); ?></th>
+                    <th><?php esc_html_e( 'Level', 'idiomiq-adaptive-placement-test' ); ?></th>
+                    <th><?php esc_html_e( 'Options', 'idiomiq-adaptive-placement-test' ); ?></th>
+                    <th><?php esc_html_e( 'Actions', 'idiomiq-adaptive-placement-test' ); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -1507,11 +1507,11 @@ function adaptive_test_settings_page_html() {
                             }
                         ?></td>
                         <td>
-                            <a href="<?php echo esc_url( add_query_arg( [ 'action' => 'edit_question', 'id' => $q->id ] ) ); ?>"><?php esc_html_e( 'Edit', 'adaptive-level-test' ); ?></a> |
+                            <a href="<?php echo esc_url( add_query_arg( [ 'action' => 'edit_question', 'id' => $q->id ] ) ); ?>"><?php esc_html_e( 'Edit', 'idiomiq-adaptive-placement-test' ); ?></a> |
                             <?php if ( $current_bank_is_default ) : ?>
-                                <span style="color: #999; cursor: not-allowed;" title="<?php esc_attr_e( 'Cannot delete questions from default bank', 'adaptive-level-test' ); ?>"><?php esc_html_e( 'Delete', 'adaptive-level-test' ); ?></span>
+                                <span style="color: #999; cursor: not-allowed;" title="<?php esc_attr_e( 'Cannot delete questions from default bank', 'idiomiq-adaptive-placement-test' ); ?>"><?php esc_html_e( 'Delete', 'idiomiq-adaptive-placement-test' ); ?></span>
                             <?php else : ?>
-                                <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'delete_question', 'id' => $q->id ] ), 'adaptive_test_delete_question_nonce' ) ); ?>" style="color: #b32d2e;" onclick="return confirm('<?php echo esc_js( __( 'Are you sure?', 'adaptive-level-test' ) ); ?>');"><?php esc_html_e( 'Delete', 'adaptive-level-test' ); ?></a>
+                                <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'delete_question', 'id' => $q->id ] ), 'adaptive_test_delete_question_nonce' ) ); ?>" style="color: #b32d2e;" onclick="return confirm('<?php echo esc_js( __( 'Are you sure?', 'idiomiq-adaptive-placement-test' ) ); ?>');"><?php esc_html_e( 'Delete', 'idiomiq-adaptive-placement-test' ); ?></a>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -1521,11 +1521,11 @@ function adaptive_test_settings_page_html() {
 
             </div><!-- end left column -->
             <div style="flex:0 0 calc(40% - 30px); min-width:0; box-sizing:border-box; background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px;">
-            <h2><?php esc_html_e( 'Tools', 'adaptive-level-test' ); ?></h2>
+            <h2><?php esc_html_e( 'Tools', 'idiomiq-adaptive-placement-test' ); ?></h2>
             <hr>
             <div style="margin-bottom: 20px;">
-                <h3><?php esc_html_e( 'Export Questions', 'adaptive-level-test' ); ?></h3>
-                <p><?php esc_html_e( 'Download all questions as a CSV file.', 'adaptive-level-test' ); ?></p>
+                <h3><?php esc_html_e( 'Export Questions', 'idiomiq-adaptive-placement-test' ); ?></h3>
+                <p><?php esc_html_e( 'Download all questions as a CSV file.', 'idiomiq-adaptive-placement-test' ); ?></p>
                 <form method="post" action="">
                     <input type="hidden" name="adaptive_test_action" value="export_csv">
                     <?php wp_nonce_field( 'adaptive_test_tool_action_nonce' ); ?>
@@ -1535,15 +1535,15 @@ function adaptive_test_settings_page_html() {
                                 <option value="<?php echo absint( $b->id ); ?>"><?php echo esc_html( $b->name ); ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <?php submit_button( __( 'Export CSV', 'adaptive-level-test' ), 'secondary', 'submit', false ); ?>
+                        <?php submit_button( __( 'Export CSV', 'idiomiq-adaptive-placement-test' ), 'secondary', 'submit', false ); ?>
                     </div>
                 </form>
             </div>
             <hr>
             <div style="margin-bottom: 20px;">
-                <h3><?php esc_html_e( 'Import Questions', 'adaptive-level-test' ); ?></h3>
-                <p><?php esc_html_e( 'Upload a CSV file to add questions. The CSV should have headers: id, question_text, options, answer, level.', 'adaptive-level-test' ); ?></p>
-                <p class="description"><?php esc_html_e( 'Note: The "options" column should be pipe-separated (e.g., Option A|Option B|Option C|Option D).', 'adaptive-level-test' ); ?></p>
+                <h3><?php esc_html_e( 'Import Questions', 'idiomiq-adaptive-placement-test' ); ?></h3>
+                <p><?php esc_html_e( 'Upload a CSV file to add questions. The CSV should have headers: id, question_text, options, answer, level.', 'idiomiq-adaptive-placement-test' ); ?></p>
+                <p class="description"><?php esc_html_e( 'Note: The "options" column should be pipe-separated (e.g., Option A|Option B|Option C|Option D).', 'idiomiq-adaptive-placement-test' ); ?></p>
                 <form method="post" action="" enctype="multipart/form-data">
                     <input type="hidden" name="adaptive_test_action" value="import_csv">
                     <?php wp_nonce_field( 'adaptive_test_tool_action_nonce' ); ?>
@@ -1554,18 +1554,18 @@ function adaptive_test_settings_page_html() {
                                 <option value="<?php echo absint( $b->id ); ?>"><?php echo esc_html( $b->name ); ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <?php submit_button( __( 'Import CSV', 'adaptive-level-test' ), 'primary', 'submit', false ); ?>
+                        <?php submit_button( __( 'Import CSV', 'idiomiq-adaptive-placement-test' ), 'primary', 'submit', false ); ?>
                     </div>
                 </form>
             </div>
             <hr>
             <div style="margin-bottom: 20px; border-left: 4px solid #d63638; padding-left: 12px;">
-                <h3><?php esc_html_e( 'Reset Database', 'adaptive-level-test' ); ?></h3>
-                <p><?php esc_html_e( 'Warning: This will delete ALL existing questions and re-insert the default sample questions.', 'adaptive-level-test' ); ?></p>
+                <h3><?php esc_html_e( 'Reset Database', 'idiomiq-adaptive-placement-test' ); ?></h3>
+                <p><?php esc_html_e( 'Warning: This will delete ALL existing questions and re-insert the default sample questions.', 'idiomiq-adaptive-placement-test' ); ?></p>
                 <form method="post" action="">
                     <input type="hidden" name="adaptive_test_action" value="reseed_questions">
                     <?php wp_nonce_field('adaptive_test_tool_action_nonce'); ?>
-                    <?php submit_button(__('Re-seed Questions', 'adaptive-level-test'), 'delete', 'submit', true, ['onclick' => "return confirm('" . esc_js(__('Are you sure you want to delete all questions and reset the database?', 'adaptive-level-test')) . "');"]); ?>
+                    <?php submit_button(__('Re-seed Questions', 'idiomiq-adaptive-placement-test'), 'delete', 'submit', true, ['onclick' => "return confirm('" . esc_js(__('Are you sure you want to delete all questions and reset the database?', 'idiomiq-adaptive-placement-test')) . "');"]); ?>
                 </form>
             </div>
             </div><!-- end right column -->
@@ -1608,7 +1608,7 @@ function adaptive_test_settings_page_html() {
                 $logs = $wpdb->get_results( "SELECT * FROM {$logs_table} ORDER BY {$orderby} {$order} LIMIT 100" );
             }
             ?>
-            <h2><?php esc_html_e( 'Attempt Logs', 'adaptive-level-test' ); ?></h2>
+            <h2><?php esc_html_e( 'Attempt Logs', 'idiomiq-adaptive-placement-test' ); ?></h2>
 
             <!-- Toolbar -->
             <div style="margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -1619,16 +1619,16 @@ function adaptive_test_settings_page_html() {
                         <input type="hidden" name="tab" value="logs">
                         <input type="hidden" name="orderby" value="<?php echo esc_attr( $orderby ); ?>">
                         <input type="hidden" name="order" value="<?php echo esc_attr( strtolower( $order ) ); ?>">
-                        <input type="text" name="email_filter" value="<?php echo esc_attr( $email_filter ); ?>" placeholder="<?php esc_attr_e( 'All users', 'adaptive-level-test' ); ?>" style="width:180px;">
+                        <input type="text" name="email_filter" value="<?php echo esc_attr( $email_filter ); ?>" placeholder="<?php esc_attr_e( 'All users', 'idiomiq-adaptive-placement-test' ); ?>" style="width:180px;">
                         <select name="bank_filter">
-                            <option value=""><?php esc_html_e( 'All Banks', 'adaptive-level-test' ); ?></option>
+                            <option value=""><?php esc_html_e( 'All Banks', 'idiomiq-adaptive-placement-test' ); ?></option>
                             <?php foreach ( $log_banks as $bank ) : ?>
                                 <option value="<?php echo esc_attr( $bank ); ?>" <?php selected( $bank_filter, $bank ); ?>><?php echo esc_html( $bank ); ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <?php submit_button( __( 'Filter', 'adaptive-level-test' ), 'secondary', 'submit', false ); ?>
+                        <?php submit_button( __( 'Filter', 'idiomiq-adaptive-placement-test' ), 'secondary', 'submit', false ); ?>
                         <?php if ( $email_filter || $bank_filter ) : ?>
-                            <a href="<?php echo esc_url( admin_url( 'options-general.php?page=adaptive-level-test&tab=logs' ) ); ?>" class="button button-secondary"><?php esc_html_e( 'Clear', 'adaptive-level-test' ); ?></a>
+                            <a href="<?php echo esc_url( admin_url( 'options-general.php?page=adaptive-level-test&tab=logs' ) ); ?>" class="button button-secondary"><?php esc_html_e( 'Clear', 'idiomiq-adaptive-placement-test' ); ?></a>
                         <?php endif; ?>
                     </form>
                     <?php if ( $is_admin ) : ?>
@@ -1637,7 +1637,7 @@ function adaptive_test_settings_page_html() {
                         <input type="hidden" name="adaptive_test_action" value="export_logs_csv">
                         <input type="hidden" name="bank_filter" value="<?php echo esc_attr( $bank_filter ); ?>">
                         <?php wp_nonce_field( 'adaptive_test_export_logs_nonce' ); ?>
-                        <?php submit_button( __( 'Export CSV', 'adaptive-level-test' ), 'secondary', 'submit', false ); ?>
+                        <?php submit_button( __( 'Export CSV', 'idiomiq-adaptive-placement-test' ), 'secondary', 'submit', false ); ?>
                     </form>
                     <?php endif; ?>
                 </div>
@@ -1646,9 +1646,9 @@ function adaptive_test_settings_page_html() {
                 <form method="post" action="">
                     <input type="hidden" name="adaptive_test_action" value="delete_logs">
                     <?php wp_nonce_field( 'adaptive_test_delete_logs_nonce' ); ?>
-                    <label><?php esc_html_e( 'Delete attempts older than:', 'adaptive-level-test' ); ?></label>
-                    <input type="number" name="log_days" value="30" style="width:60px;"> <?php esc_html_e( 'days', 'adaptive-level-test' ); ?>
-                    <?php submit_button( __( 'Delete Old Attempts', 'adaptive-level-test' ), 'delete', 'submit', false ); ?>
+                    <label><?php esc_html_e( 'Delete attempts older than:', 'idiomiq-adaptive-placement-test' ); ?></label>
+                    <input type="number" name="log_days" value="30" style="width:60px;"> <?php esc_html_e( 'days', 'idiomiq-adaptive-placement-test' ); ?>
+                    <?php submit_button( __( 'Delete Old Attempts', 'idiomiq-adaptive-placement-test' ), 'delete', 'submit', false ); ?>
                 </form>
                 <?php endif; ?>
             </div>
@@ -1663,20 +1663,20 @@ function adaptive_test_settings_page_html() {
                 <table class="wp-list-table widefat fixed striped">
                     <thead>
                         <tr>
-                            <?php if ( $is_admin ) : ?><th style="width:32px;"><input type="checkbox" id="esl-select-all" title="<?php esc_attr_e( 'Select all', 'adaptive-level-test' ); ?>"></th><?php endif; ?>
-                            <th><?php echo adaptive_test_sort_link( 'date',      __( 'Date', 'adaptive-level-test' ),          $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
-                            <th><?php echo adaptive_test_sort_link( 'email',     __( 'Email', 'adaptive-level-test' ),         $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
-                            <th><?php echo adaptive_test_sort_link( 'bank_name', __( 'Question Bank', 'adaptive-level-test' ), $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
-                            <th><?php echo adaptive_test_sort_link( 'level',     __( 'Result', 'adaptive-level-test' ),        $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
-                            <th><?php esc_html_e( 'Confidence', 'adaptive-level-test' ); ?></th>
-                            <th><?php esc_html_e( 'Time Taken', 'adaptive-level-test' ); ?></th>
+                            <?php if ( $is_admin ) : ?><th style="width:32px;"><input type="checkbox" id="esl-select-all" title="<?php esc_attr_e( 'Select all', 'idiomiq-adaptive-placement-test' ); ?>"></th><?php endif; ?>
+                            <th><?php echo adaptive_test_sort_link( 'date',      __( 'Date', 'idiomiq-adaptive-placement-test' ),          $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
+                            <th><?php echo adaptive_test_sort_link( 'email',     __( 'Email', 'idiomiq-adaptive-placement-test' ),         $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
+                            <th><?php echo adaptive_test_sort_link( 'bank_name', __( 'Question Bank', 'idiomiq-adaptive-placement-test' ), $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
+                            <th><?php echo adaptive_test_sort_link( 'level',     __( 'Result', 'idiomiq-adaptive-placement-test' ),        $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
+                            <th><?php esc_html_e( 'Confidence', 'idiomiq-adaptive-placement-test' ); ?></th>
+                            <th><?php esc_html_e( 'Time Taken', 'idiomiq-adaptive-placement-test' ); ?></th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        $strong_label      = get_option( 'adaptive_test_strong_label',      __( 'Strong',      'adaptive-level-test' ) );
-                        $borderline_label  = get_option( 'adaptive_test_borderline_label',  __( 'Borderline',  'adaptive-level-test' ) );
+                        $strong_label      = get_option( 'adaptive_test_strong_label',      __( 'Strong',      'idiomiq-adaptive-placement-test' ) );
+                        $borderline_label  = get_option( 'adaptive_test_borderline_label',  __( 'Borderline',  'idiomiq-adaptive-placement-test' ) );
                         $level_centres     = [ 'A2' => -2.0, 'B1' => -1.0, 'B2' => 0.0, 'C1' => 1.0, 'C2' => 2.0 ];
                         foreach ( $logs as $log ) :
                             $sub   = $log->sub_level ?? '';
@@ -1713,7 +1713,7 @@ function adaptive_test_settings_page_html() {
                                 <td style="white-space:nowrap;">
                                     <?php do_action( 'adaptive_test_log_row_actions', $log ); ?>
                                     <?php if ( $is_admin ) : ?>
-                                    <a href="<?php echo esc_url( $delete_url ); ?>" class="button button-small" style="color:#dc2626;" onclick="return confirm('<?php echo esc_js( __( 'Delete this attempt?', 'adaptive-level-test' ) ); ?>')"><?php esc_html_e( 'Delete', 'adaptive-level-test' ); ?></a>
+                                    <a href="<?php echo esc_url( $delete_url ); ?>" class="button button-small" style="color:#dc2626;" onclick="return confirm('<?php echo esc_js( __( 'Delete this attempt?', 'idiomiq-adaptive-placement-test' ) ); ?>')"><?php esc_html_e( 'Delete', 'idiomiq-adaptive-placement-test' ); ?></a>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -1724,8 +1724,8 @@ function adaptive_test_settings_page_html() {
                 <?php if ( $is_admin ) : ?>
                 <div style="margin-top:8px;">
                     <button type="submit" class="button button-secondary"
-                        onclick="return document.querySelectorAll('#esl-logs-bulk-form input[name=\'log_ids[]\']:checked').length > 0 || (alert('<?php echo esc_js( __( 'Please select at least one attempt.', 'adaptive-level-test' ) ); ?>'), false);"
-                    ><?php esc_html_e( 'Delete Selected', 'adaptive-level-test' ); ?></button>
+                        onclick="return document.querySelectorAll('#esl-logs-bulk-form input[name=\'log_ids[]\']:checked').length > 0 || (alert('<?php echo esc_js( __( 'Please select at least one attempt.', 'idiomiq-adaptive-placement-test' ) ); ?>'), false);"
+                    ><?php esc_html_e( 'Delete Selected', 'idiomiq-adaptive-placement-test' ); ?></button>
                 </div>
                 <?php endif; ?>
             </form>
@@ -1742,7 +1742,7 @@ function adaptive_test_settings_page_html() {
 function adaptive_test_add_dashboard_widget() {
     wp_add_dashboard_widget(
         'adaptive_level_test_stats',
-        __('Adaptive Test Statistics', 'adaptive-level-test'),
+        __('Adaptive Test Statistics', 'idiomiq-adaptive-placement-test'),
         'adaptive_test_dashboard_widget_callback'
     );
 }
@@ -1756,7 +1756,7 @@ function adaptive_test_dashboard_widget_callback() {
     $logs_table = $wpdb->prefix . 'adaptive_attempt_logs';
 
     if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $logs_table ) ) ) !== $logs_table ) {
-        echo '<p>' . esc_html__( 'No test data available yet.', 'adaptive-level-test' ) . '</p>';
+        echo '<p>' . esc_html__( 'No test data available yet.', 'idiomiq-adaptive-placement-test' ) . '</p>';
         return;
     }
 
@@ -1766,10 +1766,10 @@ function adaptive_test_dashboard_widget_callback() {
     $recent_tests = $wpdb->get_results( "SELECT * FROM {$logs_table} ORDER BY date DESC LIMIT 5" );
 
     echo '<div class="main">';
-    echo '<p><strong>' . esc_html__( 'Total Tests Completed:', 'adaptive-level-test' ) . '</strong> ' . absint( $total_tests ) . '</p>';
+    echo '<p><strong>' . esc_html__( 'Total Tests Completed:', 'idiomiq-adaptive-placement-test' ) . '</strong> ' . absint( $total_tests ) . '</p>';
 
     if ( $recent_tests ) {
-        echo '<h4>' . esc_html__( 'Recent Results:', 'adaptive-level-test' ) . '</h4>';
+        echo '<h4>' . esc_html__( 'Recent Results:', 'idiomiq-adaptive-placement-test' ) . '</h4>';
         echo '<ul>';
         foreach ( $recent_tests as $test ) {
             echo '<li>';
@@ -1780,8 +1780,8 @@ function adaptive_test_dashboard_widget_callback() {
         }
         echo '</ul>';
     } else {
-        echo '<p>' . esc_html__( 'No recent tests found.', 'adaptive-level-test' ) . '</p>';
+        echo '<p>' . esc_html__( 'No recent tests found.', 'idiomiq-adaptive-placement-test' ) . '</p>';
     }
-    echo '<p><a href="' . esc_url( admin_url( 'options-general.php?page=adaptive-level-test&tab=logs' ) ) . '" class="button button-primary">' . esc_html__( 'View All Attempts', 'adaptive-level-test' ) . '</a></p>';
+    echo '<p><a href="' . esc_url( admin_url( 'options-general.php?page=adaptive-level-test&tab=logs' ) ) . '" class="button button-primary">' . esc_html__( 'View All Attempts', 'idiomiq-adaptive-placement-test' ) . '</a></p>';
     echo '</div>';
 }

@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
          * Submit the current batch of answers
          */
         submitBatch: function() {
-            // Notify add-ons that a batch is being analysed (Pro renders an overlay here)
+            // Notify add-ons that a batch is being analysed
             this.dispatch('analysing-start', { card: this.elements.appContainer, batchNumber: this.state.batchNumber });
             if (this.elements.counterEl) { this.elements.counterEl.style.display = 'none'; }
             if (this.elements.nextBtn)   { this.elements.nextBtn.classList.add('adaptive-hidden'); }
@@ -464,7 +464,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             this.updateProgressBar(100);
 
-            // Notify add-ons that the results screen has been rendered (Pro adds share buttons here)
+            // Notify add-ons that the results screen has been rendered
             this.dispatch('results', {
                 card:         this.elements.appContainer,
                 container:    this.elements.optionsContainer,
@@ -552,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
 
         /**
-         * Dispatch a namespaced CustomEvent on document so add-ons (e.g. Pro)
+         * Dispatch a namespaced CustomEvent on document so add-ons
          * can hook into the quiz lifecycle (batch transitions, results screen).
          */
         dispatch: function(name, detail) {

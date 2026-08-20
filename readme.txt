@@ -46,10 +46,6 @@ To use a specific question bank:
 
 `[adaptive_level_test bank="2"]`
 
-**Pro add-on**
-
-The IdiomIQ Adaptive Placement Test Pro add-on extends the free plugin with visual customisation panels (colours, fonts, borders, shadows), social sharing on the results screen, an animated encouragement overlay, and per-student detailed reports. The free plugin is fully functional without it.
-
 **Source code**
 
 Development takes place on [GitHub](https://github.com/joerebbeck/adaptive-level-test-free).
@@ -79,10 +75,6 @@ Columns in order: `question_stem`, `option_a`, `option_b`, `option_c`, `option_d
 = Can I run multiple tests on the same site? =
 
 Yes. Create additional question banks under **Questions → Manage Banks** and use the `bank` shortcode attribute to target each one: `[adaptive_level_test bank="2"]`.
-
-= Does the free plugin require the pro add-on? =
-
-No. The free plugin is fully self-contained and functional without it.
 
 == Privacy Policy ==
 

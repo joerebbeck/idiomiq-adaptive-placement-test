@@ -10,14 +10,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 // any safety benefit.
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $bank_id       = get_query_var('adaptive_bank_id', 1);
-$title         = get_option( 'adaptive_test_start_title',    __( 'Start Your Level Test', 'adaptive-level-test' ) );
-$subtitle      = get_option( 'adaptive_test_start_subtitle', __( 'Enter your email address to begin the test.', 'adaptive-level-test' ) );
-$body          = get_option( 'adaptive_test_start_body',     __( 'By starting the test, you agree for your results to be sent to the email address that you provide.', 'adaptive-level-test' ) );
+$title         = get_option( 'adaptive_test_start_title',    __( 'Start Your Level Test', 'idiomiq-adaptive-placement-test' ) );
+$subtitle      = get_option( 'adaptive_test_start_subtitle', __( 'Enter your email address to begin the test.', 'idiomiq-adaptive-placement-test' ) );
+$body          = get_option( 'adaptive_test_start_body',     __( 'By starting the test, you agree for your results to be sent to the email address that you provide.', 'idiomiq-adaptive-placement-test' ) );
 $placeholder   = get_option( 'adaptive_test_start_email_placeholder', 'name@example.com' );
 $gdpr2_on      = (bool) get_option( 'adaptive_test_start_gdpr2_enabled', 0 );
-$gdpr2_default = __( "I'd like to receive information about English courses and relevant offers. I understand I can withdraw this consent at any time.", 'adaptive-level-test' );
+$gdpr2_default = __( "I'd like to receive information about English courses and relevant offers. I understand I can withdraw this consent at any time.", 'idiomiq-adaptive-placement-test' );
 $gdpr2_msg     = get_option( 'adaptive_test_start_gdpr2_message', '' ) ?: $gdpr2_default;
-$btn_text      = get_option( 'adaptive_test_start_button_text',       __( 'Start Test', 'adaptive-level-test' ) );
+$btn_text      = get_option( 'adaptive_test_start_button_text',       __( 'Start Test', 'idiomiq-adaptive-placement-test' ) );
 $show_progress = get_option( 'adaptive_test_during_show_progress', 1 ) ? '1' : '0';
 $show_counter  = get_option( 'adaptive_test_during_show_counter', 0 ) ? '1' : '0';
 $counter_fmt   = get_option( 'adaptive_test_during_counter_format', 'Question %n% of %total%' );
@@ -34,7 +34,7 @@ $opt_align     = get_option( 'adaptive_test_during_options_align', 'center' );
          data-options-align="<?php echo esc_attr( $opt_align ); ?>">
 
         <?php if ( get_option( 'adaptive_test_during_dyslexic_enabled', 1 ) ) : ?>
-        <button type="button" class="esl-dyslexic-toggle" id="esl-dyslexic-toggle" aria-pressed="false"><?php echo esc_html( get_option( 'adaptive_test_during_dyslexic_off', __( 'Change to dyslexia friendly font', 'adaptive-level-test' ) ) ); ?></button>
+        <button type="button" class="esl-dyslexic-toggle" id="esl-dyslexic-toggle" aria-pressed="false"><?php echo esc_html( get_option( 'adaptive_test_during_dyslexic_off', __( 'Change to dyslexia friendly font', 'idiomiq-adaptive-placement-test' ) ) ); ?></button>
         <?php endif; ?>
 
         <!-- Email Capture Section -->
@@ -73,7 +73,7 @@ $opt_align     = get_option( 'adaptive_test_during_options_align', 'center' );
             <div id="esl-question-area">
                 <h2 class="adaptive-question" id="esl-question-text">
                     <!-- Question text will be injected here via JS -->
-                    <?php esc_html_e('Loading question...', 'adaptive-level-test'); ?>
+                    <?php esc_html_e('Loading question...', 'idiomiq-adaptive-placement-test'); ?>
                 </h2>
 
                 <!-- Options Container -->

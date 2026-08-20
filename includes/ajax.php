@@ -104,7 +104,7 @@ add_action('wp_ajax_nopriv_adaptive_test_start_test', 'adaptive_test_start_test'
 
 function adaptive_test_start_test() {
     if ( ! check_ajax_referer( 'adaptive_level_test_nonce', 'nonce', false ) ) {
-        wp_send_json_error( __( 'Invalid nonce.', 'adaptive-level-test' ) );
+        wp_send_json_error( __( 'Invalid nonce.', 'idiomiq-adaptive-placement-test' ) );
     }
 
     // Honeypot: legitimate users leave this blank; bots typically fill it in
@@ -118,7 +118,7 @@ function adaptive_test_start_test() {
     $rate_key   = 'esl_rate_start_' . md5( $ip );
     $count      = (int) get_transient( $rate_key );
     if ( $count >= $rate_limit ) {
-        wp_send_json_error( __( 'Too many requests. Please try again later.', 'adaptive-level-test' ) );
+        wp_send_json_error( __( 'Too many requests. Please try again later.', 'idiomiq-adaptive-placement-test' ) );
     }
     set_transient( $rate_key, $count + 1, HOUR_IN_SECONDS );
 
@@ -129,13 +129,13 @@ function adaptive_test_start_test() {
     $banks_table = $wpdb->prefix . 'adaptive_question_banks';
     $bank_exists = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$banks_table} WHERE id = %d", $bank_id ) );
     if ( ! $bank_exists ) {
-        wp_send_json_error( __( 'Invalid question bank.', 'adaptive-level-test' ) );
+        wp_send_json_error( __( 'Invalid question bank.', 'idiomiq-adaptive-placement-test' ) );
     }
 
     $questions = adaptive_test_get_questions('A2', 5, $bank_id);
 
     if (empty($questions)) {
-        wp_send_json_error(__('No questions found for the starting level (A2).', 'adaptive-level-test'));
+        wp_send_json_error(__('No questions found for the starting level (A2).', 'idiomiq-adaptive-placement-test'));
     }
 
     wp_send_json_success(['questions' => $questions]);
@@ -146,7 +146,7 @@ add_action('wp_ajax_nopriv_adaptive_test_submit_answers', 'adaptive_test_submit_
 
 function adaptive_test_submit_answers() {
     if ( ! check_ajax_referer( 'adaptive_level_test_nonce', 'nonce', false ) ) {
-        wp_send_json_error( __( 'Invalid nonce.', 'adaptive-level-test' ) );
+        wp_send_json_error( __( 'Invalid nonce.', 'idiomiq-adaptive-placement-test' ) );
     }
 
     $max_batches = max( 1, (int) get_option( 'adaptive_test_max_batches', 10 ) );
@@ -157,7 +157,7 @@ function adaptive_test_submit_answers() {
     $rate_key   = 'esl_rate_submit_' . md5( $ip );
     $count      = (int) get_transient( $rate_key );
     if ( $count >= $rate_limit * $max_batches ) {
-        wp_send_json_error( __( 'Too many requests. Please try again later.', 'adaptive-level-test' ) );
+        wp_send_json_error( __( 'Too many requests. Please try again later.', 'idiomiq-adaptive-placement-test' ) );
     }
     set_transient( $rate_key, $count + 1, HOUR_IN_SECONDS );
 
@@ -169,7 +169,7 @@ function adaptive_test_submit_answers() {
     $banks_table = $wpdb->prefix . 'adaptive_question_banks';
     $bank = $wpdb->get_row( $wpdb->prepare( "SELECT id, name FROM {$banks_table} WHERE id = %d", $bank_id ) );
     if ( ! $bank ) {
-        wp_send_json_error( __( 'Invalid question bank.', 'adaptive-level-test' ) );
+        wp_send_json_error( __( 'Invalid question bank.', 'idiomiq-adaptive-placement-test' ) );
     }
 
     // Collect current-batch answers from POST (question_{id} keys)
@@ -182,7 +182,7 @@ function adaptive_test_submit_answers() {
     }
 
     if ( empty( $answers ) ) {
-        wp_send_json_error( __( 'No answers submitted.', 'adaptive-level-test' ) );
+        wp_send_json_error( __( 'No answers submitted.', 'idiomiq-adaptive-placement-test' ) );
     }
 
     $table_name = $wpdb->prefix . 'adaptive_questions';
@@ -231,7 +231,7 @@ function adaptive_test_submit_answers() {
     $current_level_index = array_search( $current_level, $levels );
 
     if ( false === $current_level_index ) {
-        wp_send_json_error( __( 'Could not determine current level.', 'adaptive-level-test' ) );
+        wp_send_json_error( __( 'Could not determine current level.', 'idiomiq-adaptive-placement-test' ) );
     }
 
     if ( $score >= 4 ) {
@@ -291,7 +291,7 @@ function adaptive_test_submit_answers() {
         if ( isset( $_POST['email'] ) && is_email( wp_unslash( $_POST['email'] ) ) ) {
             $to            = sanitize_email( wp_unslash( $_POST['email'] ) );
             $email         = $to;
-            $subject       = get_option( 'adaptive_test_email_subject' ) ?: __( 'Your English Level Test Results', 'adaptive-level-test' );
+            $subject       = get_option( 'adaptive_test_email_subject' ) ?: __( 'Your English Level Test Results', 'idiomiq-adaptive-placement-test' );
             $body_template = get_option( 'adaptive_test_email_body' ) ?: "<p>Dear Student,</p>\n<p>Thank you for completing our English level test.</p>\n<p>Your estimated CEFR level is: <strong>%s</strong></p>\n<p>A member of our team will be in touch shortly to discuss your results and recommend the right course for you.</p>";
             $body          = sprintf( $body_template, $final_level ) . $footer;
             $headers       = [ 'Content-Type: text/html; charset=UTF-8' ];
@@ -304,7 +304,7 @@ function adaptive_test_submit_answers() {
             $admin_emails = array_filter( array_map( 'sanitize_email', array_map( 'trim', explode( ',', $admin_emails_raw ) ) ) );
             if ( ! empty( $admin_emails ) ) {
                 $bank_name           = $bank->name;
-                $admin_subject       = get_option( 'adaptive_test_admin_email_subject' ) ?: __( 'New Level Test Completed', 'adaptive-level-test' );
+                $admin_subject       = get_option( 'adaptive_test_admin_email_subject' ) ?: __( 'New Level Test Completed', 'idiomiq-adaptive-placement-test' );
                 $admin_body_template = get_option( 'adaptive_test_admin_email_body' ) ?: "<p>A student has completed the English level test.</p>\n<ul>\n<li><strong>Email:</strong> %email%</li>\n<li><strong>Result:</strong> %level%</li>\n<li><strong>Question Bank:</strong> %bank%</li>\n</ul>";
                 $admin_body          = str_replace( [ '%email%', '%level%', '%bank%' ], [ $email, $final_level, $bank_name ], $admin_body_template ) . $footer;
                 $headers             = [ 'Content-Type: text/html; charset=UTF-8' ];
