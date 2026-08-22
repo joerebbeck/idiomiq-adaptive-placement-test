@@ -704,8 +704,13 @@ function iiqapt_admin_email_body_cb() {
     $default = "<p>A student has completed the English level test.</p>\n<ul>\n<li><strong>Email:</strong> %email%</li>\n<li><strong>Result:</strong> %level%</li>\n<li><strong>Question Bank:</strong> %bank%</li>\n</ul>";
     $body    = get_option( 'iiqapt_admin_email_body' ) ?: $default;
     iiqapt_html_textarea( 'iiqapt_admin_email_body', $body, 8, 'iiqapt-admin-email-body' );
-    // translators: %email%, %level%, %bank% are literal template tokens users type in the email body, not printf format specifiers.
-    echo '<p class="description">' . esc_html__( 'Placeholders: %email%, %level%, %bank%. HTML is supported.', 'idiomiq-adaptive-placement-test' ) . '</p>'; // phpcs:ignore WordPress.WP.I18n.UnorderedPlaceholdersText
+    echo '<p class="description">' . esc_html( sprintf(
+        /* translators: %1$s, %2$s and %3$s are the literal tokens %email%, %level% and %bank% that users type into the email body. */
+        __( 'Placeholders: %1$s, %2$s, %3$s. HTML is supported.', 'idiomiq-adaptive-placement-test' ),
+        '%email%',
+        '%level%',
+        '%bank%'
+    ) ) . '</p>';
 }
 
 function iiqapt_email_footer_cb() {
