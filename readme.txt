@@ -8,7 +8,7 @@ Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-An adaptive English placement test for ESL students. Determines CEFR level (A2–C2) using Bayesian IRT — fewer questions, more accurate results.
+Adaptive CEFR placement test (A2–C2) for schools and educators. Preconfigured English bank; Bayesian IRT for efficiency and more accurate results.
 
 == Description ==
 

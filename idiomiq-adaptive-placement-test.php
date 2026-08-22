@@ -2,7 +2,7 @@
 /**
  * Plugin Name: IdiomIQ Adaptive Placement Test
  * Plugin URI:  https://idiomiq.com/iiqapt
- * Description: An adaptive English placement test for ESL students. Determines CEFR level (A2-C2) using Bayesian IRT — fewer questions, more accurate results.
+ * Description: Adaptive CEFR placement test (A2–C2) for schools and educators. Preconfigured English bank; Bayesian IRT for efficiency and more accurate results.
  * Version:     1.3.2
  * Author:      IdiomIQ
  * Author URI:  https://idiomiq.com
