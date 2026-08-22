@@ -932,6 +932,8 @@ function iiqapt_admin_enqueue() {
     $font_url   = esc_url( plugins_url( '../assets/fonts/OpenDyslexic-Regular.woff2', __FILE__ ) );
     $inline_css  = "@font-face{font-family:'OpenDyslexic';src:url('{$font_url}')format('woff2');font-weight:normal;font-style:normal;font-display:swap;}";
     $inline_css .= "#iiqapt-prev-card.iiqapt-dyslexic #iiqapt-prev-question,#iiqapt-prev-card.iiqapt-dyslexic .iiqapt-prev-option{font-family:'OpenDyslexic',sans-serif;}";
+    $inline_css .= '.iiqapt-card{background:#fff;border:1px solid #ccd0d4;box-shadow:0 1px 1px rgba(0,0,0,.04);padding:20px;margin-bottom:20px;}';
+    $inline_css .= '.iiqapt-card h2{margin-top:0;}';
     $inline_css .= '#iiqapt-unsaved-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99999;align-items:center;justify-content:center;}';
     $inline_css .= '#iiqapt-unsaved-overlay.iiqapt-visible{display:flex;}';
     $inline_css .= '#iiqapt-unsaved-dialog{background:#fff;border-radius:4px;padding:24px 28px;max-width:420px;width:90%;box-shadow:0 4px 24px rgba(0,0,0,.18);}';
@@ -1114,8 +1116,8 @@ function iiqapt_settings_page_html() {
                     <!-- Content form -->
                     <form action="options.php" method="post">
                         <?php settings_fields( 'iiqapt_' . $active_sub . '_options' ); ?>
-                        <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
-                            <h2 style="margin-top:0;"><?php echo esc_html( $sub_panel_titles[ $active_sub ] ); ?></h2>
+                        <div class="iiqapt-card">
+                            <h2><?php echo esc_html( $sub_panel_titles[ $active_sub ] ); ?></h2>
                             <?php do_settings_sections( 'iiqapt-' . $active_sub ); ?>
                         </div>
                         <?php submit_button( __( 'Save Settings', 'idiomiq-adaptive-placement-test' ) ); ?>
