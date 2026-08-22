@@ -619,7 +619,7 @@ function iiqapt_html_textarea( $name, $value, $rows, $field_id ) {
     echo '<textarea id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $name ) . '" rows="' . esc_attr( $rows ) . '" cols="50" class="large-text" style="width:100%; ' . esc_attr( $textarea_style ) . '">' . esc_textarea( $value ) . '</textarea>';
     echo '<div id="' . esc_attr( $field_id ) . '-preview" style="' . esc_attr( $preview_style ) . 'padding:12px; background:#fff; border:1px solid #ddd; border-radius:3px; min-height:60px; width:100%; box-sizing:border-box;">' . wp_kses_post( $value ) . '</div>';
     echo '</div>';
-    echo '<button type="button" class="button" id="' . esc_attr( $field_id ) . '-btn" onclick="eslTogglePreview(\'' . esc_js( $field_id ) . '\')" style="flex-shrink:0;">' . esc_html( $btn_label ) . '</button>';
+    echo '<button type="button" class="button" id="' . esc_attr( $field_id ) . '-btn" onclick="iiqaptTogglePreview(\'' . esc_js( $field_id ) . '\')" style="flex-shrink:0;">' . esc_html( $btn_label ) . '</button>';
     echo '</div>';
 }
 

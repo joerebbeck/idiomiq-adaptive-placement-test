@@ -1,7 +1,7 @@
 /* Admin settings live-preview and accordion helpers.
  * Dynamic values (primary colour, i18n labels) are passed via wp_localize_script as iiqaptAdminData.
  */
-function eslTogglePreview(id) {
+function iiqaptTogglePreview(id) {
     var textarea = document.getElementById(id);
     var preview  = document.getElementById(id + '-preview');
     var btn      = document.getElementById(id + '-btn');
@@ -15,7 +15,7 @@ function eslTogglePreview(id) {
 }
 
 (function() {
-    function eslConsentAccordion(cbId, cellId) {
+    function iiqaptConsentAccordion(cbId, cellId) {
         var cb   = document.getElementById(cbId);
         var cell = document.getElementById(cellId);
         if (!cb || !cell) return;
@@ -26,7 +26,7 @@ function eslTogglePreview(id) {
             row.style.display = cb.checked ? '' : 'none';
         });
     }
-    function eslConsentAccordionDiv(cbId, divId) {
+    function iiqaptConsentAccordionDiv(cbId, divId) {
         var cb  = document.getElementById(cbId);
         var div = document.getElementById(divId);
         if (!cb || !div) return;
@@ -35,32 +35,32 @@ function eslTogglePreview(id) {
             div.style.display = cb.checked ? '' : 'none';
         });
     }
-    eslConsentAccordion('iiqapt-gdpr2-cb', 'iiqapt-gdpr2-msg-cell');
-    eslConsentAccordion('iiqapt-counter-cb', 'iiqapt-counter-format-row');
-    eslConsentAccordion('iiqapt-show-error-rate-cb', 'iiqapt-error-rate-cell');
-    eslConsentAccordionDiv('iiqapt-dyslexic-cb', 'iiqapt-dyslexic-details');
+    iiqaptConsentAccordion('iiqapt-gdpr2-cb', 'iiqapt-gdpr2-msg-cell');
+    iiqaptConsentAccordion('iiqapt-counter-cb', 'iiqapt-counter-format-row');
+    iiqaptConsentAccordion('iiqapt-show-error-rate-cb', 'iiqapt-error-rate-cell');
+    iiqaptConsentAccordionDiv('iiqapt-dyslexic-cb', 'iiqapt-dyslexic-details');
 })();
 
 // Primary colour from General Settings — used as fallback for any accent colour not explicitly overridden
-var eslPrimary = (typeof iiqaptAdminData !== 'undefined' && iiqaptAdminData.primaryColor) ? iiqaptAdminData.primaryColor : '#2563eb';
+var iiqaptPrimary = (typeof iiqaptAdminData !== 'undefined' && iiqaptAdminData.primaryColor) ? iiqaptAdminData.primaryColor : '#2563eb';
 
 // Shared helper: read value from a named input, return fallback if not found
-function eslVal(name, fallback) {
+function iiqaptVal(name, fallback) {
     var el = document.querySelector('[name="' + name + '"]');
     return el ? el.value : fallback;
 }
-function eslChecked(name) {
+function iiqaptChecked(name) {
     var el = document.querySelector('[name="' + name + '"]');
     return el ? el.checked : false;
 }
 // Apply box card styles (bg, text, radius, border, shadow) to an element
-function eslApplyBox(card, prefix) {
-    var bg  = eslVal(prefix + '_box_bg', '');
-    var txt = eslVal(prefix + '_box_text_color', '');
-    var rad = eslVal(prefix + '_box_border_radius', '');
-    var bw  = eslVal(prefix + '_box_border_width', '0');
-    var bc  = eslVal(prefix + '_box_border_color', '#e5e7eb');
-    var shd = eslChecked(prefix + '_box_shadow');
+function iiqaptApplyBox(card, prefix) {
+    var bg  = iiqaptVal(prefix + '_box_bg', '');
+    var txt = iiqaptVal(prefix + '_box_text_color', '');
+    var rad = iiqaptVal(prefix + '_box_border_radius', '');
+    var bw  = iiqaptVal(prefix + '_box_border_width', '0');
+    var bc  = iiqaptVal(prefix + '_box_border_color', '#e5e7eb');
+    var shd = iiqaptChecked(prefix + '_box_shadow');
     if (bg)  card.style.background   = bg;
     if (txt) card.style.color        = txt;
     if (rad) card.style.borderRadius = rad + 'px';
@@ -68,7 +68,7 @@ function eslApplyBox(card, prefix) {
     card.style.boxShadow = shd ? '0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06)' : 'none';
 }
 // Shared helper: bind input+change events on all matching elements
-function eslBind(selectors, update) {
+function iiqaptBind(selectors, update) {
     document.querySelectorAll(selectors).forEach(function(el) {
         el.addEventListener('input',  update);
         el.addEventListener('change', update);
@@ -120,29 +120,29 @@ function eslBind(selectors, update) {
 
         // Title
         if (prevTitle) {
-            prevTitle.style.color      = eslVal('iiqapt_before_title_color',  '#1f2937');
-            prevTitle.style.fontSize   = eslVal('iiqapt_before_title_size',   '28') + 'px';
-            prevTitle.style.fontWeight = eslVal('iiqapt_before_title_weight', '700');
+            prevTitle.style.color      = iiqaptVal('iiqapt_before_title_color',  '#1f2937');
+            prevTitle.style.fontSize   = iiqaptVal('iiqapt_before_title_size',   '28') + 'px';
+            prevTitle.style.fontWeight = iiqaptVal('iiqapt_before_title_weight', '700');
         }
         // Subtitle
         if (prevSubtitle) {
-            prevSubtitle.style.color      = eslVal('iiqapt_before_subtitle_color',  '#6b7280');
-            prevSubtitle.style.fontSize   = eslVal('iiqapt_before_subtitle_size',   '16') + 'px';
-            prevSubtitle.style.fontWeight = eslVal('iiqapt_before_subtitle_weight', '400');
+            prevSubtitle.style.color      = iiqaptVal('iiqapt_before_subtitle_color',  '#6b7280');
+            prevSubtitle.style.fontSize   = iiqaptVal('iiqapt_before_subtitle_size',   '16') + 'px';
+            prevSubtitle.style.fontWeight = iiqaptVal('iiqapt_before_subtitle_weight', '400');
         }
         // Body
         if (prevBody) {
-            prevBody.style.color      = eslVal('iiqapt_before_body_color',  '#6b7280');
-            prevBody.style.fontSize   = eslVal('iiqapt_before_body_size',   '12') + 'px';
-            prevBody.style.fontWeight = eslVal('iiqapt_before_body_weight', '400');
+            prevBody.style.color      = iiqaptVal('iiqapt_before_body_color',  '#6b7280');
+            prevBody.style.fontSize   = iiqaptVal('iiqapt_before_body_size',   '12') + 'px';
+            prevBody.style.fontWeight = iiqaptVal('iiqapt_before_body_weight', '400');
         }
         // Email input
         if (prevEmail) {
-            var bw = eslVal('iiqapt_before_input_border_width',  '2');
-            var br = eslVal('iiqapt_before_input_border_radius', '12');
-            var bc = eslVal('iiqapt_before_input_border_color',  '#e5e7eb');
-            var ps = eslVal('iiqapt_before_input_placeholder_size', '16');
-            var pc = eslVal('iiqapt_before_input_placeholder_color', '#9ca3af');
+            var bw = iiqaptVal('iiqapt_before_input_border_width',  '2');
+            var br = iiqaptVal('iiqapt_before_input_border_radius', '12');
+            var bc = iiqaptVal('iiqapt_before_input_border_color',  '#e5e7eb');
+            var ps = iiqaptVal('iiqapt_before_input_placeholder_size', '16');
+            var pc = iiqaptVal('iiqapt_before_input_placeholder_color', '#9ca3af');
             prevEmail.style.borderWidth  = bw + 'px';
             prevEmail.style.borderStyle  = 'solid';
             prevEmail.style.borderColor  = bc;
@@ -152,23 +152,23 @@ function eslBind(selectors, update) {
         }
         // Consent
         if (prevGdpr) {
-            prevGdpr.style.color      = eslVal('iiqapt_before_consent_color',  '#6b7280');
-            prevGdpr.style.fontSize   = eslVal('iiqapt_before_consent_size',   '13') + 'px';
-            prevGdpr.style.fontWeight = eslVal('iiqapt_before_consent_weight', '400');
+            prevGdpr.style.color      = iiqaptVal('iiqapt_before_consent_color',  '#6b7280');
+            prevGdpr.style.fontSize   = iiqaptVal('iiqapt_before_consent_size',   '13') + 'px';
+            prevGdpr.style.fontWeight = iiqaptVal('iiqapt_before_consent_weight', '400');
         }
         // Button
         if (prevBtn) {
-            prevBtn.style.background   = eslVal('iiqapt_before_btn_color',         eslPrimary);
-            prevBtn.style.color        = eslVal('iiqapt_before_btn_text_color',    '#ffffff');
-            prevBtn.style.fontSize     = eslVal('iiqapt_before_btn_size',          '16') + 'px';
-            prevBtn.style.fontWeight   = eslVal('iiqapt_before_btn_weight',        '600');
-            prevBtn.style.borderColor  = eslVal('iiqapt_before_btn_border_color',  eslPrimary);
-            prevBtn.style.borderWidth  = eslVal('iiqapt_before_btn_border_width',  '2') + 'px';
-            prevBtn.style.borderRadius = eslVal('iiqapt_before_btn_border_radius', '12') + 'px';
+            prevBtn.style.background   = iiqaptVal('iiqapt_before_btn_color',         iiqaptPrimary);
+            prevBtn.style.color        = iiqaptVal('iiqapt_before_btn_text_color',    '#ffffff');
+            prevBtn.style.fontSize     = iiqaptVal('iiqapt_before_btn_size',          '16') + 'px';
+            prevBtn.style.fontWeight   = iiqaptVal('iiqapt_before_btn_weight',        '600');
+            prevBtn.style.borderColor  = iiqaptVal('iiqapt_before_btn_border_color',  iiqaptPrimary);
+            prevBtn.style.borderWidth  = iiqaptVal('iiqapt_before_btn_border_width',  '2') + 'px';
+            prevBtn.style.borderRadius = iiqaptVal('iiqapt_before_btn_border_radius', '12') + 'px';
             prevBtn.style.borderStyle  = 'solid';
         }
         // Box
-        if (prevCard) eslApplyBox(prevCard, 'iiqapt_before');
+        if (prevCard) iiqaptApplyBox(prevCard, 'iiqapt_before');
     }
 
     ['iiqapt-start-title','iiqapt-start-subtitle','iiqapt-start-body','iiqapt-start-gdpr2'].forEach(function(id) {
@@ -176,7 +176,7 @@ function eslBind(selectors, update) {
         if (el) el.addEventListener('input', update);
     });
     document.getElementById('iiqapt-gdpr2-cb') && document.getElementById('iiqapt-gdpr2-cb').addEventListener('change', update);
-    eslBind(
+    iiqaptBind(
         '[name="iiqapt_start_email_placeholder"],[name="iiqapt_start_button_text"],' +
         '[name="iiqapt_before_title_color"],[name="iiqapt_before_title_size"],[name="iiqapt_before_title_weight"],' +
         '[name="iiqapt_before_subtitle_color"],[name="iiqapt_before_subtitle_size"],[name="iiqapt_before_subtitle_weight"],' +
@@ -208,39 +208,39 @@ function eslBind(selectors, update) {
         var showProg = document.querySelector('[name="iiqapt_during_show_progress"]');
         if (prevProgressWrap) prevProgressWrap.style.display = (showProg && showProg.checked) ? '' : 'none';
 
-        if (prevProgressBar) prevProgressBar.style.background = eslVal('iiqapt_during_progress_color', eslPrimary);
+        if (prevProgressBar) prevProgressBar.style.background = iiqaptVal('iiqapt_during_progress_color', iiqaptPrimary);
 
         var showCtr = document.getElementById('iiqapt-counter-cb');
         var ctrFmt  = document.querySelector('[name="iiqapt_during_counter_format"]');
         if (prevCounter) {
             prevCounter.style.display    = (showCtr && showCtr.checked) ? '' : 'none';
-            prevCounter.style.color      = eslVal('iiqapt_during_counter_color',  '#6b7280');
-            prevCounter.style.fontSize   = eslVal('iiqapt_during_counter_size',   '13') + 'px';
-            prevCounter.style.fontWeight = eslVal('iiqapt_during_counter_weight', '400');
+            prevCounter.style.color      = iiqaptVal('iiqapt_during_counter_color',  '#6b7280');
+            prevCounter.style.fontSize   = iiqaptVal('iiqapt_during_counter_size',   '13') + 'px';
+            prevCounter.style.fontWeight = iiqaptVal('iiqapt_during_counter_weight', '400');
             if (ctrFmt) prevCounter.textContent = ctrFmt.value.replace('%n%','2').replace('%total%','5');
         }
 
         if (prevQuestion) {
-            prevQuestion.style.textAlign  = eslVal('iiqapt_during_question_align',  'center');
-            prevQuestion.style.color      = eslVal('iiqapt_during_question_color',  '#1f2937');
-            prevQuestion.style.fontSize   = eslVal('iiqapt_during_question_size',   '20') + 'px';
-            prevQuestion.style.fontWeight = eslVal('iiqapt_during_question_weight', '600');
+            prevQuestion.style.textAlign  = iiqaptVal('iiqapt_during_question_align',  'center');
+            prevQuestion.style.color      = iiqaptVal('iiqapt_during_question_color',  '#1f2937');
+            prevQuestion.style.fontSize   = iiqaptVal('iiqapt_during_question_size',   '20') + 'px';
+            prevQuestion.style.fontWeight = iiqaptVal('iiqapt_during_question_weight', '600');
         }
 
-        var optColor    = eslVal('iiqapt_during_option_color',                    '#000000');
-        var selColor    = eslVal('iiqapt_during_option_selected_color',          eslPrimary);
-        var selTxtColor = eslVal('iiqapt_during_option_selected_text',           '#ffffff');
-        var selSz       = eslVal('iiqapt_during_option_selected_size',           '15');
-        var selWt       = eslVal('iiqapt_during_option_selected_weight',         '400');
-        var selBdrC     = eslVal('iiqapt_during_option_selected_border_color',   eslPrimary);
-        var selBdrW     = eslVal('iiqapt_during_option_selected_border_width',   '2');
-        var selBdrR     = eslVal('iiqapt_during_option_selected_border_radius',  '12');
-        var optBw       = eslVal('iiqapt_during_option_border_width',            '2');
-        var optRad      = eslVal('iiqapt_during_option_border_radius',           '12');
-        var optBc       = eslVal('iiqapt_during_option_border_color',            '#e5e7eb');
-        var optSz       = eslVal('iiqapt_during_option_size',                    '15');
-        var optWt       = eslVal('iiqapt_during_option_weight',                  '400');
-        var oAlign      = eslVal('iiqapt_during_options_align',                  'center');
+        var optColor    = iiqaptVal('iiqapt_during_option_color',                    '#000000');
+        var selColor    = iiqaptVal('iiqapt_during_option_selected_color',          iiqaptPrimary);
+        var selTxtColor = iiqaptVal('iiqapt_during_option_selected_text',           '#ffffff');
+        var selSz       = iiqaptVal('iiqapt_during_option_selected_size',           '15');
+        var selWt       = iiqaptVal('iiqapt_during_option_selected_weight',         '400');
+        var selBdrC     = iiqaptVal('iiqapt_during_option_selected_border_color',   iiqaptPrimary);
+        var selBdrW     = iiqaptVal('iiqapt_during_option_selected_border_width',   '2');
+        var selBdrR     = iiqaptVal('iiqapt_during_option_selected_border_radius',  '12');
+        var optBw       = iiqaptVal('iiqapt_during_option_border_width',            '2');
+        var optRad      = iiqaptVal('iiqapt_during_option_border_radius',           '12');
+        var optBc       = iiqaptVal('iiqapt_during_option_border_color',            '#e5e7eb');
+        var optSz       = iiqaptVal('iiqapt_during_option_size',                    '15');
+        var optWt       = iiqaptVal('iiqapt_during_option_weight',                  '400');
+        var oAlign      = iiqaptVal('iiqapt_during_options_align',                  'center');
         document.querySelectorAll('.iiqapt-prev-option').forEach(function(o) {
             var isSel = o.classList.contains('iiqapt-prev-selected');
             o.style.textAlign = oAlign;
@@ -265,10 +265,10 @@ function eslBind(selectors, update) {
             }
         });
 
-        eslApplyBox(prevCard, 'iiqapt_during');
+        iiqaptApplyBox(prevCard, 'iiqapt_during');
     }
 
-    eslBind(
+    iiqaptBind(
         '[name="iiqapt_during_show_progress"],[name="iiqapt_during_question_align"],' +
         '[name="iiqapt_during_question_color"],[name="iiqapt_during_question_size"],[name="iiqapt_during_question_weight"],' +
         '[name="iiqapt_during_options_align"],[name="iiqapt_during_counter_format"],' +
@@ -300,12 +300,12 @@ function eslBind(selectors, update) {
             if (enabledCb) prevDyslexicToggle.style.display = dysEnabled ? '' : 'none';
             if (prevProgressWrap) prevProgressWrap.style.marginTop = dysEnabled ? '28px' : '0';
             prevDyslexicToggle.textContent = dyslexicActive ? labelOn : labelOff;
-            prevDyslexicToggle.style.color        = eslVal('iiqapt_during_dyslexic_color',         '#6b7280');
-            prevDyslexicToggle.style.background   = eslVal('iiqapt_during_dyslexic_bg',            '#ffffff');
-            prevDyslexicToggle.style.fontSize     = eslVal('iiqapt_during_dyslexic_size',          '11') + 'px';
-            var bdw = eslVal('iiqapt_during_dyslexic_border_width',  '1');
-            var bdc = eslVal('iiqapt_during_dyslexic_border_color',  '#e5e7eb');
-            var bdr = eslVal('iiqapt_during_dyslexic_border_radius', '20');
+            prevDyslexicToggle.style.color        = iiqaptVal('iiqapt_during_dyslexic_color',         '#6b7280');
+            prevDyslexicToggle.style.background   = iiqaptVal('iiqapt_during_dyslexic_bg',            '#ffffff');
+            prevDyslexicToggle.style.fontSize     = iiqaptVal('iiqapt_during_dyslexic_size',          '11') + 'px';
+            var bdw = iiqaptVal('iiqapt_during_dyslexic_border_width',  '1');
+            var bdc = iiqaptVal('iiqapt_during_dyslexic_border_color',  '#e5e7eb');
+            var bdr = iiqaptVal('iiqapt_during_dyslexic_border_radius', '20');
             prevDyslexicToggle.style.border       = parseInt(bdw) > 0 ? bdw + 'px solid ' + bdc : 'none';
             prevDyslexicToggle.style.borderRadius = bdr + 'px';
         }
@@ -314,7 +314,7 @@ function eslBind(selectors, update) {
             prevCard.classList.toggle('iiqapt-dyslexic', dyslexicActive);
             updateDyslexic();
         });
-        eslBind(
+        iiqaptBind(
             '[name="iiqapt_during_dyslexic_enabled"],[name="iiqapt_during_dyslexic_off"],[name="iiqapt_during_dyslexic_on"],' +
             '[name="iiqapt_during_dyslexic_color"],[name="iiqapt_during_dyslexic_bg"],[name="iiqapt_during_dyslexic_size"],' +
             '[name="iiqapt_during_dyslexic_border_width"],[name="iiqapt_during_dyslexic_border_color"],[name="iiqapt_during_dyslexic_border_radius"]',
@@ -344,33 +344,33 @@ function eslBind(selectors, update) {
         var titleEl = document.getElementById('iiqapt-after-title');
         if (titleEl && prevAfterTitle) prevAfterTitle.textContent = titleEl.value;
         if (prevAfterTitle) {
-            prevAfterTitle.style.color      = eslVal('iiqapt_after_title_color',  '#1f2937');
-            prevAfterTitle.style.fontSize   = eslVal('iiqapt_after_title_size',   '24') + 'px';
-            prevAfterTitle.style.fontWeight = eslVal('iiqapt_after_title_weight', '700');
+            prevAfterTitle.style.color      = iiqaptVal('iiqapt_after_title_color',  '#1f2937');
+            prevAfterTitle.style.fontSize   = iiqaptVal('iiqapt_after_title_size',   '24') + 'px';
+            prevAfterTitle.style.fontWeight = iiqaptVal('iiqapt_after_title_weight', '700');
         }
         // Subheading content + styling
         var subEl = document.getElementById('iiqapt-after-subheading');
         if (subEl && prevAfterSub) prevAfterSub.textContent = subEl.value;
         if (prevAfterSub) {
-            prevAfterSub.style.color      = eslVal('iiqapt_after_subheading_color',  '#6b7280');
-            prevAfterSub.style.fontSize   = eslVal('iiqapt_after_subheading_size',   '16') + 'px';
-            prevAfterSub.style.fontWeight = eslVal('iiqapt_after_subheading_weight', '400');
+            prevAfterSub.style.color      = iiqaptVal('iiqapt_after_subheading_color',  '#6b7280');
+            prevAfterSub.style.fontSize   = iiqaptVal('iiqapt_after_subheading_size',   '16') + 'px';
+            prevAfterSub.style.fontWeight = iiqaptVal('iiqapt_after_subheading_weight', '400');
         }
         // Body content + styling
         var bodyEl = document.getElementById('iiqapt-after-body');
         if (bodyEl && prevAfterBody) prevAfterBody.textContent = bodyEl.value;
         if (prevAfterBody) {
-            prevAfterBody.style.color      = eslVal('iiqapt_after_body_color',  '#6b7280');
-            prevAfterBody.style.fontSize   = eslVal('iiqapt_after_body_size',   '14') + 'px';
-            prevAfterBody.style.fontWeight = eslVal('iiqapt_after_body_weight', '400');
+            prevAfterBody.style.color      = iiqaptVal('iiqapt_after_body_color',  '#6b7280');
+            prevAfterBody.style.fontSize   = iiqaptVal('iiqapt_after_body_size',   '14') + 'px';
+            prevAfterBody.style.fontWeight = iiqaptVal('iiqapt_after_body_weight', '400');
         }
 
-        var resultColor = eslVal('iiqapt_after_result_color', eslPrimary);
+        var resultColor = iiqaptVal('iiqapt_after_result_color', iiqaptPrimary);
         prevResultLevel.style.color      = resultColor;
-        prevResultLevel.style.fontSize   = eslVal('iiqapt_after_result_size',   '64') + 'px';
-        prevResultLevel.style.fontWeight = eslVal('iiqapt_after_result_weight', '700');
+        prevResultLevel.style.fontSize   = iiqaptVal('iiqapt_after_result_size',   '64') + 'px';
+        prevResultLevel.style.fontWeight = iiqaptVal('iiqapt_after_result_weight', '700');
         if (prevScaleBar) {
-            var showErrRate = eslChecked('iiqapt_show_error_rate');
+            var showErrRate = iiqaptChecked('iiqapt_show_error_rate');
             prevScaleBar.style.display = showErrRate ? '' : 'none';
             if (showErrRate) {
                 prevScaleBar.style.background = resultColor;
@@ -382,7 +382,7 @@ function eslBind(selectors, update) {
             }
         }
         if (prevErrorMargin) {
-            var showErrRate2 = eslChecked('iiqapt_show_error_rate');
+            var showErrRate2 = iiqaptChecked('iiqapt_show_error_rate');
             prevErrorMargin.style.display = showErrRate2 ? '' : 'none';
             if (showErrRate2) {
                 var labelEl  = document.getElementById('iiqapt-error-rate-label');
@@ -394,17 +394,17 @@ function eslBind(selectors, update) {
         if (prevActiveLabel) prevActiveLabel.style.color   = resultColor;
 
         if (prevRetake) {
-            prevRetake.style.background   = eslVal('iiqapt_after_retake_color',         eslPrimary);
-            prevRetake.style.color        = eslVal('iiqapt_after_retake_text_color',     '#ffffff');
-            prevRetake.style.fontSize     = eslVal('iiqapt_after_retake_size',           '16') + 'px';
-            prevRetake.style.fontWeight   = eslVal('iiqapt_after_retake_weight',         '600');
-            prevRetake.style.borderColor  = eslVal('iiqapt_after_retake_border_color',   eslPrimary);
-            prevRetake.style.borderWidth  = eslVal('iiqapt_after_retake_border_width',   '2') + 'px';
-            prevRetake.style.borderRadius = eslVal('iiqapt_after_retake_border_radius',  '8') + 'px';
+            prevRetake.style.background   = iiqaptVal('iiqapt_after_retake_color',         iiqaptPrimary);
+            prevRetake.style.color        = iiqaptVal('iiqapt_after_retake_text_color',     '#ffffff');
+            prevRetake.style.fontSize     = iiqaptVal('iiqapt_after_retake_size',           '16') + 'px';
+            prevRetake.style.fontWeight   = iiqaptVal('iiqapt_after_retake_weight',         '600');
+            prevRetake.style.borderColor  = iiqaptVal('iiqapt_after_retake_border_color',   iiqaptPrimary);
+            prevRetake.style.borderWidth  = iiqaptVal('iiqapt_after_retake_border_width',   '2') + 'px';
+            prevRetake.style.borderRadius = iiqaptVal('iiqapt_after_retake_border_radius',  '8') + 'px';
             prevRetake.style.borderStyle  = 'solid';
         }
 
-        if (prevCard) eslApplyBox(prevCard, 'iiqapt_after');
+        if (prevCard) iiqaptApplyBox(prevCard, 'iiqapt_after');
     }
 
     ['iiqapt-after-title','iiqapt-after-subheading','iiqapt-after-body'].forEach(function(id) {
@@ -413,7 +413,7 @@ function eslBind(selectors, update) {
     });
     var errLabelEl = document.getElementById('iiqapt-error-rate-label');
     if (errLabelEl) errLabelEl.addEventListener('input', update);
-    eslBind(
+    iiqaptBind(
         '[name="iiqapt_show_error_rate"],' +
         '[name="iiqapt_after_title_color"],[name="iiqapt_after_title_size"],[name="iiqapt_after_title_weight"],' +
         '[name="iiqapt_after_subheading_color"],[name="iiqapt_after_subheading_size"],[name="iiqapt_after_subheading_weight"],' +
