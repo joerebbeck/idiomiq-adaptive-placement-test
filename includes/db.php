@@ -11,11 +11,11 @@ if (!defined('ABSPATH')) {
  * Create the database table for questions.
  * This should be triggered on plugin activation.
  */
-function adaptive_test_create_questions_table() {
+function iiqapt_create_questions_table() {
     global $wpdb;
-    $table_name = $wpdb->prefix . 'adaptive_questions';
-    $banks_table = $wpdb->prefix . 'adaptive_question_banks';
-    $logs_table = $wpdb->prefix . 'adaptive_attempt_logs';
+    $table_name = $wpdb->prefix . 'iiqapt_questions';
+    $banks_table = $wpdb->prefix . 'iiqapt_question_banks';
+    $logs_table = $wpdb->prefix . 'iiqapt_attempt_logs';
     $charset_collate = $wpdb->get_charset_collate();
 
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -82,9 +82,9 @@ function adaptive_test_create_questions_table() {
  * @param int $bank_id The question bank ID.
  * @return array Array of question objects.
  */
-function adaptive_test_get_questions( $level, $limit = 5, $bank_id = 1, $excluded_ids = [] ) {
+function iiqapt_get_questions( $level, $limit = 5, $bank_id = 1, $excluded_ids = [] ) {
     global $wpdb;
-    $table_name = $wpdb->prefix . 'adaptive_questions';
+    $table_name = $wpdb->prefix . 'iiqapt_questions';
 
     if ( ! empty( $excluded_ids ) ) {
         $placeholders = implode( ',', array_fill( 0, count( $excluded_ids ), '%d' ) );
@@ -111,9 +111,9 @@ function adaptive_test_get_questions( $level, $limit = 5, $bank_id = 1, $exclude
  * Seed the database with sample questions for testing.
  * Focuses on B1 level as that is the entry point.
  */
-function adaptive_test_insert_sample_questions() {
+function iiqapt_insert_sample_questions() {
     global $wpdb;
-    $table_name = $wpdb->prefix . 'adaptive_questions';
+    $table_name = $wpdb->prefix . 'iiqapt_questions';
 
     // Check if questions already exist
     // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
@@ -1333,10 +1333,10 @@ function adaptive_test_insert_sample_questions() {
 /**
  * Log a completed test result.
  */
-function adaptive_test_log_result( $email, $level, $bank_id, $score_data = '', $theta = null, $se = null, $sub_level = '', $duration_seconds = null ) {
+function iiqapt_log_result( $email, $level, $bank_id, $score_data = '', $theta = null, $se = null, $sub_level = '', $duration_seconds = null ) {
     global $wpdb;
-    $logs_table  = $wpdb->prefix . 'adaptive_attempt_logs';
-    $banks_table = $wpdb->prefix . 'adaptive_question_banks';
+    $logs_table  = $wpdb->prefix . 'iiqapt_attempt_logs';
+    $banks_table = $wpdb->prefix . 'iiqapt_question_banks';
 
     $bank_name = $wpdb->get_var( $wpdb->prepare( "SELECT name FROM $banks_table WHERE id = %d", $bank_id ) );
 

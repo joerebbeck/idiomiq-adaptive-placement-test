@@ -7,18 +7,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const AdaptiveLevelQuiz = {
         // DOM Elements
         elements: {
-            appContainer:      document.getElementById('adaptive-app'),
-            optionsContainer:  document.getElementById('esl-options-container'),
-            progressContainer:  document.getElementById('esl-progress-container'),
-            progressBar:        document.getElementById('esl-progress-bar'),
-            counterEl:         document.getElementById('esl-counter'),
-            nextBtn:           document.getElementById('esl-next-btn'),
-            questionText:      document.getElementById('esl-question-text'),
-            emailCapture:      document.getElementById('esl-email-capture'),
-            quizInterface:     document.getElementById('esl-quiz-interface'),
-            startBtn:          document.getElementById('esl-start-btn'),
-            emailInput:        document.getElementById('esl-test-email'),
-            emailError:        document.getElementById('esl-email-error')
+            appContainer:      document.getElementById('iiqapt-app'),
+            optionsContainer:  document.getElementById('iiqapt-options-container'),
+            progressContainer:  document.getElementById('iiqapt-progress-container'),
+            progressBar:        document.getElementById('iiqapt-progress-bar'),
+            counterEl:         document.getElementById('iiqapt-counter'),
+            nextBtn:           document.getElementById('iiqapt-next-btn'),
+            questionText:      document.getElementById('iiqapt-question-text'),
+            emailCapture:      document.getElementById('iiqapt-email-capture'),
+            quizInterface:     document.getElementById('iiqapt-quiz-interface'),
+            startBtn:          document.getElementById('iiqapt-start-btn'),
+            emailInput:        document.getElementById('iiqapt-test-email'),
+            emailError:        document.getElementById('iiqapt-email-error')
         },
 
         // Settings read from data attributes
@@ -67,30 +67,30 @@ document.addEventListener('DOMContentLoaded', function() {
         },
 
         initDyslexicToggle: function() {
-            const toggle  = document.getElementById('esl-dyslexic-toggle');
+            const toggle  = document.getElementById('iiqapt-dyslexic-toggle');
             const wrapper = this.elements.appContainer
-                ? this.elements.appContainer.closest('.adaptive-wrapper')
+                ? this.elements.appContainer.closest('.iiqapt-wrapper')
                 : null;
             if (!toggle || !wrapper) return;
 
-            const i18n     = (typeof adaptive_test_ajax !== 'undefined' && adaptive_test_ajax.i18n) ? adaptive_test_ajax.i18n : {};
+            const i18n     = (typeof iiqapt_ajax !== 'undefined' && iiqapt_ajax.i18n) ? iiqapt_ajax.i18n : {};
             const labelOn  = i18n.dyslexic_on  || 'Change to regular font';
             const labelOff = i18n.dyslexic_off || 'Change to dyslexia friendly font';
 
             // Restore preference from localStorage
-            if (localStorage.getItem('esl_dyslexic') === '1') {
-                wrapper.classList.add('esl-dyslexic');
+            if (localStorage.getItem('iiqapt_dyslexic') === '1') {
+                wrapper.classList.add('iiqapt-dyslexic');
                 toggle.classList.add('active');
                 toggle.setAttribute('aria-pressed', 'true');
                 toggle.textContent = labelOn;
             }
 
             toggle.addEventListener('click', function() {
-                const on = wrapper.classList.toggle('esl-dyslexic');
+                const on = wrapper.classList.toggle('iiqapt-dyslexic');
                 toggle.classList.toggle('active', on);
                 toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
                 toggle.textContent = on ? labelOn : labelOff;
-                localStorage.setItem('esl_dyslexic', on ? '1' : '0');
+                localStorage.setItem('iiqapt_dyslexic', on ? '1' : '0');
             });
         },
 
@@ -101,16 +101,16 @@ document.addEventListener('DOMContentLoaded', function() {
             // Event Delegation for Option Buttons
             this.elements.optionsContainer.addEventListener('click', (e) => {
                 // Check for Retake button first
-                if (e.target.closest('#esl-retake-btn')) {
+                if (e.target.closest('#iiqapt-retake-btn')) {
                     this.resetTest();
                     return;
                 }
 
                 // Traverse up to find the button if clicking on an internal element
-                const button = e.target.closest('.adaptive-option-btn');
+                const button = e.target.closest('.iiqapt-option-btn');
                 
                 // Ensure we clicked a button and it's not the Next button (if nested)
-                if (button && button.id !== 'esl-next-btn') {
+                if (button && button.id !== 'iiqapt-next-btn') {
                     this.handleOptionSelect(button);
                 }
             });
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
          */
         handleOptionSelect: function(selectedButton) {
             // 1. Remove 'selected' class from all sibling options
-            const allOptions = this.elements.optionsContainer.querySelectorAll('.adaptive-option-btn');
+            const allOptions = this.elements.optionsContainer.querySelectorAll('.iiqapt-option-btn');
             allOptions.forEach(btn => btn.classList.remove('selected'));
             
             // 2. Add 'selected' class to the clicked button
@@ -199,8 +199,8 @@ document.addEventListener('DOMContentLoaded', function() {
         setCardState: function(state) {
             const card = this.elements.appContainer;
             if (!card) return;
-            card.classList.remove('esl-state-before', 'esl-state-during', 'esl-state-after');
-            card.classList.add('esl-state-' + state);
+            card.classList.remove('iiqapt-state-before', 'iiqapt-state-during', 'iiqapt-state-after');
+            card.classList.add('iiqapt-state-' + state);
         },
 
         /**
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (!email || !email.includes('@')) {
                 if (this.elements.emailError) {
-                    this.elements.emailError.textContent = adaptive_test_ajax.i18n.valid_email;
+                    this.elements.emailError.textContent = iiqapt_ajax.i18n.valid_email;
                     this.elements.emailError.style.display = 'block';
                 }
                 if (this.elements.emailInput) {
@@ -225,10 +225,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             if (this.elements.emailCapture) {
-                this.elements.emailCapture.classList.add('adaptive-hidden');
+                this.elements.emailCapture.classList.add('iiqapt-hidden');
             }
             if (this.elements.quizInterface) {
-                this.elements.quizInterface.classList.remove('adaptive-hidden');
+                this.elements.quizInterface.classList.remove('iiqapt-hidden');
             }
             this.setCardState('during');
             this.startTest();
@@ -252,12 +252,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             this.updateProgressBar(0);
             this.elements.questionText.style.cssText = '';
-            this.elements.questionText.textContent = adaptive_test_ajax.i18n.loading || 'Loading...';
+            this.elements.questionText.textContent = iiqapt_ajax.i18n.loading || 'Loading...';
             this.elements.optionsContainer.innerHTML = '';
             if (this.elements.counterEl) { this.elements.counterEl.style.display = 'none'; }
 
-            if (this.elements.quizInterface) this.elements.quizInterface.classList.add('adaptive-hidden');
-            if (this.elements.emailCapture) this.elements.emailCapture.classList.remove('adaptive-hidden');
+            if (this.elements.quizInterface) this.elements.quizInterface.classList.add('iiqapt-hidden');
+            if (this.elements.emailCapture) this.elements.emailCapture.classList.remove('iiqapt-hidden');
             this.setCardState('before');
         },
 
@@ -266,19 +266,19 @@ document.addEventListener('DOMContentLoaded', function() {
          */
         startTest: function() {
             // Ensure global ajax object exists
-            if (typeof adaptive_test_ajax === 'undefined') {
+            if (typeof iiqapt_ajax === 'undefined') {
                 console.error('Adaptive Level Test: AJAX configuration missing.');
                 return;
             }
 
             const formData = new FormData();
-            formData.append('action', 'adaptive_test_start_test');
-            formData.append('nonce', adaptive_test_ajax.nonce);
+            formData.append('action', 'iiqapt_start_test');
+            formData.append('nonce', iiqapt_ajax.nonce);
             formData.append('bank_id', this.state.bankId);
-            const hp = document.getElementById('esl-hp-url');
-            if (hp) formData.append('esl_hp', hp.value);
+            const hp = document.getElementById('iiqapt-hp-url');
+            if (hp) formData.append('iiqapt_hp', hp.value);
 
-            fetch(adaptive_test_ajax.ajax_url, {
+            fetch(iiqapt_ajax.ajax_url, {
                 method: 'POST',
                 body: formData
             })
@@ -296,16 +296,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.state.shownIds = response.data.questions.map(q => q.id);
                     this.renderQuestion();
                 } else {
-                    const msg = response.data || adaptive_test_ajax.i18n.unknown_error;
-                    this.elements.questionText.textContent = adaptive_test_ajax.i18n.error_loading;
+                    const msg = response.data || iiqapt_ajax.i18n.unknown_error;
+                    this.elements.questionText.textContent = iiqapt_ajax.i18n.error_loading;
                     this.showError(msg);
                     console.error('API Error:', response);
                 }
             })
             .catch(error => {
                 console.error('Fetch Error:', error);
-                this.elements.questionText.textContent = adaptive_test_ajax.i18n.connection_error;
-                this.showError(error.message + '. ' + adaptive_test_ajax.i18n.refresh_retry);
+                this.elements.questionText.textContent = iiqapt_ajax.i18n.connection_error;
+                this.showError(error.message + '. ' + iiqapt_ajax.i18n.refresh_retry);
             });
         },
 
@@ -316,11 +316,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Notify add-ons that a batch is being analysed
             this.dispatch('analysing-start', { card: this.elements.appContainer, batchNumber: this.state.batchNumber });
             if (this.elements.counterEl) { this.elements.counterEl.style.display = 'none'; }
-            if (this.elements.nextBtn)   { this.elements.nextBtn.classList.add('adaptive-hidden'); }
+            if (this.elements.nextBtn)   { this.elements.nextBtn.classList.add('iiqapt-hidden'); }
 
             const formData = new FormData();
-            formData.append('action', 'adaptive_test_submit_answers');
-            formData.append('nonce', adaptive_test_ajax.nonce);
+            formData.append('action', 'iiqapt_submit_answers');
+            formData.append('nonce', iiqapt_ajax.nonce);
             formData.append('batch_number', this.state.batchNumber);
             formData.append('bank_id', this.state.bankId);
             formData.append('shown_ids', JSON.stringify(this.state.shownIds));
@@ -333,12 +333,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Attempt to capture email from the initial form if present in DOM
-            const emailInput = document.getElementById('esl-test-email');
+            const emailInput = document.getElementById('iiqapt-test-email');
             if (emailInput && emailInput.value) {
                 formData.append('email', emailInput.value);
             }
 
-            fetch(adaptive_test_ajax.ajax_url, {
+            fetch(iiqapt_ajax.ajax_url, {
                 method: 'POST',
                 body: formData
             })
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => {
                 if (response.success) {
-                    const targetError = parseFloat(adaptive_test_ajax.target_error) || 8;
+                    const targetError = parseFloat(iiqapt_ajax.target_error) || 8;
                     if (response.data.finished) {
                         this.dispatch('analysing-update', { card: this.elements.appContainer, errorRate: targetError, targetError: targetError, finished: true });
                         this.renderResults(response.data.level, response.data.theta, response.data.error_rate);
@@ -369,14 +369,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         this.dispatch('analysing-end', { card: this.elements.appContainer, finished: false });
                     }
                 } else {
-                    const msg = response.data || adaptive_test_ajax.i18n.unknown_error;
-                    this.elements.questionText.textContent = adaptive_test_ajax.i18n.error_submitting;
+                    const msg = response.data || iiqapt_ajax.i18n.unknown_error;
+                    this.elements.questionText.textContent = iiqapt_ajax.i18n.error_submitting;
                     this.showError(msg);
                 }
             })
             .catch(error => {
                 console.error('Submission Error:', error);
-                this.showError(error.message + '. ' + adaptive_test_ajax.i18n.retry);
+                this.showError(error.message + '. ' + iiqapt_ajax.i18n.retry);
             });
         },
 
@@ -384,20 +384,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const levels = ['A2', 'B1', 'B2', 'C1', 'C2'];
             // Validate level against known values before any DOM insertion
             if (!levels.includes(level)) {
-                this.showError(adaptive_test_ajax.i18n.unknown_error);
+                this.showError(iiqapt_ajax.i18n.unknown_error);
                 return;
             }
             const levelIndex    = levels.indexOf(level);
-            const showErrorRate = !!adaptive_test_ajax.show_error_rate;
+            const showErrorRate = !!iiqapt_ajax.show_error_rate;
             const errorRate     = dynamicErrorRate != null ? dynamicErrorRate : 0;
 
             // Calculate scale visuals
-            let scaleHtml = '<div class="esl-result-scale-container"><div class="esl-result-scale">';
+            let scaleHtml = '<div class="iiqapt-result-scale-container"><div class="iiqapt-result-scale">';
 
             // Segments
             levels.forEach(lvl => {
                 const isActive = lvl === level ? 'active' : '';
-                scaleHtml += `<div class="esl-scale-segment ${isActive}"><span class="esl-scale-label">${lvl}</span></div>`;
+                scaleHtml += `<div class="iiqapt-scale-segment ${isActive}"><span class="iiqapt-scale-label">${lvl}</span></div>`;
             });
 
             if (showErrorRate) {
@@ -410,31 +410,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 const centerPos   = Math.max(levelCentre - halfSeg, Math.min(levelCentre + halfSeg, thetaPos));
                 const indicatorWidth = Math.max(5, errorRate * 2);
                 const leftPos     = Math.max(0, Math.min(100 - indicatorWidth, centerPos - indicatorWidth / 2));
-                scaleHtml += `<div class="esl-scale-indicator" style="left: ${leftPos}%; width: ${indicatorWidth}%;"></div>`;
+                scaleHtml += `<div class="iiqapt-scale-indicator" style="left: ${leftPos}%; width: ${indicatorWidth}%;"></div>`;
             }
             scaleHtml += '</div></div>';
 
-            const titleColor      = adaptive_test_ajax.after_title_color      || '#1f2937';
-            const titleSize       = (adaptive_test_ajax.after_title_size      || 24) + 'px';
-            const titleWeight     = adaptive_test_ajax.after_title_weight     || '700';
-            const subColor        = adaptive_test_ajax.after_subheading_color || '#6b7280';
-            const subSize         = (adaptive_test_ajax.after_subheading_size || 16) + 'px';
-            const subWeight       = adaptive_test_ajax.after_subheading_weight|| '400';
-            const bodyColor       = adaptive_test_ajax.after_body_color       || '#6b7280';
-            const bodySize        = (adaptive_test_ajax.after_body_size       || 14) + 'px';
-            const bodyWeight      = adaptive_test_ajax.after_body_weight      || '400';
-            const resultColor     = adaptive_test_ajax.result_color      || 'var(--esl-primary)';
-            const resultSize      = (adaptive_test_ajax.result_size      || 64) + 'px';
-            const resultWeight    = adaptive_test_ajax.result_weight     || '700';
-            const retakeColor        = adaptive_test_ajax.retake_color        || resultColor;
-            const retakeTextColor    = adaptive_test_ajax.retake_text_color    || '#fff';
-            const retakeSize         = (adaptive_test_ajax.retake_size         || 16) + 'px';
-            const retakeWeight       = adaptive_test_ajax.retake_weight        || '600';
-            const retakeBorderColor  = adaptive_test_ajax.retake_border_color  || retakeColor;
-            const retakeBorderWidth  = (adaptive_test_ajax.retake_border_width  ?? 2) + 'px';
-            const retakeBorderRadius = (adaptive_test_ajax.retake_border_radius ?? 8) + 'px';
+            const titleColor      = iiqapt_ajax.after_title_color      || '#1f2937';
+            const titleSize       = (iiqapt_ajax.after_title_size      || 24) + 'px';
+            const titleWeight     = iiqapt_ajax.after_title_weight     || '700';
+            const subColor        = iiqapt_ajax.after_subheading_color || '#6b7280';
+            const subSize         = (iiqapt_ajax.after_subheading_size || 16) + 'px';
+            const subWeight       = iiqapt_ajax.after_subheading_weight|| '400';
+            const bodyColor       = iiqapt_ajax.after_body_color       || '#6b7280';
+            const bodySize        = (iiqapt_ajax.after_body_size       || 14) + 'px';
+            const bodyWeight      = iiqapt_ajax.after_body_weight      || '400';
+            const resultColor     = iiqapt_ajax.result_color      || 'var(--iiqapt-primary)';
+            const resultSize      = (iiqapt_ajax.result_size      || 64) + 'px';
+            const resultWeight    = iiqapt_ajax.result_weight     || '700';
+            const retakeColor        = iiqapt_ajax.retake_color        || resultColor;
+            const retakeTextColor    = iiqapt_ajax.retake_text_color    || '#fff';
+            const retakeSize         = (iiqapt_ajax.retake_size         || 16) + 'px';
+            const retakeWeight       = iiqapt_ajax.retake_weight        || '600';
+            const retakeBorderColor  = iiqapt_ajax.retake_border_color  || retakeColor;
+            const retakeBorderWidth  = (iiqapt_ajax.retake_border_width  ?? 2) + 'px';
+            const retakeBorderRadius = (iiqapt_ajax.retake_border_radius ?? 8) + 'px';
 
-            const i18n = adaptive_test_ajax.i18n || {};
+            const i18n = iiqapt_ajax.i18n || {};
 
             this.setCardState('after');
             this.elements.questionText.style.color      = titleColor;
@@ -443,24 +443,24 @@ document.addEventListener('DOMContentLoaded', function() {
             this.elements.questionText.innerHTML = i18n.test_complete;
             this.elements.optionsContainer.innerHTML = `
                 <div style="text-align: center; padding: 20px;">
-                    <p id="esl-result-label" style="color: ${subColor}; font-size: ${subSize}; font-weight: ${subWeight}; margin: 0 0 4px;"></p>
-                    <h1 id="esl-result-level" style="font-size: ${resultSize}; font-weight: ${resultWeight}; color: ${resultColor}; margin: 10px 0;"></h1>
+                    <p id="iiqapt-result-label" style="color: ${subColor}; font-size: ${subSize}; font-weight: ${subWeight}; margin: 0 0 4px;"></p>
+                    <h1 id="iiqapt-result-level" style="font-size: ${resultSize}; font-weight: ${resultWeight}; color: ${resultColor}; margin: 10px 0;"></h1>
                     ${scaleHtml}
-                    ${showErrorRate ? '<p id="esl-result-margin" style="font-size: 0.9rem; color: var(--esl-text-muted); margin-top: 10px;"></p>' : ''}
-                    <p id="esl-result-email" style="color: ${bodyColor}; font-size: ${bodySize}; font-weight: ${bodyWeight}; margin: 0 0 16px;"></p>
-                    <button type="button" id="esl-retake-btn" class="adaptive-option-btn" style="margin-top: 24px; width: auto; display: inline-block; background-color: ${retakeColor}; color: ${retakeTextColor}; font-size: ${retakeSize}; font-weight: ${retakeWeight}; border: ${retakeBorderWidth} solid ${retakeBorderColor}; border-radius: ${retakeBorderRadius};"></button>
+                    ${showErrorRate ? '<p id="iiqapt-result-margin" style="font-size: 0.9rem; color: var(--iiqapt-text-muted); margin-top: 10px;"></p>' : ''}
+                    <p id="iiqapt-result-email" style="color: ${bodyColor}; font-size: ${bodySize}; font-weight: ${bodyWeight}; margin: 0 0 16px;"></p>
+                    <button type="button" id="iiqapt-retake-btn" class="iiqapt-option-btn" style="margin-top: 24px; width: auto; display: inline-block; background-color: ${retakeColor}; color: ${retakeTextColor}; font-size: ${retakeSize}; font-weight: ${retakeWeight}; border: ${retakeBorderWidth} solid ${retakeBorderColor}; border-radius: ${retakeBorderRadius};"></button>
                 </div>
             `;
             // Set content safely after building structure
-            document.getElementById('esl-result-label').innerHTML = i18n.estimated_level;
-            document.getElementById('esl-result-level').textContent = level;
+            document.getElementById('iiqapt-result-label').innerHTML = i18n.estimated_level;
+            document.getElementById('iiqapt-result-level').textContent = level;
             if (showErrorRate) {
-                const rawLabel = adaptive_test_ajax.error_rate_label || 'Margin of Error: ±{rate}%';
-                document.getElementById('esl-result-margin').innerHTML = rawLabel.replace('{rate}', errorRate);
+                const rawLabel = iiqapt_ajax.error_rate_label || 'Margin of Error: ±{rate}%';
+                document.getElementById('iiqapt-result-margin').innerHTML = rawLabel.replace('{rate}', errorRate);
             }
 
-            document.getElementById('esl-result-email').innerHTML = i18n.email_sent;
-            document.getElementById('esl-retake-btn').textContent = i18n.retake_test;
+            document.getElementById('iiqapt-result-email').innerHTML = i18n.email_sent;
+            document.getElementById('iiqapt-retake-btn').textContent = i18n.retake_test;
 
             this.updateProgressBar(100);
 
@@ -468,7 +468,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.dispatch('results', {
                 card:         this.elements.appContainer,
                 container:    this.elements.optionsContainer,
-                retakeButton: document.getElementById('esl-retake-btn'),
+                retakeButton: document.getElementById('iiqapt-retake-btn'),
                 level:        level,
                 theta:        theta,
                 errorRate:    errorRate
@@ -510,7 +510,7 @@ document.addEventListener('DOMContentLoaded', function() {
             options.forEach(optionText => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.className = 'adaptive-option-btn';
+                btn.className = 'iiqapt-option-btn';
                 btn.textContent = optionText;
                 btn.dataset.id = optionText;
                 btn.style.textAlign = this.settings.optionsAlign || 'left';
@@ -528,7 +528,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // 6. Reset UI state for new question
             if (this.elements.nextBtn) {
-                this.elements.nextBtn.classList.add('adaptive-hidden');
+                this.elements.nextBtn.classList.add('iiqapt-hidden');
             }
             this.state.selectedOptionId = null;
 
@@ -556,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function() {
          * can hook into the quiz lifecycle (batch transitions, results screen).
          */
         dispatch: function(name, detail) {
-            document.dispatchEvent(new CustomEvent('adaptive_test:' + name, { detail: detail || {} }));
+            document.dispatchEvent(new CustomEvent('iiqapt:' + name, { detail: detail || {} }));
         }
     };
 

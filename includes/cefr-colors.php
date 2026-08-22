@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * C1  Advanced     #00A3D7  sky blue
  * C2  Proficiency  #1B3F7A  navy
  */
-function adaptive_test_cefr_colors() {
+function iiqapt_cefr_colors() {
     return [
         'A2' => '#2BADA6',
         'B1' => '#D4213D',
@@ -27,7 +27,7 @@ function adaptive_test_cefr_colors() {
  * Returns a lighter tint (20% opacity equivalent) of each brand colour,
  * suitable for chart band backgrounds and filled areas.
  */
-function adaptive_test_cefr_tints() {
+function iiqapt_cefr_tints() {
     return [
         'A2' => '#d0edec',
         'B1' => '#f7d0d5',

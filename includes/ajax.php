@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 
 // Map a CEFR level name to its logit-scale difficulty midpoint.
 // A2=-2, B1=-1, B2=0, C1=1, C2=2 — one logit apart, centred at B2.
-function adaptive_test_level_difficulty( $level ) {
+function iiqapt_level_difficulty( $level ) {
     static $map = [ 'A2' => -2.0, 'B1' => -1.0, 'B2' => 0.0, 'C1' => 1.0, 'C2' => 2.0 ];
     return isset( $map[ $level ] ) ? $map[ $level ] : 0.0;
 }
@@ -26,7 +26,7 @@ function adaptive_test_level_difficulty( $level ) {
  * @param array $items  Each element: ['difficulty' => float, 'correct' => 0|1]
  * @return array        ['theta' => float, 'se' => float]
  */
-function adaptive_test_irt_estimate( array $items ) {
+function iiqapt_irt_estimate( array $items ) {
     if ( empty( $items ) ) {
         // No data yet — return prior parameters
         return [ 'theta' => 0.0, 'se' => 1.5 ];
@@ -85,8 +85,8 @@ function adaptive_test_irt_estimate( array $items ) {
  * Classify a theta estimate as 'borderline', 'mid', or 'strong' within its level segment.
  * Each level segment spans ±0.5 logits around the level midpoint; divided into equal thirds.
  */
-function adaptive_test_sub_level( $theta, $level ) {
-    $b         = adaptive_test_level_difficulty( $level );
+function iiqapt_sub_level( $theta, $level ) {
+    $b         = iiqapt_level_difficulty( $level );
     $threshold = 1.0 / 6.0; // one third of the 0.5-logit half-segment ≈ 0.167
     if ( $theta > $b + $threshold ) {
         return 'strong';
@@ -99,23 +99,23 @@ function adaptive_test_sub_level( $theta, $level ) {
 
 // --- AJAX handlers ---
 
-add_action('wp_ajax_adaptive_test_start_test', 'adaptive_test_start_test');
-add_action('wp_ajax_nopriv_adaptive_test_start_test', 'adaptive_test_start_test');
+add_action('wp_ajax_iiqapt_start_test', 'iiqapt_start_test');
+add_action('wp_ajax_nopriv_iiqapt_start_test', 'iiqapt_start_test');
 
-function adaptive_test_start_test() {
-    if ( ! check_ajax_referer( 'adaptive_level_test_nonce', 'nonce', false ) ) {
+function iiqapt_start_test() {
+    if ( ! check_ajax_referer( 'iiqapt_nonce', 'nonce', false ) ) {
         wp_send_json_error( __( 'Invalid nonce.', 'idiomiq-adaptive-placement-test' ) );
     }
 
     // Honeypot: legitimate users leave this blank; bots typically fill it in
-    if ( ! empty( $_POST['esl_hp'] ) ) {
+    if ( ! empty( $_POST['iiqapt_hp'] ) ) {
         wp_send_json_success( [ 'questions' => [] ] ); // Silent discard
     }
 
     // Rate limiting: configurable via Settings → General
-    $rate_limit = max( 1, (int) get_option( 'adaptive_test_rate_limit', 5 ) );
+    $rate_limit = max( 1, (int) get_option( 'iiqapt_rate_limit', 5 ) );
     $ip         = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ) );
-    $rate_key   = 'esl_rate_start_' . md5( $ip );
+    $rate_key   = 'iiqapt_rate_start_' . md5( $ip );
     $count      = (int) get_transient( $rate_key );
     if ( $count >= $rate_limit ) {
         wp_send_json_error( __( 'Too many requests. Please try again later.', 'idiomiq-adaptive-placement-test' ) );
@@ -126,13 +126,13 @@ function adaptive_test_start_test() {
 
     // Validate bank exists
     global $wpdb;
-    $banks_table = $wpdb->prefix . 'adaptive_question_banks';
+    $banks_table = $wpdb->prefix . 'iiqapt_question_banks';
     $bank_exists = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$banks_table} WHERE id = %d", $bank_id ) );
     if ( ! $bank_exists ) {
         wp_send_json_error( __( 'Invalid question bank.', 'idiomiq-adaptive-placement-test' ) );
     }
 
-    $questions = adaptive_test_get_questions('A2', 5, $bank_id);
+    $questions = iiqapt_get_questions('A2', 5, $bank_id);
 
     if (empty($questions)) {
         wp_send_json_error(__('No questions found for the starting level (A2).', 'idiomiq-adaptive-placement-test'));
@@ -141,20 +141,20 @@ function adaptive_test_start_test() {
     wp_send_json_success(['questions' => $questions]);
 }
 
-add_action('wp_ajax_adaptive_test_submit_answers', 'adaptive_test_submit_answers');
-add_action('wp_ajax_nopriv_adaptive_test_submit_answers', 'adaptive_test_submit_answers');
+add_action('wp_ajax_iiqapt_submit_answers', 'iiqapt_submit_answers');
+add_action('wp_ajax_nopriv_iiqapt_submit_answers', 'iiqapt_submit_answers');
 
-function adaptive_test_submit_answers() {
-    if ( ! check_ajax_referer( 'adaptive_level_test_nonce', 'nonce', false ) ) {
+function iiqapt_submit_answers() {
+    if ( ! check_ajax_referer( 'iiqapt_nonce', 'nonce', false ) ) {
         wp_send_json_error( __( 'Invalid nonce.', 'idiomiq-adaptive-placement-test' ) );
     }
 
-    $max_batches = max( 1, (int) get_option( 'adaptive_test_max_batches', 10 ) );
+    $max_batches = max( 1, (int) get_option( 'iiqapt_max_batches', 10 ) );
 
     // Rate limiting: allow up to max_batches submissions per test start per IP
-    $rate_limit = max( 1, (int) get_option( 'adaptive_test_rate_limit', 5 ) );
+    $rate_limit = max( 1, (int) get_option( 'iiqapt_rate_limit', 5 ) );
     $ip         = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ) );
-    $rate_key   = 'esl_rate_submit_' . md5( $ip );
+    $rate_key   = 'iiqapt_rate_submit_' . md5( $ip );
     $count      = (int) get_transient( $rate_key );
     if ( $count >= $rate_limit * $max_batches ) {
         wp_send_json_error( __( 'Too many requests. Please try again later.', 'idiomiq-adaptive-placement-test' ) );
@@ -166,7 +166,7 @@ function adaptive_test_submit_answers() {
 
     // Validate bank exists — fetch name here to avoid a second query when sending the admin email.
     global $wpdb;
-    $banks_table = $wpdb->prefix . 'adaptive_question_banks';
+    $banks_table = $wpdb->prefix . 'iiqapt_question_banks';
     $bank = $wpdb->get_row( $wpdb->prepare( "SELECT id, name FROM {$banks_table} WHERE id = %d", $bank_id ) );
     if ( ! $bank ) {
         wp_send_json_error( __( 'Invalid question bank.', 'idiomiq-adaptive-placement-test' ) );
@@ -185,7 +185,7 @@ function adaptive_test_submit_answers() {
         wp_send_json_error( __( 'No answers submitted.', 'idiomiq-adaptive-placement-test' ) );
     }
 
-    $table_name = $wpdb->prefix . 'adaptive_questions';
+    $table_name = $wpdb->prefix . 'iiqapt_questions';
 
     // The JS accumulates every answer across all batches into answer_log and sends it every time.
     // We use this full history for the IRT estimate, while the current batch alone drives up/down/stay.
@@ -256,12 +256,12 @@ function adaptive_test_submit_answers() {
         $row    = $row_map[ $q_id ];
         $chosen = sanitize_text_field( $entry['chosen'] ?? '' );
         $is_correct = (int) ( strtolower( $chosen ) === strtolower( $row->answer ) );
-        $b          = ( null !== $row->difficulty ) ? (float) $row->difficulty : adaptive_test_level_difficulty( $row->level );
+        $b          = ( null !== $row->difficulty ) ? (float) $row->difficulty : iiqapt_level_difficulty( $row->level );
         $irt_items[]  = [ 'difficulty' => $b, 'correct' => $is_correct ];
         $score_data[] = [ 'n' => (int) ( $entry['n'] ?? 0 ), 'id' => $q_id, 'chosen' => $chosen, 'correct' => $is_correct, 'ms' => (int) ( $entry['ms'] ?? 0 ) ];
     }
 
-    $irt   = adaptive_test_irt_estimate( $irt_items );
+    $irt   = iiqapt_irt_estimate( $irt_items );
     $theta = $irt['theta'];
     $se    = $irt['se'];
 
@@ -272,7 +272,7 @@ function adaptive_test_submit_answers() {
     //   1. Ceiling: algorithm wants to go above C2
     //   2. Convergence: SE has fallen below the admin-configured target
     //   3. Maximum batches reached
-    $target_error = max( 1.0, (float) get_option( 'adaptive_test_target_error', 8.0 ) );
+    $target_error = max( 1.0, (float) get_option( 'iiqapt_target_error', 8.0 ) );
     $se_threshold = $target_error / 100.0 * 4.0;
 
     $ceiling_hit = $next_level_index >= count( $levels );
@@ -281,31 +281,31 @@ function adaptive_test_submit_answers() {
 
     if ( $ceiling_hit || $converged || $max_reached ) {
         $final_level = $levels[ min( $next_level_index, count( $levels ) - 1 ) ] ?? $levels[ $current_level_index ];
-        $sub_level   = adaptive_test_sub_level( $theta, $final_level );
+        $sub_level   = iiqapt_sub_level( $theta, $final_level );
 
         // Student email
         $email          = '';
         $footer_default = "<hr style=\"margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;\">\n<p style=\"font-size: 0.85em; color: #6b7280;\">You are receiving this email because you completed a level test on our website.</p>";
-        $footer         = get_option( 'adaptive_test_email_footer' ) ?: $footer_default;
+        $footer         = get_option( 'iiqapt_email_footer' ) ?: $footer_default;
 
         if ( isset( $_POST['email'] ) && is_email( wp_unslash( $_POST['email'] ) ) ) {
             $to            = sanitize_email( wp_unslash( $_POST['email'] ) );
             $email         = $to;
-            $subject       = get_option( 'adaptive_test_email_subject' ) ?: __( 'Your English Level Test Results', 'idiomiq-adaptive-placement-test' );
-            $body_template = get_option( 'adaptive_test_email_body' ) ?: "<p>Dear Student,</p>\n<p>Thank you for completing our English level test.</p>\n<p>Your estimated CEFR level is: <strong>%s</strong></p>\n<p>A member of our team will be in touch shortly to discuss your results and recommend the right course for you.</p>";
+            $subject       = get_option( 'iiqapt_email_subject' ) ?: __( 'Your English Level Test Results', 'idiomiq-adaptive-placement-test' );
+            $body_template = get_option( 'iiqapt_email_body' ) ?: "<p>Dear Student,</p>\n<p>Thank you for completing our English level test.</p>\n<p>Your estimated CEFR level is: <strong>%s</strong></p>\n<p>A member of our team will be in touch shortly to discuss your results and recommend the right course for you.</p>";
             $body          = sprintf( $body_template, $final_level ) . $footer;
             $headers       = [ 'Content-Type: text/html; charset=UTF-8' ];
             wp_mail( $to, $subject, $body, $headers );
         }
 
         // Admin notification
-        $admin_emails_raw = get_option( 'adaptive_test_admin_email', get_option( 'admin_email' ) );
+        $admin_emails_raw = get_option( 'iiqapt_admin_email', get_option( 'admin_email' ) );
         if ( ! empty( $admin_emails_raw ) ) {
             $admin_emails = array_filter( array_map( 'sanitize_email', array_map( 'trim', explode( ',', $admin_emails_raw ) ) ) );
             if ( ! empty( $admin_emails ) ) {
                 $bank_name           = $bank->name;
-                $admin_subject       = get_option( 'adaptive_test_admin_email_subject' ) ?: __( 'New Level Test Completed', 'idiomiq-adaptive-placement-test' );
-                $admin_body_template = get_option( 'adaptive_test_admin_email_body' ) ?: "<p>A student has completed the English level test.</p>\n<ul>\n<li><strong>Email:</strong> %email%</li>\n<li><strong>Result:</strong> %level%</li>\n<li><strong>Question Bank:</strong> %bank%</li>\n</ul>";
+                $admin_subject       = get_option( 'iiqapt_admin_email_subject' ) ?: __( 'New Level Test Completed', 'idiomiq-adaptive-placement-test' );
+                $admin_body_template = get_option( 'iiqapt_admin_email_body' ) ?: "<p>A student has completed the English level test.</p>\n<ul>\n<li><strong>Email:</strong> %email%</li>\n<li><strong>Result:</strong> %level%</li>\n<li><strong>Question Bank:</strong> %bank%</li>\n</ul>";
                 $admin_body          = str_replace( [ '%email%', '%level%', '%bank%' ], [ $email, $final_level, $bank_name ], $admin_body_template ) . $footer;
                 $headers             = [ 'Content-Type: text/html; charset=UTF-8' ];
                 foreach ( $admin_emails as $admin_email ) {
@@ -314,7 +314,7 @@ function adaptive_test_submit_answers() {
             }
         }
 
-        adaptive_test_log_result( $email, $final_level, $bank_id, wp_json_encode( $score_data ), $theta, $se, $sub_level, $duration_seconds );
+        iiqapt_log_result( $email, $final_level, $bank_id, wp_json_encode( $score_data ), $theta, $se, $sub_level, $duration_seconds );
 
         wp_send_json_success( [
             'finished'   => true,
@@ -329,7 +329,7 @@ function adaptive_test_submit_answers() {
     // Continue to next batch
     $shown_ids     = array_map( 'absint', json_decode( wp_unslash( $_POST['shown_ids'] ?? '[]' ), true ) ?: [] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON payload; every element cast through absint.
     $next_level    = $levels[ $next_level_index ];
-    $new_questions = adaptive_test_get_questions( $next_level, 5, $bank_id, $shown_ids );
+    $new_questions = iiqapt_get_questions( $next_level, 5, $bank_id, $shown_ids );
 
     // Detect whether the pool was reset (returned IDs overlap with shown IDs)
     $returned_ids = array_map( 'intval', array_column( $new_questions, 'id' ) );

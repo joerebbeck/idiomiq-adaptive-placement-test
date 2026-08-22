@@ -1,5 +1,5 @@
 /* Admin settings live-preview and accordion helpers.
- * Dynamic values (primary colour, i18n labels) are passed via wp_localize_script as eslAdminData.
+ * Dynamic values (primary colour, i18n labels) are passed via wp_localize_script as iiqaptAdminData.
  */
 function eslTogglePreview(id) {
     var textarea = document.getElementById(id);
@@ -10,8 +10,8 @@ function eslTogglePreview(id) {
     preview.style.display  = editMode ? '' : 'none';
     if (editMode) { preview.textContent = textarea.value; }
     btn.textContent = editMode
-        ? (typeof eslAdminData !== 'undefined' ? eslAdminData.labelEditHtml : 'Edit HTML')
-        : (typeof eslAdminData !== 'undefined' ? eslAdminData.labelPreview  : 'Preview');
+        ? (typeof iiqaptAdminData !== 'undefined' ? iiqaptAdminData.labelEditHtml : 'Edit HTML')
+        : (typeof iiqaptAdminData !== 'undefined' ? iiqaptAdminData.labelPreview  : 'Preview');
 }
 
 (function() {
@@ -35,14 +35,14 @@ function eslTogglePreview(id) {
             div.style.display = cb.checked ? '' : 'none';
         });
     }
-    eslConsentAccordion('esl-gdpr2-cb', 'esl-gdpr2-msg-cell');
-    eslConsentAccordion('esl-counter-cb', 'esl-counter-format-row');
-    eslConsentAccordion('esl-show-error-rate-cb', 'esl-error-rate-cell');
-    eslConsentAccordionDiv('esl-dyslexic-cb', 'esl-dyslexic-details');
+    eslConsentAccordion('iiqapt-gdpr2-cb', 'iiqapt-gdpr2-msg-cell');
+    eslConsentAccordion('iiqapt-counter-cb', 'iiqapt-counter-format-row');
+    eslConsentAccordion('iiqapt-show-error-rate-cb', 'iiqapt-error-rate-cell');
+    eslConsentAccordionDiv('iiqapt-dyslexic-cb', 'iiqapt-dyslexic-details');
 })();
 
 // Primary colour from General Settings — used as fallback for any accent colour not explicitly overridden
-var eslPrimary = (typeof eslAdminData !== 'undefined' && eslAdminData.primaryColor) ? eslAdminData.primaryColor : '#2563eb';
+var eslPrimary = (typeof iiqaptAdminData !== 'undefined' && iiqaptAdminData.primaryColor) ? iiqaptAdminData.primaryColor : '#2563eb';
 
 // Shared helper: read value from a named input, return fallback if not found
 function eslVal(name, fallback) {
@@ -77,15 +77,15 @@ function eslBind(selectors, update) {
 
 // Live Preview — Before the Quiz
 (function() {
-    var prevCard     = document.getElementById('esl-prev-card');
-    var prevTitle    = document.getElementById('esl-prev-title');
+    var prevCard     = document.getElementById('iiqapt-prev-card');
+    var prevTitle    = document.getElementById('iiqapt-prev-title');
     if (!prevTitle) return;
-    var prevSubtitle = document.getElementById('esl-prev-subtitle');
-    var prevBody     = document.getElementById('esl-prev-body');
-    var prevEmail    = document.getElementById('esl-prev-email');
-    var prevBtn      = document.getElementById('esl-prev-btn');
-    var prevGdpr     = document.getElementById('esl-prev-gdpr');
-    var prevGdprMsg  = document.getElementById('esl-prev-gdpr-msg');
+    var prevSubtitle = document.getElementById('iiqapt-prev-subtitle');
+    var prevBody     = document.getElementById('iiqapt-prev-body');
+    var prevEmail    = document.getElementById('iiqapt-prev-email');
+    var prevBtn      = document.getElementById('iiqapt-prev-btn');
+    var prevGdpr     = document.getElementById('iiqapt-prev-gdpr');
+    var prevGdprMsg  = document.getElementById('iiqapt-prev-gdpr-msg');
 
     // Dynamic style for ::placeholder (can't be set inline)
     var phStyle = document.createElement('style');
@@ -93,26 +93,26 @@ function eslBind(selectors, update) {
 
     function update() {
         // Content
-        var t = document.getElementById('esl-start-title');
+        var t = document.getElementById('iiqapt-start-title');
         if (t && prevTitle) prevTitle.textContent = t.value;
 
-        var s = document.getElementById('esl-start-subtitle');
+        var s = document.getElementById('iiqapt-start-subtitle');
         if (s && prevSubtitle) prevSubtitle.textContent = s.value;
 
-        var b = document.getElementById('esl-start-body');
+        var b = document.getElementById('iiqapt-start-body');
         if (b && prevBody) {
             prevBody.textContent = b.value;
             prevBody.style.display = b.value.trim() ? '' : 'none';
         }
 
-        var ep = document.querySelector('[name="adaptive_test_start_email_placeholder"]');
+        var ep = document.querySelector('[name="iiqapt_start_email_placeholder"]');
         if (ep && prevEmail) prevEmail.placeholder = ep.value;
 
-        var bt = document.querySelector('[name="adaptive_test_start_button_text"]');
+        var bt = document.querySelector('[name="iiqapt_start_button_text"]');
         if (bt && prevBtn) prevBtn.textContent = bt.value;
 
-        var cb = document.getElementById('esl-gdpr2-cb');
-        var gm = document.getElementById('esl-start-gdpr2');
+        var cb = document.getElementById('iiqapt-gdpr2-cb');
+        var gm = document.getElementById('iiqapt-start-gdpr2');
         if (cb && prevGdpr) {
             prevGdpr.style.display = cb.checked ? 'flex' : 'none';
             if (gm && prevGdprMsg) prevGdprMsg.textContent = gm.value;
@@ -120,74 +120,74 @@ function eslBind(selectors, update) {
 
         // Title
         if (prevTitle) {
-            prevTitle.style.color      = eslVal('adaptive_test_before_title_color',  '#1f2937');
-            prevTitle.style.fontSize   = eslVal('adaptive_test_before_title_size',   '28') + 'px';
-            prevTitle.style.fontWeight = eslVal('adaptive_test_before_title_weight', '700');
+            prevTitle.style.color      = eslVal('iiqapt_before_title_color',  '#1f2937');
+            prevTitle.style.fontSize   = eslVal('iiqapt_before_title_size',   '28') + 'px';
+            prevTitle.style.fontWeight = eslVal('iiqapt_before_title_weight', '700');
         }
         // Subtitle
         if (prevSubtitle) {
-            prevSubtitle.style.color      = eslVal('adaptive_test_before_subtitle_color',  '#6b7280');
-            prevSubtitle.style.fontSize   = eslVal('adaptive_test_before_subtitle_size',   '16') + 'px';
-            prevSubtitle.style.fontWeight = eslVal('adaptive_test_before_subtitle_weight', '400');
+            prevSubtitle.style.color      = eslVal('iiqapt_before_subtitle_color',  '#6b7280');
+            prevSubtitle.style.fontSize   = eslVal('iiqapt_before_subtitle_size',   '16') + 'px';
+            prevSubtitle.style.fontWeight = eslVal('iiqapt_before_subtitle_weight', '400');
         }
         // Body
         if (prevBody) {
-            prevBody.style.color      = eslVal('adaptive_test_before_body_color',  '#6b7280');
-            prevBody.style.fontSize   = eslVal('adaptive_test_before_body_size',   '12') + 'px';
-            prevBody.style.fontWeight = eslVal('adaptive_test_before_body_weight', '400');
+            prevBody.style.color      = eslVal('iiqapt_before_body_color',  '#6b7280');
+            prevBody.style.fontSize   = eslVal('iiqapt_before_body_size',   '12') + 'px';
+            prevBody.style.fontWeight = eslVal('iiqapt_before_body_weight', '400');
         }
         // Email input
         if (prevEmail) {
-            var bw = eslVal('adaptive_test_before_input_border_width',  '2');
-            var br = eslVal('adaptive_test_before_input_border_radius', '12');
-            var bc = eslVal('adaptive_test_before_input_border_color',  '#e5e7eb');
-            var ps = eslVal('adaptive_test_before_input_placeholder_size', '16');
-            var pc = eslVal('adaptive_test_before_input_placeholder_color', '#9ca3af');
+            var bw = eslVal('iiqapt_before_input_border_width',  '2');
+            var br = eslVal('iiqapt_before_input_border_radius', '12');
+            var bc = eslVal('iiqapt_before_input_border_color',  '#e5e7eb');
+            var ps = eslVal('iiqapt_before_input_placeholder_size', '16');
+            var pc = eslVal('iiqapt_before_input_placeholder_color', '#9ca3af');
             prevEmail.style.borderWidth  = bw + 'px';
             prevEmail.style.borderStyle  = 'solid';
             prevEmail.style.borderColor  = bc;
             prevEmail.style.borderRadius = br + 'px';
             prevEmail.style.fontSize     = ps + 'px';
-            phStyle.textContent = '#esl-prev-email::placeholder{color:' + pc + ';}';
+            phStyle.textContent = '#iiqapt-prev-email::placeholder{color:' + pc + ';}';
         }
         // Consent
         if (prevGdpr) {
-            prevGdpr.style.color      = eslVal('adaptive_test_before_consent_color',  '#6b7280');
-            prevGdpr.style.fontSize   = eslVal('adaptive_test_before_consent_size',   '13') + 'px';
-            prevGdpr.style.fontWeight = eslVal('adaptive_test_before_consent_weight', '400');
+            prevGdpr.style.color      = eslVal('iiqapt_before_consent_color',  '#6b7280');
+            prevGdpr.style.fontSize   = eslVal('iiqapt_before_consent_size',   '13') + 'px';
+            prevGdpr.style.fontWeight = eslVal('iiqapt_before_consent_weight', '400');
         }
         // Button
         if (prevBtn) {
-            prevBtn.style.background   = eslVal('adaptive_test_before_btn_color',         eslPrimary);
-            prevBtn.style.color        = eslVal('adaptive_test_before_btn_text_color',    '#ffffff');
-            prevBtn.style.fontSize     = eslVal('adaptive_test_before_btn_size',          '16') + 'px';
-            prevBtn.style.fontWeight   = eslVal('adaptive_test_before_btn_weight',        '600');
-            prevBtn.style.borderColor  = eslVal('adaptive_test_before_btn_border_color',  eslPrimary);
-            prevBtn.style.borderWidth  = eslVal('adaptive_test_before_btn_border_width',  '2') + 'px';
-            prevBtn.style.borderRadius = eslVal('adaptive_test_before_btn_border_radius', '12') + 'px';
+            prevBtn.style.background   = eslVal('iiqapt_before_btn_color',         eslPrimary);
+            prevBtn.style.color        = eslVal('iiqapt_before_btn_text_color',    '#ffffff');
+            prevBtn.style.fontSize     = eslVal('iiqapt_before_btn_size',          '16') + 'px';
+            prevBtn.style.fontWeight   = eslVal('iiqapt_before_btn_weight',        '600');
+            prevBtn.style.borderColor  = eslVal('iiqapt_before_btn_border_color',  eslPrimary);
+            prevBtn.style.borderWidth  = eslVal('iiqapt_before_btn_border_width',  '2') + 'px';
+            prevBtn.style.borderRadius = eslVal('iiqapt_before_btn_border_radius', '12') + 'px';
             prevBtn.style.borderStyle  = 'solid';
         }
         // Box
-        if (prevCard) eslApplyBox(prevCard, 'adaptive_test_before');
+        if (prevCard) eslApplyBox(prevCard, 'iiqapt_before');
     }
 
-    ['esl-start-title','esl-start-subtitle','esl-start-body','esl-start-gdpr2'].forEach(function(id) {
+    ['iiqapt-start-title','iiqapt-start-subtitle','iiqapt-start-body','iiqapt-start-gdpr2'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el) el.addEventListener('input', update);
     });
-    document.getElementById('esl-gdpr2-cb') && document.getElementById('esl-gdpr2-cb').addEventListener('change', update);
+    document.getElementById('iiqapt-gdpr2-cb') && document.getElementById('iiqapt-gdpr2-cb').addEventListener('change', update);
     eslBind(
-        '[name="adaptive_test_start_email_placeholder"],[name="adaptive_test_start_button_text"],' +
-        '[name="adaptive_test_before_title_color"],[name="adaptive_test_before_title_size"],[name="adaptive_test_before_title_weight"],' +
-        '[name="adaptive_test_before_subtitle_color"],[name="adaptive_test_before_subtitle_size"],[name="adaptive_test_before_subtitle_weight"],' +
-        '[name="adaptive_test_before_body_color"],[name="adaptive_test_before_body_size"],[name="adaptive_test_before_body_weight"],' +
-        '[name="adaptive_test_before_input_placeholder_color"],[name="adaptive_test_before_input_placeholder_size"],' +
-        '[name="adaptive_test_before_input_border_width"],[name="adaptive_test_before_input_border_radius"],[name="adaptive_test_before_input_border_color"],' +
-        '[name="adaptive_test_before_consent_color"],[name="adaptive_test_before_consent_size"],[name="adaptive_test_before_consent_weight"],' +
-        '[name="adaptive_test_before_btn_color"],[name="adaptive_test_before_btn_text_color"],[name="adaptive_test_before_btn_size"],[name="adaptive_test_before_btn_weight"],' +
-        '[name="adaptive_test_before_btn_border_color"],[name="adaptive_test_before_btn_border_width"],[name="adaptive_test_before_btn_border_radius"],' +
-        '[name="adaptive_test_before_box_bg"],[name="adaptive_test_before_box_text_color"],[name="adaptive_test_before_box_border_radius"],' +
-        '[name="adaptive_test_before_box_border_width"],[name="adaptive_test_before_box_border_color"],[name="adaptive_test_before_box_shadow"]',
+        '[name="iiqapt_start_email_placeholder"],[name="iiqapt_start_button_text"],' +
+        '[name="iiqapt_before_title_color"],[name="iiqapt_before_title_size"],[name="iiqapt_before_title_weight"],' +
+        '[name="iiqapt_before_subtitle_color"],[name="iiqapt_before_subtitle_size"],[name="iiqapt_before_subtitle_weight"],' +
+        '[name="iiqapt_before_body_color"],[name="iiqapt_before_body_size"],[name="iiqapt_before_body_weight"],' +
+        '[name="iiqapt_before_input_placeholder_color"],[name="iiqapt_before_input_placeholder_size"],' +
+        '[name="iiqapt_before_input_border_width"],[name="iiqapt_before_input_border_radius"],[name="iiqapt_before_input_border_color"],' +
+        '[name="iiqapt_before_consent_color"],[name="iiqapt_before_consent_size"],[name="iiqapt_before_consent_weight"],' +
+        '[name="iiqapt_before_btn_color"],[name="iiqapt_before_btn_text_color"],[name="iiqapt_before_btn_size"],[name="iiqapt_before_btn_weight"],' +
+        '[name="iiqapt_before_btn_border_color"],[name="iiqapt_before_btn_border_width"],[name="iiqapt_before_btn_border_radius"],' +
+        '[name="iiqapt_before_box_bg"],[name="iiqapt_before_box_text_color"],[name="iiqapt_before_box_border_radius"],' +
+        '[name="iiqapt_before_box_border_width"],[name="iiqapt_before_box_border_color"],[name="iiqapt_before_box_shadow"]',
         update
     );
 
@@ -196,53 +196,53 @@ function eslBind(selectors, update) {
 
 // Live Preview — During the Quiz
 (function() {
-    var prevCard = document.getElementById('esl-prev-card');
-    if (!prevCard || !document.querySelector('[name="adaptive_test_during_show_progress"]')) return;
+    var prevCard = document.getElementById('iiqapt-prev-card');
+    if (!prevCard || !document.querySelector('[name="iiqapt_during_show_progress"]')) return;
 
-    var prevProgressWrap = document.getElementById('esl-prev-progress-wrap');
-    var prevProgressBar  = document.getElementById('esl-prev-progress-bar');
-    var prevCounter      = document.getElementById('esl-prev-counter');
-    var prevQuestion     = document.getElementById('esl-prev-question');
+    var prevProgressWrap = document.getElementById('iiqapt-prev-progress-wrap');
+    var prevProgressBar  = document.getElementById('iiqapt-prev-progress-bar');
+    var prevCounter      = document.getElementById('iiqapt-prev-counter');
+    var prevQuestion     = document.getElementById('iiqapt-prev-question');
 
     function update() {
-        var showProg = document.querySelector('[name="adaptive_test_during_show_progress"]');
+        var showProg = document.querySelector('[name="iiqapt_during_show_progress"]');
         if (prevProgressWrap) prevProgressWrap.style.display = (showProg && showProg.checked) ? '' : 'none';
 
-        if (prevProgressBar) prevProgressBar.style.background = eslVal('adaptive_test_during_progress_color', eslPrimary);
+        if (prevProgressBar) prevProgressBar.style.background = eslVal('iiqapt_during_progress_color', eslPrimary);
 
-        var showCtr = document.getElementById('esl-counter-cb');
-        var ctrFmt  = document.querySelector('[name="adaptive_test_during_counter_format"]');
+        var showCtr = document.getElementById('iiqapt-counter-cb');
+        var ctrFmt  = document.querySelector('[name="iiqapt_during_counter_format"]');
         if (prevCounter) {
             prevCounter.style.display    = (showCtr && showCtr.checked) ? '' : 'none';
-            prevCounter.style.color      = eslVal('adaptive_test_during_counter_color',  '#6b7280');
-            prevCounter.style.fontSize   = eslVal('adaptive_test_during_counter_size',   '13') + 'px';
-            prevCounter.style.fontWeight = eslVal('adaptive_test_during_counter_weight', '400');
+            prevCounter.style.color      = eslVal('iiqapt_during_counter_color',  '#6b7280');
+            prevCounter.style.fontSize   = eslVal('iiqapt_during_counter_size',   '13') + 'px';
+            prevCounter.style.fontWeight = eslVal('iiqapt_during_counter_weight', '400');
             if (ctrFmt) prevCounter.textContent = ctrFmt.value.replace('%n%','2').replace('%total%','5');
         }
 
         if (prevQuestion) {
-            prevQuestion.style.textAlign  = eslVal('adaptive_test_during_question_align',  'center');
-            prevQuestion.style.color      = eslVal('adaptive_test_during_question_color',  '#1f2937');
-            prevQuestion.style.fontSize   = eslVal('adaptive_test_during_question_size',   '20') + 'px';
-            prevQuestion.style.fontWeight = eslVal('adaptive_test_during_question_weight', '600');
+            prevQuestion.style.textAlign  = eslVal('iiqapt_during_question_align',  'center');
+            prevQuestion.style.color      = eslVal('iiqapt_during_question_color',  '#1f2937');
+            prevQuestion.style.fontSize   = eslVal('iiqapt_during_question_size',   '20') + 'px';
+            prevQuestion.style.fontWeight = eslVal('iiqapt_during_question_weight', '600');
         }
 
-        var optColor    = eslVal('adaptive_test_during_option_color',                    '#000000');
-        var selColor    = eslVal('adaptive_test_during_option_selected_color',          eslPrimary);
-        var selTxtColor = eslVal('adaptive_test_during_option_selected_text',           '#ffffff');
-        var selSz       = eslVal('adaptive_test_during_option_selected_size',           '15');
-        var selWt       = eslVal('adaptive_test_during_option_selected_weight',         '400');
-        var selBdrC     = eslVal('adaptive_test_during_option_selected_border_color',   eslPrimary);
-        var selBdrW     = eslVal('adaptive_test_during_option_selected_border_width',   '2');
-        var selBdrR     = eslVal('adaptive_test_during_option_selected_border_radius',  '12');
-        var optBw       = eslVal('adaptive_test_during_option_border_width',            '2');
-        var optRad      = eslVal('adaptive_test_during_option_border_radius',           '12');
-        var optBc       = eslVal('adaptive_test_during_option_border_color',            '#e5e7eb');
-        var optSz       = eslVal('adaptive_test_during_option_size',                    '15');
-        var optWt       = eslVal('adaptive_test_during_option_weight',                  '400');
-        var oAlign      = eslVal('adaptive_test_during_options_align',                  'center');
-        document.querySelectorAll('.esl-prev-option').forEach(function(o) {
-            var isSel = o.classList.contains('esl-prev-selected');
+        var optColor    = eslVal('iiqapt_during_option_color',                    '#000000');
+        var selColor    = eslVal('iiqapt_during_option_selected_color',          eslPrimary);
+        var selTxtColor = eslVal('iiqapt_during_option_selected_text',           '#ffffff');
+        var selSz       = eslVal('iiqapt_during_option_selected_size',           '15');
+        var selWt       = eslVal('iiqapt_during_option_selected_weight',         '400');
+        var selBdrC     = eslVal('iiqapt_during_option_selected_border_color',   eslPrimary);
+        var selBdrW     = eslVal('iiqapt_during_option_selected_border_width',   '2');
+        var selBdrR     = eslVal('iiqapt_during_option_selected_border_radius',  '12');
+        var optBw       = eslVal('iiqapt_during_option_border_width',            '2');
+        var optRad      = eslVal('iiqapt_during_option_border_radius',           '12');
+        var optBc       = eslVal('iiqapt_during_option_border_color',            '#e5e7eb');
+        var optSz       = eslVal('iiqapt_during_option_size',                    '15');
+        var optWt       = eslVal('iiqapt_during_option_weight',                  '400');
+        var oAlign      = eslVal('iiqapt_during_options_align',                  'center');
+        document.querySelectorAll('.iiqapt-prev-option').forEach(function(o) {
+            var isSel = o.classList.contains('iiqapt-prev-selected');
             o.style.textAlign = oAlign;
             if (isSel) {
                 o.style.background   = selColor;
@@ -265,59 +265,59 @@ function eslBind(selectors, update) {
             }
         });
 
-        eslApplyBox(prevCard, 'adaptive_test_during');
+        eslApplyBox(prevCard, 'iiqapt_during');
     }
 
     eslBind(
-        '[name="adaptive_test_during_show_progress"],[name="adaptive_test_during_question_align"],' +
-        '[name="adaptive_test_during_question_color"],[name="adaptive_test_during_question_size"],[name="adaptive_test_during_question_weight"],' +
-        '[name="adaptive_test_during_options_align"],[name="adaptive_test_during_counter_format"],' +
-        '[name="adaptive_test_during_counter_color"],[name="adaptive_test_during_counter_size"],[name="adaptive_test_during_counter_weight"],' +
-        '[name="adaptive_test_during_progress_color"],' +
-        '[name="adaptive_test_during_option_color"],[name="adaptive_test_during_option_selected_color"],[name="adaptive_test_during_option_selected_text"],' +
-        '[name="adaptive_test_during_option_selected_size"],[name="adaptive_test_during_option_selected_weight"],' +
-        '[name="adaptive_test_during_option_selected_border_color"],[name="adaptive_test_during_option_selected_border_width"],[name="adaptive_test_during_option_selected_border_radius"],' +
-        '[name="adaptive_test_during_option_border_width"],[name="adaptive_test_during_option_border_radius"],[name="adaptive_test_during_option_border_color"],' +
-        '[name="adaptive_test_during_option_size"],[name="adaptive_test_during_option_weight"],' +
-        '[name="adaptive_test_during_box_bg"],[name="adaptive_test_during_box_border_radius"],' +
-        '[name="adaptive_test_during_box_border_width"],[name="adaptive_test_during_box_border_color"],[name="adaptive_test_during_box_shadow"]',
+        '[name="iiqapt_during_show_progress"],[name="iiqapt_during_question_align"],' +
+        '[name="iiqapt_during_question_color"],[name="iiqapt_during_question_size"],[name="iiqapt_during_question_weight"],' +
+        '[name="iiqapt_during_options_align"],[name="iiqapt_during_counter_format"],' +
+        '[name="iiqapt_during_counter_color"],[name="iiqapt_during_counter_size"],[name="iiqapt_during_counter_weight"],' +
+        '[name="iiqapt_during_progress_color"],' +
+        '[name="iiqapt_during_option_color"],[name="iiqapt_during_option_selected_color"],[name="iiqapt_during_option_selected_text"],' +
+        '[name="iiqapt_during_option_selected_size"],[name="iiqapt_during_option_selected_weight"],' +
+        '[name="iiqapt_during_option_selected_border_color"],[name="iiqapt_during_option_selected_border_width"],[name="iiqapt_during_option_selected_border_radius"],' +
+        '[name="iiqapt_during_option_border_width"],[name="iiqapt_during_option_border_radius"],[name="iiqapt_during_option_border_color"],' +
+        '[name="iiqapt_during_option_size"],[name="iiqapt_during_option_weight"],' +
+        '[name="iiqapt_during_box_bg"],[name="iiqapt_during_box_border_radius"],' +
+        '[name="iiqapt_during_box_border_width"],[name="iiqapt_during_box_border_color"],[name="iiqapt_during_box_shadow"]',
         update
     );
-    var ctrCb = document.getElementById('esl-counter-cb');
+    var ctrCb = document.getElementById('iiqapt-counter-cb');
     if (ctrCb) ctrCb.addEventListener('change', update);
 
     // Dyslexic toggle visibility, label, and interactive font switching
-    var prevDyslexicToggle = document.getElementById('esl-prev-dyslexic-toggle');
+    var prevDyslexicToggle = document.getElementById('iiqapt-prev-dyslexic-toggle');
     if (prevDyslexicToggle) {
         var dyslexicActive = false;
         function updateDyslexic() {
-            var enabledCb  = document.querySelector('[name="adaptive_test_during_dyslexic_enabled"]');
-            var labelOffIn = document.querySelector('[name="adaptive_test_during_dyslexic_off"]');
-            var labelOnIn  = document.querySelector('[name="adaptive_test_during_dyslexic_on"]');
+            var enabledCb  = document.querySelector('[name="iiqapt_during_dyslexic_enabled"]');
+            var labelOffIn = document.querySelector('[name="iiqapt_during_dyslexic_off"]');
+            var labelOnIn  = document.querySelector('[name="iiqapt_during_dyslexic_on"]');
             var labelOff   = (labelOffIn && labelOffIn.value.trim()) ? labelOffIn.value : 'Change to dyslexia friendly font';
             var labelOn    = (labelOnIn  && labelOnIn.value.trim())  ? labelOnIn.value  : 'Change to regular font';
             var dysEnabled = enabledCb && enabledCb.checked;
             if (enabledCb) prevDyslexicToggle.style.display = dysEnabled ? '' : 'none';
             if (prevProgressWrap) prevProgressWrap.style.marginTop = dysEnabled ? '28px' : '0';
             prevDyslexicToggle.textContent = dyslexicActive ? labelOn : labelOff;
-            prevDyslexicToggle.style.color        = eslVal('adaptive_test_during_dyslexic_color',         '#6b7280');
-            prevDyslexicToggle.style.background   = eslVal('adaptive_test_during_dyslexic_bg',            '#ffffff');
-            prevDyslexicToggle.style.fontSize     = eslVal('adaptive_test_during_dyslexic_size',          '11') + 'px';
-            var bdw = eslVal('adaptive_test_during_dyslexic_border_width',  '1');
-            var bdc = eslVal('adaptive_test_during_dyslexic_border_color',  '#e5e7eb');
-            var bdr = eslVal('adaptive_test_during_dyslexic_border_radius', '20');
+            prevDyslexicToggle.style.color        = eslVal('iiqapt_during_dyslexic_color',         '#6b7280');
+            prevDyslexicToggle.style.background   = eslVal('iiqapt_during_dyslexic_bg',            '#ffffff');
+            prevDyslexicToggle.style.fontSize     = eslVal('iiqapt_during_dyslexic_size',          '11') + 'px';
+            var bdw = eslVal('iiqapt_during_dyslexic_border_width',  '1');
+            var bdc = eslVal('iiqapt_during_dyslexic_border_color',  '#e5e7eb');
+            var bdr = eslVal('iiqapt_during_dyslexic_border_radius', '20');
             prevDyslexicToggle.style.border       = parseInt(bdw) > 0 ? bdw + 'px solid ' + bdc : 'none';
             prevDyslexicToggle.style.borderRadius = bdr + 'px';
         }
         prevDyslexicToggle.addEventListener('click', function() {
             dyslexicActive = !dyslexicActive;
-            prevCard.classList.toggle('esl-dyslexic', dyslexicActive);
+            prevCard.classList.toggle('iiqapt-dyslexic', dyslexicActive);
             updateDyslexic();
         });
         eslBind(
-            '[name="adaptive_test_during_dyslexic_enabled"],[name="adaptive_test_during_dyslexic_off"],[name="adaptive_test_during_dyslexic_on"],' +
-            '[name="adaptive_test_during_dyslexic_color"],[name="adaptive_test_during_dyslexic_bg"],[name="adaptive_test_during_dyslexic_size"],' +
-            '[name="adaptive_test_during_dyslexic_border_width"],[name="adaptive_test_during_dyslexic_border_color"],[name="adaptive_test_during_dyslexic_border_radius"]',
+            '[name="iiqapt_during_dyslexic_enabled"],[name="iiqapt_during_dyslexic_off"],[name="iiqapt_during_dyslexic_on"],' +
+            '[name="iiqapt_during_dyslexic_color"],[name="iiqapt_during_dyslexic_bg"],[name="iiqapt_during_dyslexic_size"],' +
+            '[name="iiqapt_during_dyslexic_border_width"],[name="iiqapt_during_dyslexic_border_color"],[name="iiqapt_during_dyslexic_border_radius"]',
             updateDyslexic
         );
         updateDyslexic();
@@ -328,49 +328,49 @@ function eslBind(selectors, update) {
 
 // Live Preview — After the Quiz
 (function() {
-    var prevCard          = document.getElementById('esl-prev-card');
-    var prevResultLevel   = document.getElementById('esl-prev-result-level');
+    var prevCard          = document.getElementById('iiqapt-prev-card');
+    var prevResultLevel   = document.getElementById('iiqapt-prev-result-level');
     if (!prevResultLevel) return;
-    var prevScaleBar      = document.getElementById('esl-prev-scale-bar');
-    var prevErrorMargin   = document.getElementById('esl-prev-error-margin');
-    var prevActiveLabel   = document.getElementById('esl-prev-active-label');
-    var prevRetake        = document.getElementById('esl-prev-retake');
-    var prevAfterTitle    = document.getElementById('esl-prev-after-title');
-    var prevAfterSub      = document.getElementById('esl-prev-after-subheading');
-    var prevAfterBody     = document.getElementById('esl-prev-after-body');
+    var prevScaleBar      = document.getElementById('iiqapt-prev-scale-bar');
+    var prevErrorMargin   = document.getElementById('iiqapt-prev-error-margin');
+    var prevActiveLabel   = document.getElementById('iiqapt-prev-active-label');
+    var prevRetake        = document.getElementById('iiqapt-prev-retake');
+    var prevAfterTitle    = document.getElementById('iiqapt-prev-after-title');
+    var prevAfterSub      = document.getElementById('iiqapt-prev-after-subheading');
+    var prevAfterBody     = document.getElementById('iiqapt-prev-after-body');
 
     function update() {
         // Title content + styling
-        var titleEl = document.getElementById('esl-after-title');
+        var titleEl = document.getElementById('iiqapt-after-title');
         if (titleEl && prevAfterTitle) prevAfterTitle.textContent = titleEl.value;
         if (prevAfterTitle) {
-            prevAfterTitle.style.color      = eslVal('adaptive_test_after_title_color',  '#1f2937');
-            prevAfterTitle.style.fontSize   = eslVal('adaptive_test_after_title_size',   '24') + 'px';
-            prevAfterTitle.style.fontWeight = eslVal('adaptive_test_after_title_weight', '700');
+            prevAfterTitle.style.color      = eslVal('iiqapt_after_title_color',  '#1f2937');
+            prevAfterTitle.style.fontSize   = eslVal('iiqapt_after_title_size',   '24') + 'px';
+            prevAfterTitle.style.fontWeight = eslVal('iiqapt_after_title_weight', '700');
         }
         // Subheading content + styling
-        var subEl = document.getElementById('esl-after-subheading');
+        var subEl = document.getElementById('iiqapt-after-subheading');
         if (subEl && prevAfterSub) prevAfterSub.textContent = subEl.value;
         if (prevAfterSub) {
-            prevAfterSub.style.color      = eslVal('adaptive_test_after_subheading_color',  '#6b7280');
-            prevAfterSub.style.fontSize   = eslVal('adaptive_test_after_subheading_size',   '16') + 'px';
-            prevAfterSub.style.fontWeight = eslVal('adaptive_test_after_subheading_weight', '400');
+            prevAfterSub.style.color      = eslVal('iiqapt_after_subheading_color',  '#6b7280');
+            prevAfterSub.style.fontSize   = eslVal('iiqapt_after_subheading_size',   '16') + 'px';
+            prevAfterSub.style.fontWeight = eslVal('iiqapt_after_subheading_weight', '400');
         }
         // Body content + styling
-        var bodyEl = document.getElementById('esl-after-body');
+        var bodyEl = document.getElementById('iiqapt-after-body');
         if (bodyEl && prevAfterBody) prevAfterBody.textContent = bodyEl.value;
         if (prevAfterBody) {
-            prevAfterBody.style.color      = eslVal('adaptive_test_after_body_color',  '#6b7280');
-            prevAfterBody.style.fontSize   = eslVal('adaptive_test_after_body_size',   '14') + 'px';
-            prevAfterBody.style.fontWeight = eslVal('adaptive_test_after_body_weight', '400');
+            prevAfterBody.style.color      = eslVal('iiqapt_after_body_color',  '#6b7280');
+            prevAfterBody.style.fontSize   = eslVal('iiqapt_after_body_size',   '14') + 'px';
+            prevAfterBody.style.fontWeight = eslVal('iiqapt_after_body_weight', '400');
         }
 
-        var resultColor = eslVal('adaptive_test_after_result_color', eslPrimary);
+        var resultColor = eslVal('iiqapt_after_result_color', eslPrimary);
         prevResultLevel.style.color      = resultColor;
-        prevResultLevel.style.fontSize   = eslVal('adaptive_test_after_result_size',   '64') + 'px';
-        prevResultLevel.style.fontWeight = eslVal('adaptive_test_after_result_weight', '700');
+        prevResultLevel.style.fontSize   = eslVal('iiqapt_after_result_size',   '64') + 'px';
+        prevResultLevel.style.fontWeight = eslVal('iiqapt_after_result_weight', '700');
         if (prevScaleBar) {
-            var showErrRate = eslChecked('adaptive_test_show_error_rate');
+            var showErrRate = eslChecked('iiqapt_show_error_rate');
             prevScaleBar.style.display = showErrRate ? '' : 'none';
             if (showErrRate) {
                 prevScaleBar.style.background = resultColor;
@@ -382,10 +382,10 @@ function eslBind(selectors, update) {
             }
         }
         if (prevErrorMargin) {
-            var showErrRate2 = eslChecked('adaptive_test_show_error_rate');
+            var showErrRate2 = eslChecked('iiqapt_show_error_rate');
             prevErrorMargin.style.display = showErrRate2 ? '' : 'none';
             if (showErrRate2) {
-                var labelEl  = document.getElementById('esl-error-rate-label');
+                var labelEl  = document.getElementById('iiqapt-error-rate-label');
                 var rawLabel = (labelEl && labelEl.value.trim()) ? labelEl.value : 'Margin of Error: ±{rate}%';
                 var errRate2 = 12; // preview uses a realistic example; actual value is computed by the test
                 prevErrorMargin.textContent = rawLabel.replace('{rate}', errRate2);
@@ -394,35 +394,35 @@ function eslBind(selectors, update) {
         if (prevActiveLabel) prevActiveLabel.style.color   = resultColor;
 
         if (prevRetake) {
-            prevRetake.style.background   = eslVal('adaptive_test_after_retake_color',         eslPrimary);
-            prevRetake.style.color        = eslVal('adaptive_test_after_retake_text_color',     '#ffffff');
-            prevRetake.style.fontSize     = eslVal('adaptive_test_after_retake_size',           '16') + 'px';
-            prevRetake.style.fontWeight   = eslVal('adaptive_test_after_retake_weight',         '600');
-            prevRetake.style.borderColor  = eslVal('adaptive_test_after_retake_border_color',   eslPrimary);
-            prevRetake.style.borderWidth  = eslVal('adaptive_test_after_retake_border_width',   '2') + 'px';
-            prevRetake.style.borderRadius = eslVal('adaptive_test_after_retake_border_radius',  '8') + 'px';
+            prevRetake.style.background   = eslVal('iiqapt_after_retake_color',         eslPrimary);
+            prevRetake.style.color        = eslVal('iiqapt_after_retake_text_color',     '#ffffff');
+            prevRetake.style.fontSize     = eslVal('iiqapt_after_retake_size',           '16') + 'px';
+            prevRetake.style.fontWeight   = eslVal('iiqapt_after_retake_weight',         '600');
+            prevRetake.style.borderColor  = eslVal('iiqapt_after_retake_border_color',   eslPrimary);
+            prevRetake.style.borderWidth  = eslVal('iiqapt_after_retake_border_width',   '2') + 'px';
+            prevRetake.style.borderRadius = eslVal('iiqapt_after_retake_border_radius',  '8') + 'px';
             prevRetake.style.borderStyle  = 'solid';
         }
 
-        if (prevCard) eslApplyBox(prevCard, 'adaptive_test_after');
+        if (prevCard) eslApplyBox(prevCard, 'iiqapt_after');
     }
 
-    ['esl-after-title','esl-after-subheading','esl-after-body'].forEach(function(id) {
+    ['iiqapt-after-title','iiqapt-after-subheading','iiqapt-after-body'].forEach(function(id) {
         var el = document.getElementById(id);
         if (el) el.addEventListener('input', update);
     });
-    var errLabelEl = document.getElementById('esl-error-rate-label');
+    var errLabelEl = document.getElementById('iiqapt-error-rate-label');
     if (errLabelEl) errLabelEl.addEventListener('input', update);
     eslBind(
-        '[name="adaptive_test_show_error_rate"],' +
-        '[name="adaptive_test_after_title_color"],[name="adaptive_test_after_title_size"],[name="adaptive_test_after_title_weight"],' +
-        '[name="adaptive_test_after_subheading_color"],[name="adaptive_test_after_subheading_size"],[name="adaptive_test_after_subheading_weight"],' +
-        '[name="adaptive_test_after_body_color"],[name="adaptive_test_after_body_size"],[name="adaptive_test_after_body_weight"],' +
-        '[name="adaptive_test_after_result_color"],[name="adaptive_test_after_result_size"],[name="adaptive_test_after_result_weight"],' +
-        '[name="adaptive_test_after_retake_color"],[name="adaptive_test_after_retake_text_color"],[name="adaptive_test_after_retake_size"],[name="adaptive_test_after_retake_weight"],' +
-        '[name="adaptive_test_after_retake_border_color"],[name="adaptive_test_after_retake_border_width"],[name="adaptive_test_after_retake_border_radius"],' +
-        '[name="adaptive_test_after_box_bg"],[name="adaptive_test_after_box_text_color"],[name="adaptive_test_after_box_border_radius"],' +
-        '[name="adaptive_test_after_box_border_width"],[name="adaptive_test_after_box_border_color"],[name="adaptive_test_after_box_shadow"]',
+        '[name="iiqapt_show_error_rate"],' +
+        '[name="iiqapt_after_title_color"],[name="iiqapt_after_title_size"],[name="iiqapt_after_title_weight"],' +
+        '[name="iiqapt_after_subheading_color"],[name="iiqapt_after_subheading_size"],[name="iiqapt_after_subheading_weight"],' +
+        '[name="iiqapt_after_body_color"],[name="iiqapt_after_body_size"],[name="iiqapt_after_body_weight"],' +
+        '[name="iiqapt_after_result_color"],[name="iiqapt_after_result_size"],[name="iiqapt_after_result_weight"],' +
+        '[name="iiqapt_after_retake_color"],[name="iiqapt_after_retake_text_color"],[name="iiqapt_after_retake_size"],[name="iiqapt_after_retake_weight"],' +
+        '[name="iiqapt_after_retake_border_color"],[name="iiqapt_after_retake_border_width"],[name="iiqapt_after_retake_border_radius"],' +
+        '[name="iiqapt_after_box_bg"],[name="iiqapt_after_box_text_color"],[name="iiqapt_after_box_border_radius"],' +
+        '[name="iiqapt_after_box_border_width"],[name="iiqapt_after_box_border_color"],[name="iiqapt_after_box_shadow"]',
         update
     );
 

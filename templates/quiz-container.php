@@ -10,22 +10,22 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 // any safety benefit.
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $bank_id       = get_query_var('adaptive_bank_id', 1);
-$title         = get_option( 'adaptive_test_start_title',    __( 'Start Your Level Test', 'idiomiq-adaptive-placement-test' ) );
-$subtitle      = get_option( 'adaptive_test_start_subtitle', __( 'Enter your email address to begin the test.', 'idiomiq-adaptive-placement-test' ) );
-$body          = get_option( 'adaptive_test_start_body',     __( 'By starting the test, you agree for your results to be sent to the email address that you provide.', 'idiomiq-adaptive-placement-test' ) );
-$placeholder   = get_option( 'adaptive_test_start_email_placeholder', 'name@example.com' );
-$gdpr2_on      = (bool) get_option( 'adaptive_test_start_gdpr2_enabled', 0 );
+$title         = get_option( 'iiqapt_start_title',    __( 'Start Your Level Test', 'idiomiq-adaptive-placement-test' ) );
+$subtitle      = get_option( 'iiqapt_start_subtitle', __( 'Enter your email address to begin the test.', 'idiomiq-adaptive-placement-test' ) );
+$body          = get_option( 'iiqapt_start_body',     __( 'By starting the test, you agree for your results to be sent to the email address that you provide.', 'idiomiq-adaptive-placement-test' ) );
+$placeholder   = get_option( 'iiqapt_start_email_placeholder', 'name@example.com' );
+$gdpr2_on      = (bool) get_option( 'iiqapt_start_gdpr2_enabled', 0 );
 $gdpr2_default = __( "I'd like to receive information about English courses and relevant offers. I understand I can withdraw this consent at any time.", 'idiomiq-adaptive-placement-test' );
-$gdpr2_msg     = get_option( 'adaptive_test_start_gdpr2_message', '' ) ?: $gdpr2_default;
-$btn_text      = get_option( 'adaptive_test_start_button_text',       __( 'Start Test', 'idiomiq-adaptive-placement-test' ) );
-$show_progress = get_option( 'adaptive_test_during_show_progress', 1 ) ? '1' : '0';
-$show_counter  = get_option( 'adaptive_test_during_show_counter', 0 ) ? '1' : '0';
-$counter_fmt   = get_option( 'adaptive_test_during_counter_format', 'Question %n% of %total%' );
-$q_align       = get_option( 'adaptive_test_during_question_align', 'center' );
-$opt_align     = get_option( 'adaptive_test_during_options_align', 'center' );
+$gdpr2_msg     = get_option( 'iiqapt_start_gdpr2_message', '' ) ?: $gdpr2_default;
+$btn_text      = get_option( 'iiqapt_start_button_text',       __( 'Start Test', 'idiomiq-adaptive-placement-test' ) );
+$show_progress = get_option( 'iiqapt_during_show_progress', 1 ) ? '1' : '0';
+$show_counter  = get_option( 'iiqapt_during_show_counter', 0 ) ? '1' : '0';
+$counter_fmt   = get_option( 'iiqapt_during_counter_format', 'Question %n% of %total%' );
+$q_align       = get_option( 'iiqapt_during_question_align', 'center' );
+$opt_align     = get_option( 'iiqapt_during_options_align', 'center' );
 ?>
-<div class="adaptive-wrapper">
-    <div class="adaptive-card esl-state-before" id="adaptive-app"
+<div class="iiqapt-wrapper">
+    <div class="iiqapt-card iiqapt-state-before" id="iiqapt-app"
          data-bank-id="<?php echo esc_attr( $bank_id ); ?>"
          data-show-progress="<?php echo esc_attr( $show_progress ); ?>"
          data-show-counter="<?php echo esc_attr( $show_counter ); ?>"
@@ -33,58 +33,58 @@ $opt_align     = get_option( 'adaptive_test_during_options_align', 'center' );
          data-question-align="<?php echo esc_attr( $q_align ); ?>"
          data-options-align="<?php echo esc_attr( $opt_align ); ?>">
 
-        <?php if ( get_option( 'adaptive_test_during_dyslexic_enabled', 1 ) ) : ?>
-        <button type="button" class="esl-dyslexic-toggle" id="esl-dyslexic-toggle" aria-pressed="false"><?php echo esc_html( get_option( 'adaptive_test_during_dyslexic_off', __( 'Change to dyslexia friendly font', 'idiomiq-adaptive-placement-test' ) ) ); ?></button>
+        <?php if ( get_option( 'iiqapt_during_dyslexic_enabled', 1 ) ) : ?>
+        <button type="button" class="iiqapt-dyslexic-toggle" id="iiqapt-dyslexic-toggle" aria-pressed="false"><?php echo esc_html( get_option( 'iiqapt_during_dyslexic_off', __( 'Change to dyslexia friendly font', 'idiomiq-adaptive-placement-test' ) ) ); ?></button>
         <?php endif; ?>
 
         <!-- Email Capture Section -->
-        <div id="esl-email-capture">
-            <h2 class="adaptive-question"><?php echo wp_kses_post( $title ); ?></h2>
+        <div id="iiqapt-email-capture">
+            <h2 class="iiqapt-question"><?php echo wp_kses_post( $title ); ?></h2>
             <?php if ( $subtitle ) : ?>
-                <p style="text-align:center; margin-bottom: 20px; color: var(--esl-text-muted);"><?php echo wp_kses_post( $subtitle ); ?></p>
+                <p style="text-align:center; margin-bottom: 20px; color: var(--iiqapt-text-muted);"><?php echo wp_kses_post( $subtitle ); ?></p>
             <?php endif; ?>
             <?php if ( $body ) : ?>
                 <div style="margin-bottom: 20px; text-align: center;"><?php echo wp_kses_post( $body ); ?></div>
             <?php endif; ?>
             <div style="margin-bottom: 20px; text-align: center;">
-                <input type="email" id="esl-test-email" placeholder="<?php echo esc_attr( $placeholder ); ?>" style="width: 100%; padding: 16px; border: 2px solid var(--esl-border-color); border-radius: 12px; font-size: 1rem; box-sizing: border-box; text-align: center;">
-                <p id="esl-email-error" role="alert" style="display:none; color:#c0392b; margin-top:8px; font-size:0.9em;"></p>
+                <input type="email" id="iiqapt-test-email" placeholder="<?php echo esc_attr( $placeholder ); ?>" style="width: 100%; padding: 16px; border: 2px solid var(--iiqapt-border-color); border-radius: 12px; font-size: 1rem; box-sizing: border-box; text-align: center;">
+                <p id="iiqapt-email-error" role="alert" style="display:none; color:#c0392b; margin-top:8px; font-size:0.9em;"></p>
             </div>
             <div style="position:absolute;left:-9999px;height:0;overflow:hidden;" aria-hidden="true">
-                <input type="text" id="esl-hp-url" name="esl_hp_url" value="" tabindex="-1" autocomplete="off">
+                <input type="text" id="iiqapt-hp-url" name="iiqapt_hp_url" value="" tabindex="-1" autocomplete="off">
             </div>
             <?php if ( $gdpr2_on ) : ?>
                 <div style="margin-bottom: 16px; display: flex; justify-content: center; align-items: flex-start; gap: 10px;">
-                    <input type="checkbox" id="esl-gdpr2-checkbox" style="margin-top: 3px; flex-shrink: 0;">
-                    <label for="esl-gdpr2-checkbox" style="font-size: 0.9em; color: var(--esl-text-muted); text-align: center;"><?php echo wp_kses_post( $gdpr2_msg ); ?></label>
+                    <input type="checkbox" id="iiqapt-gdpr2-checkbox" style="margin-top: 3px; flex-shrink: 0;">
+                    <label for="iiqapt-gdpr2-checkbox" style="font-size: 0.9em; color: var(--iiqapt-text-muted); text-align: center;"><?php echo wp_kses_post( $gdpr2_msg ); ?></label>
                 </div>
             <?php endif; ?>
-            <button type="button" id="esl-start-btn" class="adaptive-option-btn" style="text-align: center; background-color: var(--esl-primary); color: #fff; border-color: var(--esl-primary); font-weight: 600;">
+            <button type="button" id="iiqapt-start-btn" class="iiqapt-option-btn" style="text-align: center; background-color: var(--iiqapt-primary); color: #fff; border-color: var(--iiqapt-primary); font-weight: 600;">
                 <?php echo esc_html( $btn_text ); ?>
             </button>
         </div>
 
         <!-- Quiz Interface (Hidden by default) -->
-        <div id="esl-quiz-interface" class="adaptive-hidden">
+        <div id="iiqapt-quiz-interface" class="iiqapt-hidden">
             <!-- Question Counter -->
-            <div id="esl-counter" style="display:none; text-align:center; margin-bottom:8px; font-size:0.85em; color:var(--esl-text-muted);"></div>
+            <div id="iiqapt-counter" style="display:none; text-align:center; margin-bottom:8px; font-size:0.85em; color:var(--iiqapt-text-muted);"></div>
 
             <!-- Question Area -->
-            <div id="esl-question-area">
-                <h2 class="adaptive-question" id="esl-question-text">
+            <div id="iiqapt-question-area">
+                <h2 class="iiqapt-question" id="iiqapt-question-text">
                     <!-- Question text will be injected here via JS -->
                     <?php esc_html_e('Loading question...', 'idiomiq-adaptive-placement-test'); ?>
                 </h2>
 
                 <!-- Options Container -->
-                <div class="adaptive-options" id="esl-options-container">
+                <div class="iiqapt-options" id="iiqapt-options-container">
                     <!-- Options will be injected here via JS -->
                 </div>
             </div>
 
             <!-- Progress Bar (moved to bottom) -->
-            <div class="adaptive-progress-container" id="esl-progress-container">
-                <div id="esl-progress-bar" class="adaptive-progress-bar" style="width: 0%;"></div>
+            <div class="iiqapt-progress-container" id="iiqapt-progress-container">
+                <div id="iiqapt-progress-bar" class="iiqapt-progress-bar" style="width: 0%;"></div>
             </div>
         </div>
 

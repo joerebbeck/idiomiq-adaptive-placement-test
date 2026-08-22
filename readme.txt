@@ -4,7 +4,7 @@ Tags: quiz, english, esl, cefr, adaptive
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,22 +40,22 @@ IdiomIQ Adaptive Placement Test delivers a personalised English placement test t
 
 Place the test on any page or post:
 
-`[adaptive_level_test]`
+`[iiqapt]`
 
 To use a specific question bank:
 
-`[adaptive_level_test bank="2"]`
+`[iiqapt bank="2"]`
 
 **Source code**
 
-Development takes place on [GitHub](https://github.com/joerebbeck/adaptive-level-test-free).
+Development takes place on [GitHub](https://github.com/joerebbeck/idiomiq-adaptive-placement-test).
 
 == Installation ==
 
 1. Upload the `idiomiq-adaptive-placement-test` folder to `/wp-content/plugins/`, or install directly from the WordPress plugin directory.
 2. Activate the plugin through the **Plugins** menu.
-3. Go to **Settings → Adaptive Level Test** to configure question banks, email templates, and quiz behaviour.
-4. Add `[adaptive_level_test]` to any page or post where you want the test to appear.
+3. Go to **Settings → IdiomIQ Adaptive Placement Test** to configure question banks, email templates, and quiz behaviour.
+4. Add `[iiqapt]` to any page or post where you want the test to appear.
 5. Import questions via **Questions → Import CSV**, or add them individually through the admin interface.
 
 == Frequently Asked Questions ==
@@ -74,7 +74,7 @@ Columns in order: `question_stem`, `option_a`, `option_b`, `option_c`, `option_d
 
 = Can I run multiple tests on the same site? =
 
-Yes. Create additional question banks under **Questions → Manage Banks** and use the `bank` shortcode attribute to target each one: `[adaptive_level_test bank="2"]`.
+Yes. Create additional question banks under **Questions → Manage Banks** and use the `bank` shortcode attribute to target each one: `[iiqapt bank="2"]`.
 
 == Privacy Policy ==
 
@@ -113,6 +113,10 @@ Site owners should include the following information in their own Privacy Policy
 
 == Changelog ==
 
+= 1.3.2 =
+* Standardised all internal code naming to a single `iiqapt` prefix (functions, options, database tables, CSS/JS, hooks).
+* The shortcode is now `[iiqapt]` (previously `[adaptive_level_test]`).
+
 = 1.3.1 =
 * Renamed plugin to IdiomIQ Adaptive Placement Test.
 * Removed question bank and question count limits — the free plugin is now fully unlimited.
@@ -133,6 +137,9 @@ Site owners should include the following information in their own Privacy Policy
 * Option to delete all plugin data on uninstall.
 
 == Upgrade Notice ==
+
+= 1.3.2 =
+Internal naming standardised. The shortcode is now `[iiqapt]` — update any pages that used the old `[adaptive_level_test]` shortcode.
 
 = 1.3.1 =
 Renamed to IdiomIQ Adaptive Placement Test. Question bank and question count limits removed — the free plugin is now fully unlimited.

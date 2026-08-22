@@ -11,25 +11,25 @@ if (!defined('ABSPATH')) {
 
 // ── SAVE CHANGE TRACKING ──────────────────────────────────────────────────────
 
-function adaptive_test_save_tracking_init() {
+function iiqapt_save_tracking_init() {
     if ( ! isset( $_POST['option_page'] ) ) return; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook fires on load-options.php; WP Settings API verifies the nonce before that action runs
     $group = sanitize_key( wp_unslash( $_POST['option_page'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- same: nonce already verified upstream by WP Settings API
 
     $labels = [
-        'adaptive_test_options' => 'General settings',
-        'adaptive_test_msg_options'        => 'Message settings',
-        'adaptive_test_before_options'     => 'Before the Quiz settings',
-        'adaptive_test_before_pro_options' => 'Before the Quiz customisation',
-        'adaptive_test_during_options'     => 'During the Quiz settings',
-        'adaptive_test_during_pro_options' => 'During the Quiz customisation',
-        'adaptive_test_after_options'      => 'After the Quiz settings',
-        'adaptive_test_after_pro_options'  => 'After the Quiz customisation',
+        'iiqapt_options' => 'General settings',
+        'iiqapt_msg_options'        => 'Message settings',
+        'iiqapt_before_options'     => 'Before the Quiz settings',
+        'iiqapt_before_pro_options' => 'Before the Quiz customisation',
+        'iiqapt_during_options'     => 'During the Quiz settings',
+        'iiqapt_during_pro_options' => 'During the Quiz customisation',
+        'iiqapt_after_options'      => 'After the Quiz settings',
+        'iiqapt_after_pro_options'  => 'After the Quiz customisation',
     ];
 
     if ( ! array_key_exists( $group, $labels ) ) return;
 
     $uid   = get_current_user_id();
-    $key   = 'adaptive_test_save_' . $uid;
+    $key   = 'iiqapt_save_' . $uid;
     $label = $labels[ $group ];
 
     set_transient( $key, [ 'label' => $label, 'changed' => false ], 60 );
@@ -38,27 +38,27 @@ function adaptive_test_save_tracking_init() {
         set_transient( $key, [ 'label' => $label, 'changed' => true ], 60 );
     } );
 }
-add_action( 'load-options.php', 'adaptive_test_save_tracking_init' );
+add_action( 'load-options.php', 'iiqapt_save_tracking_init' );
 
-function adaptive_test_suppress_default_settings_notice() {
+function iiqapt_suppress_default_settings_notice() {
     if ( ! isset( $_GET['settings-updated'], $_GET['page'] ) ) return; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only: only deletes a transient to suppress WP's generic "Settings saved" notice; no data is written or mutated
-    if ( 'adaptive-level-test' !== sanitize_key( wp_unslash( $_GET['page'] ) ) ) return; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- same: read-only display check
+    if ( 'iiqapt' !== sanitize_key( wp_unslash( $_GET['page'] ) ) ) return; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- same: read-only display check
     // Delete the transient before admin-header.php reads it, so WordPress never
     // adds its generic "Settings saved." to admin_notices.
     delete_transient( 'settings_errors' );
 }
-add_action( 'admin_init', 'adaptive_test_suppress_default_settings_notice' );
+add_action( 'admin_init', 'iiqapt_suppress_default_settings_notice' );
 
 /**
  * Handle Question Form Submissions (Add/Edit/Delete)
  */
-function adaptive_test_handle_question_actions() {
+function iiqapt_handle_question_actions() {
     if (!current_user_can('manage_options')) return;
 
-    if ( isset( $_POST['adaptive_test_action'] ) && 'save_question' === $_POST['adaptive_test_action'] ) {
-        check_admin_referer( 'adaptive_test_save_question_nonce' );
+    if ( isset( $_POST['iiqapt_action'] ) && 'save_question' === $_POST['iiqapt_action'] ) {
+        check_admin_referer( 'iiqapt_save_question_nonce' );
         global $wpdb;
-        $table_name = $wpdb->prefix . 'adaptive_questions';
+        $table_name = $wpdb->prefix . 'iiqapt_questions';
 
         $data = [
             'question_text' => sanitize_text_field( wp_unslash( $_POST['question_text'] ?? '' ) ),
@@ -70,7 +70,7 @@ function adaptive_test_handle_question_actions() {
         ];
 
         if ( ! in_array( $data['level'], [ 'A2', 'B1', 'B2', 'C1', 'C2' ], true ) ) {
-            wp_safe_redirect( add_query_arg( [ 'message' => 'invalid_level', 'tab' => 'questions', 'bank_id' => $data['bank_id'] ], remove_query_arg( [ 'adaptive_test_action' ] ) ) );
+            wp_safe_redirect( add_query_arg( [ 'message' => 'invalid_level', 'tab' => 'questions', 'bank_id' => $data['bank_id'] ], remove_query_arg( [ 'iiqapt_action' ] ) ) );
             exit;
         }
 
@@ -85,10 +85,10 @@ function adaptive_test_handle_question_actions() {
     }
 
     if ( isset( $_GET['action'] ) && 'delete_question' === $_GET['action'] && isset( $_GET['id'] ) ) {
-        check_admin_referer( 'adaptive_test_delete_question_nonce' );
+        check_admin_referer( 'iiqapt_delete_question_nonce' );
         global $wpdb;
-        $banks_table = $wpdb->prefix . 'adaptive_question_banks';
-        $table_name  = $wpdb->prefix . 'adaptive_questions';
+        $banks_table = $wpdb->prefix . 'iiqapt_question_banks';
+        $table_name  = $wpdb->prefix . 'iiqapt_questions';
 
         $question = $wpdb->get_row( $wpdb->prepare( "SELECT bank_id FROM {$table_name} WHERE id = %d", absint( wp_unslash( $_GET['id'] ) ) ) );
         if ( $question ) {
@@ -105,22 +105,22 @@ function adaptive_test_handle_question_actions() {
     }
 
     // Handle Bank Actions
-    if ( isset( $_POST['adaptive_test_action'] ) && 'save_bank' === $_POST['adaptive_test_action'] ) {
-        check_admin_referer( 'adaptive_test_save_bank_nonce' );
+    if ( isset( $_POST['iiqapt_action'] ) && 'save_bank' === $_POST['iiqapt_action'] ) {
+        check_admin_referer( 'iiqapt_save_bank_nonce' );
 
         global $wpdb;
-        $banks_table = $wpdb->prefix . 'adaptive_question_banks';
+        $banks_table = $wpdb->prefix . 'iiqapt_question_banks';
 
         $wpdb->insert( $banks_table, [ 'name' => sanitize_text_field( wp_unslash( $_POST['bank_name'] ?? '' ) ) ] );
 
-        wp_safe_redirect( add_query_arg( [ 'message' => 'bank_saved', 'tab' => 'questions' ], remove_query_arg( [ 'adaptive_test_action' ] ) ) );
+        wp_safe_redirect( add_query_arg( [ 'message' => 'bank_saved', 'tab' => 'questions' ], remove_query_arg( [ 'iiqapt_action' ] ) ) );
         exit;
     }
 
     if ( isset( $_GET['action'] ) && 'delete_bank' === $_GET['action'] && isset( $_GET['id'] ) ) {
-        check_admin_referer( 'adaptive_test_delete_bank_nonce' );
+        check_admin_referer( 'iiqapt_delete_bank_nonce' );
         global $wpdb;
-        $banks_table = $wpdb->prefix . 'adaptive_question_banks';
+        $banks_table = $wpdb->prefix . 'iiqapt_question_banks';
         $id          = absint( wp_unslash( $_GET['id'] ) );
 
         // Check if default
@@ -130,7 +130,7 @@ function adaptive_test_handle_question_actions() {
         }
 
         // Check usage in posts (simple check)
-        $shortcode_str = '[adaptive_level_test bank="' . $id . '"';
+        $shortcode_str = '[iiqapt bank="' . $id . '"';
         $in_use = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_content LIKE %s AND post_status = 'publish' LIMIT 1", '%' . $wpdb->esc_like($shortcode_str) . '%'));
         
         if ($in_use) {
@@ -144,10 +144,10 @@ function adaptive_test_handle_question_actions() {
     }
 
     // Handle Rename Bank
-    if ( isset( $_POST['adaptive_test_action'] ) && 'rename_bank' === $_POST['adaptive_test_action'] ) {
-        check_admin_referer( 'adaptive_test_rename_bank_nonce' );
+    if ( isset( $_POST['iiqapt_action'] ) && 'rename_bank' === $_POST['iiqapt_action'] ) {
+        check_admin_referer( 'iiqapt_rename_bank_nonce' );
         global $wpdb;
-        $banks_table = $wpdb->prefix . 'adaptive_question_banks';
+        $banks_table = $wpdb->prefix . 'iiqapt_question_banks';
         $id   = absint( wp_unslash( $_POST['bank_id'] ?? 0 ) );
         $name = sanitize_text_field( wp_unslash( $_POST['bank_name'] ?? '' ) );
 
@@ -155,16 +155,16 @@ function adaptive_test_handle_question_actions() {
             $wpdb->update( $banks_table, [ 'name' => $name ], [ 'id' => $id ] );
         }
 
-        wp_safe_redirect( add_query_arg( [ 'message' => 'bank_renamed', 'tab' => 'questions' ], remove_query_arg( [ 'adaptive_test_action' ] ) ) );
+        wp_safe_redirect( add_query_arg( [ 'message' => 'bank_renamed', 'tab' => 'questions' ], remove_query_arg( [ 'iiqapt_action' ] ) ) );
         exit;
     }
 
     // Handle Duplicate Bank
     if ( isset( $_GET['action'] ) && 'duplicate_bank' === $_GET['action'] && isset( $_GET['id'] ) ) {
-        check_admin_referer( 'adaptive_test_duplicate_bank_nonce' );
+        check_admin_referer( 'iiqapt_duplicate_bank_nonce' );
         global $wpdb;
-        $banks_table     = $wpdb->prefix . 'adaptive_question_banks';
-        $questions_table = $wpdb->prefix . 'adaptive_questions';
+        $banks_table     = $wpdb->prefix . 'iiqapt_question_banks';
+        $questions_table = $wpdb->prefix . 'iiqapt_questions';
         $source_id       = absint( wp_unslash( $_GET['id'] ) );
 
         // 1. Get Source Bank
@@ -208,27 +208,27 @@ function adaptive_test_handle_question_actions() {
         exit;
     }
 }
-add_action('admin_init', 'adaptive_test_handle_question_actions');
+add_action('admin_init', 'iiqapt_handle_question_actions');
 
 /**
  * Handle Tool Actions (Import/Export/Reseed)
  */
-function adaptive_test_handle_tool_actions() {
+function iiqapt_handle_tool_actions() {
     if (!current_user_can('manage_options')) return;
 
     // Export CSV
-    if ( isset( $_POST['adaptive_test_action'] ) && 'export_csv' === $_POST['adaptive_test_action'] ) {
-        check_admin_referer( 'adaptive_test_tool_action_nonce' );
+    if ( isset( $_POST['iiqapt_action'] ) && 'export_csv' === $_POST['iiqapt_action'] ) {
+        check_admin_referer( 'iiqapt_tool_action_nonce' );
         $bank_id = absint( wp_unslash( $_POST['export_bank_id'] ?? 1 ) );
         
         global $wpdb;
-        $table_name = $wpdb->prefix . 'adaptive_questions';
+        $table_name = $wpdb->prefix . 'iiqapt_questions';
         $query = $wpdb->prepare("SELECT * FROM $table_name WHERE bank_id = %d", $bank_id);
         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
         $questions = $wpdb->get_results($query, ARRAY_A);
 
         header('Content-Type: text/csv');
-        header( 'Content-Disposition: attachment; filename="esl-questions-export-' . wp_date( 'Y-m-d' ) . '.csv"' );
+        header( 'Content-Disposition: attachment; filename="iiqapt-questions-export-' . wp_date( 'Y-m-d' ) . '.csv"' );
         header('Pragma: no-cache');
         header('Expires: 0');
 
@@ -254,8 +254,8 @@ function adaptive_test_handle_tool_actions() {
     }
 
     // Import CSV
-    if ( isset( $_POST['adaptive_test_action'] ) && 'import_csv' === $_POST['adaptive_test_action'] ) {
-        check_admin_referer( 'adaptive_test_tool_action_nonce' );
+    if ( isset( $_POST['iiqapt_action'] ) && 'import_csv' === $_POST['iiqapt_action'] ) {
+        check_admin_referer( 'iiqapt_tool_action_nonce' );
         $bank_id = absint( wp_unslash( $_POST['import_bank_id'] ?? 1 ) );
 
         if (!empty($_FILES['csv_file']['tmp_name'])) {
@@ -265,7 +265,7 @@ function adaptive_test_handle_tool_actions() {
             }
 
             global $wpdb;
-            $table_name = $wpdb->prefix . 'adaptive_questions';
+            $table_name = $wpdb->prefix . 'iiqapt_questions';
             
             $handle = fopen( $_FILES['csv_file']['tmp_name'], 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- WP_Filesystem cannot read uploaded tmp files; tmp_name is a server-generated path, not user-supplied content
             $header = fgetcsv($handle); // Skip header
@@ -303,7 +303,7 @@ function adaptive_test_handle_tool_actions() {
             }
             fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 
-            $redirect_args = [ 'page' => 'adaptive-level-test', 'tab' => 'questions', 'message' => 'imported', 'count' => $imported ];
+            $redirect_args = [ 'page' => 'iiqapt', 'tab' => 'questions', 'message' => 'imported', 'count' => $imported ];
             if ( $skipped > 0 ) {
                 $redirect_args['skipped'] = $skipped;
             }
@@ -313,12 +313,12 @@ function adaptive_test_handle_tool_actions() {
     }
 
     // Re-seed Questions
-    if ( isset( $_POST['adaptive_test_action'] ) && 'reseed_questions' === $_POST['adaptive_test_action'] ) {
-        check_admin_referer('adaptive_test_tool_action_nonce');
+    if ( isset( $_POST['iiqapt_action'] ) && 'reseed_questions' === $_POST['iiqapt_action'] ) {
+        check_admin_referer('iiqapt_tool_action_nonce');
         
         global $wpdb;
-        $banks_table = $wpdb->prefix . 'adaptive_question_banks';
-        $table_name = $wpdb->prefix . 'adaptive_questions';
+        $banks_table = $wpdb->prefix . 'iiqapt_question_banks';
+        $table_name = $wpdb->prefix . 'iiqapt_questions';
         
         // Truncate both tables and re-insert the default bank atomically.
         $wpdb->query( 'START TRANSACTION' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
@@ -330,19 +330,19 @@ function adaptive_test_handle_tool_actions() {
         $wpdb->query( 'COMMIT' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
         
         // Seed
-        if (function_exists('adaptive_test_insert_sample_questions')) {
-            adaptive_test_insert_sample_questions();
+        if (function_exists('iiqapt_insert_sample_questions')) {
+            iiqapt_insert_sample_questions();
         }
 
-        wp_safe_redirect(add_query_arg(['page' => 'adaptive-level-test', 'tab' => 'questions', 'message' => 'reseeded'], admin_url('options-general.php')));
+        wp_safe_redirect(add_query_arg(['page' => 'iiqapt', 'tab' => 'questions', 'message' => 'reseeded'], admin_url('options-general.php')));
         exit;
     }
 
     // Export Logs CSV
-    if ( isset( $_POST['adaptive_test_action'] ) && 'export_logs_csv' === $_POST['adaptive_test_action'] ) {
-        check_admin_referer( 'adaptive_test_export_logs_nonce' );
+    if ( isset( $_POST['iiqapt_action'] ) && 'export_logs_csv' === $_POST['iiqapt_action'] ) {
+        check_admin_referer( 'iiqapt_export_logs_nonce' );
         global $wpdb;
-        $logs_table  = $wpdb->prefix . 'adaptive_attempt_logs';
+        $logs_table  = $wpdb->prefix . 'iiqapt_attempt_logs';
         $bank_filter = isset( $_POST['bank_filter'] ) ? sanitize_text_field( wp_unslash( $_POST['bank_filter'] ) ) : '';
         if ( $bank_filter ) {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -360,7 +360,7 @@ function adaptive_test_handle_tool_actions() {
         }
 
         header( 'Content-Type: text/csv' );
-        header( 'Content-Disposition: attachment; filename="esl-attempt-logs-' . wp_date( 'Y-m-d' ) . '.csv"' );
+        header( 'Content-Disposition: attachment; filename="iiqapt-attempt-logs-' . wp_date( 'Y-m-d' ) . '.csv"' );
         header( 'Pragma: no-cache' );
         header( 'Expires: 0' );
 
@@ -374,44 +374,44 @@ function adaptive_test_handle_tool_actions() {
     }
 
     // Delete Logs
-    if ( isset( $_POST['adaptive_test_action'] ) && 'delete_logs' === $_POST['adaptive_test_action'] ) {
-        check_admin_referer( 'adaptive_test_delete_logs_nonce' );
+    if ( isset( $_POST['iiqapt_action'] ) && 'delete_logs' === $_POST['iiqapt_action'] ) {
+        check_admin_referer( 'iiqapt_delete_logs_nonce' );
         $days = absint( wp_unslash( $_POST['log_days'] ?? 30 ) );
         global $wpdb;
-        $logs_table = $wpdb->prefix . 'adaptive_attempt_logs';
+        $logs_table = $wpdb->prefix . 'iiqapt_attempt_logs';
         $wpdb->query($wpdb->prepare("DELETE FROM $logs_table WHERE date < DATE_SUB(NOW(), INTERVAL %d DAY)", $days));
-        wp_safe_redirect(add_query_arg(['page' => 'adaptive-level-test', 'tab' => 'logs', 'message' => 'logs_deleted'], admin_url('options-general.php')));
+        wp_safe_redirect(add_query_arg(['page' => 'iiqapt', 'tab' => 'logs', 'message' => 'logs_deleted'], admin_url('options-general.php')));
         exit;
     }
 
     // Delete individual log entry
     if ( isset( $_GET['action'] ) && 'delete_log' === $_GET['action'] && isset( $_GET['id'] ) ) {
-        check_admin_referer( 'adaptive_test_delete_log_nonce' );
+        check_admin_referer( 'iiqapt_delete_log_nonce' );
         global $wpdb;
-        $logs_table = $wpdb->prefix . 'adaptive_attempt_logs';
+        $logs_table = $wpdb->prefix . 'iiqapt_attempt_logs';
         $wpdb->delete( $logs_table, [ 'id' => absint( wp_unslash( $_GET['id'] ) ) ] );
-        wp_safe_redirect( add_query_arg( [ 'page' => 'adaptive-level-test', 'tab' => 'logs', 'message' => 'log_deleted' ], admin_url( 'options-general.php' ) ) );
+        wp_safe_redirect( add_query_arg( [ 'page' => 'iiqapt', 'tab' => 'logs', 'message' => 'log_deleted' ], admin_url( 'options-general.php' ) ) );
         exit;
     }
 
     // Bulk delete log entries
-    if ( isset( $_POST['adaptive_test_action'] ) && 'bulk_delete_logs' === $_POST['adaptive_test_action'] ) {
-        check_admin_referer( 'adaptive_test_bulk_delete_logs_nonce' );
+    if ( isset( $_POST['iiqapt_action'] ) && 'bulk_delete_logs' === $_POST['iiqapt_action'] ) {
+        check_admin_referer( 'iiqapt_bulk_delete_logs_nonce' );
         $ids = isset( $_POST['log_ids'] ) ? array_map( 'absint', (array) wp_unslash( $_POST['log_ids'] ) ) : [];
         if ( ! empty( $ids ) ) {
             global $wpdb;
-            $logs_table   = $wpdb->prefix . 'adaptive_attempt_logs';
+            $logs_table   = $wpdb->prefix . 'iiqapt_attempt_logs';
             $placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
             // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
             $wpdb->query( $wpdb->prepare( "DELETE FROM {$logs_table} WHERE id IN ({$placeholders})", $ids ) );
         }
-        wp_safe_redirect( add_query_arg( [ 'page' => 'adaptive-level-test', 'tab' => 'logs', 'message' => 'logs_deleted' ], admin_url( 'options-general.php' ) ) );
+        wp_safe_redirect( add_query_arg( [ 'page' => 'iiqapt', 'tab' => 'logs', 'message' => 'logs_deleted' ], admin_url( 'options-general.php' ) ) );
         exit;
     }
 
     // Reset Start Screen Defaults
-    if ( isset( $_POST['adaptive_test_action'] ) && 'reset_start_screen' === $_POST['adaptive_test_action'] ) {
-        check_admin_referer( 'adaptive_test_reset_start_screen_nonce' );
+    if ( isset( $_POST['iiqapt_action'] ) && 'reset_start_screen' === $_POST['iiqapt_action'] ) {
+        check_admin_referer( 'iiqapt_reset_start_screen_nonce' );
         $before_opts = [ 'start_title', 'start_subtitle', 'start_body', 'start_email_placeholder', 'start_gdpr2_enabled', 'start_gdpr2_message', 'start_button_text',
             'before_title_color', 'before_title_size', 'before_title_weight',
             'before_subtitle_color', 'before_subtitle_size', 'before_subtitle_weight',
@@ -424,14 +424,14 @@ function adaptive_test_handle_tool_actions() {
             'before_box_bg', 'before_box_text_color', 'before_box_text_size', 'before_box_text_weight',
             'before_box_border_width', 'before_box_border_radius', 'before_box_border_color', 'before_box_shadow',
         ];
-        foreach ( $before_opts as $key ) { delete_option( 'adaptive_test_' . $key ); }
-        wp_safe_redirect( add_query_arg( [ 'page' => 'adaptive-level-test', 'tab' => 'quiz', 'sub' => 'before', 'message' => 'start_screen_reset' ], admin_url( 'options-general.php' ) ) );
+        foreach ( $before_opts as $key ) { delete_option( 'iiqapt_' . $key ); }
+        wp_safe_redirect( add_query_arg( [ 'page' => 'iiqapt', 'tab' => 'quiz', 'sub' => 'before', 'message' => 'start_screen_reset' ], admin_url( 'options-general.php' ) ) );
         exit;
     }
 
     // Reset During the Quiz Defaults
-    if ( isset( $_POST['adaptive_test_action'] ) && 'reset_during' === $_POST['adaptive_test_action'] ) {
-        check_admin_referer( 'adaptive_test_reset_during_nonce' );
+    if ( isset( $_POST['iiqapt_action'] ) && 'reset_during' === $_POST['iiqapt_action'] ) {
+        check_admin_referer( 'iiqapt_reset_during_nonce' );
         $during_opts = [ 'during_loading', 'during_analysing', 'during_show_progress', 'during_show_counter', 'during_counter_format', 'during_question_align', 'during_options_align',
             'during_progress_color',
             'during_question_color', 'during_question_size', 'during_question_weight',
@@ -446,14 +446,14 @@ function adaptive_test_handle_tool_actions() {
             'during_box_bg', 'during_box_text_color', 'during_box_text_size', 'during_box_text_weight',
             'during_box_border_width', 'during_box_border_radius', 'during_box_border_color', 'during_box_shadow',
         ];
-        foreach ( $during_opts as $key ) { delete_option( 'adaptive_test_' . $key ); }
-        wp_safe_redirect( add_query_arg( [ 'page' => 'adaptive-level-test', 'tab' => 'quiz', 'sub' => 'during', 'message' => 'during_reset' ], admin_url( 'options-general.php' ) ) );
+        foreach ( $during_opts as $key ) { delete_option( 'iiqapt_' . $key ); }
+        wp_safe_redirect( add_query_arg( [ 'page' => 'iiqapt', 'tab' => 'quiz', 'sub' => 'during', 'message' => 'during_reset' ], admin_url( 'options-general.php' ) ) );
         exit;
     }
 
     // Reset After the Quiz Defaults
-    if ( isset( $_POST['adaptive_test_action'] ) && 'reset_after' === $_POST['adaptive_test_action'] ) {
-        check_admin_referer( 'adaptive_test_reset_after_nonce' );
+    if ( isset( $_POST['iiqapt_action'] ) && 'reset_after' === $_POST['iiqapt_action'] ) {
+        check_admin_referer( 'iiqapt_reset_after_nonce' );
         $after_opts = [ 'show_error_rate', 'error_rate_label',
             'after_title', 'after_subheading', 'after_body',
             'after_title_color', 'after_title_size', 'after_title_weight',
@@ -465,151 +465,151 @@ function adaptive_test_handle_tool_actions() {
             'after_box_bg', 'after_box_text_color', 'after_box_text_size', 'after_box_text_weight',
             'after_box_border_width', 'after_box_border_radius', 'after_box_border_color', 'after_box_shadow',
         ];
-        foreach ( $after_opts as $key ) { delete_option( 'adaptive_test_' . $key ); }
-        wp_safe_redirect( add_query_arg( [ 'page' => 'adaptive-level-test', 'tab' => 'quiz', 'sub' => 'after', 'message' => 'after_reset' ], admin_url( 'options-general.php' ) ) );
+        foreach ( $after_opts as $key ) { delete_option( 'iiqapt_' . $key ); }
+        wp_safe_redirect( add_query_arg( [ 'page' => 'iiqapt', 'tab' => 'quiz', 'sub' => 'after', 'message' => 'after_reset' ], admin_url( 'options-general.php' ) ) );
         exit;
     }
 
     // Reset Email Templates
-    if ( isset( $_POST['adaptive_test_action'] ) && 'reset_email_templates' === $_POST['adaptive_test_action'] ) {
-        check_admin_referer('adaptive_test_reset_email_nonce');
+    if ( isset( $_POST['iiqapt_action'] ) && 'reset_email_templates' === $_POST['iiqapt_action'] ) {
+        check_admin_referer('iiqapt_reset_email_nonce');
         
-        delete_option('adaptive_test_email_subject');
-        delete_option('adaptive_test_email_body');
-        delete_option('adaptive_test_admin_email');
-        delete_option('adaptive_test_admin_email_subject');
-        delete_option('adaptive_test_admin_email_body');
-        delete_option('adaptive_test_email_footer');
+        delete_option('iiqapt_email_subject');
+        delete_option('iiqapt_email_body');
+        delete_option('iiqapt_admin_email');
+        delete_option('iiqapt_admin_email_subject');
+        delete_option('iiqapt_admin_email_body');
+        delete_option('iiqapt_email_footer');
 
-        wp_safe_redirect(add_query_arg(['page' => 'adaptive-level-test', 'tab' => 'messages', 'message' => 'emails_reset'], admin_url('options-general.php')));
+        wp_safe_redirect(add_query_arg(['page' => 'iiqapt', 'tab' => 'messages', 'message' => 'emails_reset'], admin_url('options-general.php')));
         exit;
     }
 }
-add_action('admin_init', 'adaptive_test_handle_tool_actions');
+add_action('admin_init', 'iiqapt_handle_tool_actions');
 
 /**
  * Register settings and fields.
  */
-function adaptive_test_register_settings() {
+function iiqapt_register_settings() {
     $int = [ 'sanitize_callback' => 'absint' ];
     $str = [ 'sanitize_callback' => 'sanitize_text_field' ];
-    $wt  = [ 'sanitize_callback' => 'adaptive_test_sanitize_font_weight' ];
+    $wt  = [ 'sanitize_callback' => 'iiqapt_sanitize_font_weight' ];
 
 
-    register_setting( 'adaptive_test_options', 'adaptive_test_delete_on_uninstall',   $int );
-    register_setting( 'adaptive_test_options', 'adaptive_test_rate_limit',            $int );
-    register_setting( 'adaptive_test_options', 'adaptive_test_max_batches',           $int );
-    register_setting( 'adaptive_test_options', 'adaptive_test_log_retention_days',   $int );
-    register_setting( 'adaptive_test_options', 'adaptive_test_primary_color',       [ 'sanitize_callback' => 'sanitize_hex_color' ] );
-    register_setting( 'adaptive_test_options', 'adaptive_test_target_error',        [ 'sanitize_callback' => 'floatval' ] );
-    register_setting( 'adaptive_test_options', 'adaptive_test_strong_label',        $str );
-    register_setting( 'adaptive_test_options', 'adaptive_test_borderline_label',    $str );
+    register_setting( 'iiqapt_options', 'iiqapt_delete_on_uninstall',   $int );
+    register_setting( 'iiqapt_options', 'iiqapt_rate_limit',            $int );
+    register_setting( 'iiqapt_options', 'iiqapt_max_batches',           $int );
+    register_setting( 'iiqapt_options', 'iiqapt_log_retention_days',   $int );
+    register_setting( 'iiqapt_options', 'iiqapt_primary_color',       [ 'sanitize_callback' => 'sanitize_hex_color' ] );
+    register_setting( 'iiqapt_options', 'iiqapt_target_error',        [ 'sanitize_callback' => 'floatval' ] );
+    register_setting( 'iiqapt_options', 'iiqapt_strong_label',        $str );
+    register_setting( 'iiqapt_options', 'iiqapt_borderline_label',    $str );
 
     // Messages (own group so saving General never clears these)
-    register_setting( 'adaptive_test_msg_options', 'adaptive_test_email_subject',        [ 'sanitize_callback' => 'sanitize_text_field' ] );
-    register_setting( 'adaptive_test_msg_options', 'adaptive_test_email_body',            [ 'sanitize_callback' => 'sanitize_textarea_field' ] );
-    register_setting( 'adaptive_test_msg_options', 'adaptive_test_admin_email',           [ 'sanitize_callback' => 'adaptive_test_sanitize_admin_emails' ] );
-    register_setting( 'adaptive_test_msg_options', 'adaptive_test_admin_email_subject',   $str );
-    register_setting( 'adaptive_test_msg_options', 'adaptive_test_admin_email_body',      [ 'sanitize_callback' => 'sanitize_textarea_field' ] );
-    register_setting( 'adaptive_test_msg_options', 'adaptive_test_email_footer',          [ 'sanitize_callback' => 'wp_kses_post' ] );
+    register_setting( 'iiqapt_msg_options', 'iiqapt_email_subject',        [ 'sanitize_callback' => 'sanitize_text_field' ] );
+    register_setting( 'iiqapt_msg_options', 'iiqapt_email_body',            [ 'sanitize_callback' => 'sanitize_textarea_field' ] );
+    register_setting( 'iiqapt_msg_options', 'iiqapt_admin_email',           [ 'sanitize_callback' => 'iiqapt_sanitize_admin_emails' ] );
+    register_setting( 'iiqapt_msg_options', 'iiqapt_admin_email_subject',   $str );
+    register_setting( 'iiqapt_msg_options', 'iiqapt_admin_email_body',      [ 'sanitize_callback' => 'sanitize_textarea_field' ] );
+    register_setting( 'iiqapt_msg_options', 'iiqapt_email_footer',          [ 'sanitize_callback' => 'wp_kses_post' ] );
 
     // Before — content
-    register_setting( 'adaptive_test_before_options', 'adaptive_test_start_title',             [ 'sanitize_callback' => 'wp_kses_post' ] );
-    register_setting( 'adaptive_test_before_options', 'adaptive_test_start_subtitle',          [ 'sanitize_callback' => 'wp_kses_post' ] );
-    register_setting( 'adaptive_test_before_options', 'adaptive_test_start_body',              [ 'sanitize_callback' => 'wp_kses_post' ] );
-    register_setting( 'adaptive_test_before_options', 'adaptive_test_start_email_placeholder', $str );
-    register_setting( 'adaptive_test_before_options', 'adaptive_test_start_button_text',       $str );
-    register_setting( 'adaptive_test_before_options', 'adaptive_test_start_gdpr2_enabled',     $int );
-    register_setting( 'adaptive_test_before_options', 'adaptive_test_start_gdpr2_message',     [ 'sanitize_callback' => 'wp_kses_post' ] );
+    register_setting( 'iiqapt_before_options', 'iiqapt_start_title',             [ 'sanitize_callback' => 'wp_kses_post' ] );
+    register_setting( 'iiqapt_before_options', 'iiqapt_start_subtitle',          [ 'sanitize_callback' => 'wp_kses_post' ] );
+    register_setting( 'iiqapt_before_options', 'iiqapt_start_body',              [ 'sanitize_callback' => 'wp_kses_post' ] );
+    register_setting( 'iiqapt_before_options', 'iiqapt_start_email_placeholder', $str );
+    register_setting( 'iiqapt_before_options', 'iiqapt_start_button_text',       $str );
+    register_setting( 'iiqapt_before_options', 'iiqapt_start_gdpr2_enabled',     $int );
+    register_setting( 'iiqapt_before_options', 'iiqapt_start_gdpr2_message',     [ 'sanitize_callback' => 'wp_kses_post' ] );
 
     // During — content/layout
-    register_setting( 'adaptive_test_during_options', 'adaptive_test_during_loading',        $str );
-    register_setting( 'adaptive_test_during_options', 'adaptive_test_during_analysing',      $str );
-    register_setting( 'adaptive_test_during_options', 'adaptive_test_during_show_progress',  $int );
-    register_setting( 'adaptive_test_during_options', 'adaptive_test_during_show_counter',   $int );
-    register_setting( 'adaptive_test_during_options', 'adaptive_test_during_counter_format', $str );
-    register_setting( 'adaptive_test_during_options', 'adaptive_test_during_question_align', $str );
-    register_setting( 'adaptive_test_during_options', 'adaptive_test_during_options_align',  $str );
-    register_setting( 'adaptive_test_during_options', 'adaptive_test_during_dyslexic_enabled', $int );
-    register_setting( 'adaptive_test_during_options', 'adaptive_test_during_dyslexic_off',     $str );
-    register_setting( 'adaptive_test_during_options', 'adaptive_test_during_dyslexic_on',      $str );
+    register_setting( 'iiqapt_during_options', 'iiqapt_during_loading',        $str );
+    register_setting( 'iiqapt_during_options', 'iiqapt_during_analysing',      $str );
+    register_setting( 'iiqapt_during_options', 'iiqapt_during_show_progress',  $int );
+    register_setting( 'iiqapt_during_options', 'iiqapt_during_show_counter',   $int );
+    register_setting( 'iiqapt_during_options', 'iiqapt_during_counter_format', $str );
+    register_setting( 'iiqapt_during_options', 'iiqapt_during_question_align', $str );
+    register_setting( 'iiqapt_during_options', 'iiqapt_during_options_align',  $str );
+    register_setting( 'iiqapt_during_options', 'iiqapt_during_dyslexic_enabled', $int );
+    register_setting( 'iiqapt_during_options', 'iiqapt_during_dyslexic_off',     $str );
+    register_setting( 'iiqapt_during_options', 'iiqapt_during_dyslexic_on',      $str );
 
     // After — content
-    register_setting( 'adaptive_test_after_options', 'adaptive_test_show_error_rate',  [ 'default' => 1, 'sanitize_callback' => 'absint' ] );
-    register_setting( 'adaptive_test_after_options', 'adaptive_test_error_rate_label', [ 'sanitize_callback' => 'wp_kses_post' ] );
-    register_setting( 'adaptive_test_after_options', 'adaptive_test_after_title',      [ 'sanitize_callback' => 'wp_kses_post' ] );
-    register_setting( 'adaptive_test_after_options', 'adaptive_test_after_subheading', [ 'sanitize_callback' => 'wp_kses_post' ] );
-    register_setting( 'adaptive_test_after_options', 'adaptive_test_after_body',       [ 'sanitize_callback' => 'wp_kses_post' ] );
+    register_setting( 'iiqapt_after_options', 'iiqapt_show_error_rate',  [ 'default' => 1, 'sanitize_callback' => 'absint' ] );
+    register_setting( 'iiqapt_after_options', 'iiqapt_error_rate_label', [ 'sanitize_callback' => 'wp_kses_post' ] );
+    register_setting( 'iiqapt_after_options', 'iiqapt_after_title',      [ 'sanitize_callback' => 'wp_kses_post' ] );
+    register_setting( 'iiqapt_after_options', 'iiqapt_after_subheading', [ 'sanitize_callback' => 'wp_kses_post' ] );
+    register_setting( 'iiqapt_after_options', 'iiqapt_after_body',       [ 'sanitize_callback' => 'wp_kses_post' ] );
 
     // ── SECTIONS & FIELDS ──────────────────────────────────────────────────────
 
     // Before tab — content
-    add_settings_section( 'adaptive_test_before_section', '', null, 'adaptive-level-test-before' );
-    add_settings_field( 'adaptive_test_start_title',             __( 'Title', 'idiomiq-adaptive-placement-test' ),                   'adaptive_test_start_title_cb',             'adaptive-level-test-before', 'adaptive_test_before_section' );
-    add_settings_field( 'adaptive_test_start_subtitle',          __( 'Subtitle', 'idiomiq-adaptive-placement-test' ),                'adaptive_test_start_subtitle_cb',          'adaptive-level-test-before', 'adaptive_test_before_section' );
-    add_settings_field( 'adaptive_test_start_body',              __( 'Body', 'idiomiq-adaptive-placement-test' ),                    'adaptive_test_start_body_cb',              'adaptive-level-test-before', 'adaptive_test_before_section' );
-    add_settings_field( 'adaptive_test_start_email_placeholder', __( 'Email Placeholder', 'idiomiq-adaptive-placement-test' ),       'adaptive_test_start_email_placeholder_cb', 'adaptive-level-test-before', 'adaptive_test_before_section' );
-    add_settings_field( 'adaptive_test_start_gdpr2_enabled',     __( 'Follow-up Consent', 'idiomiq-adaptive-placement-test' ),       'adaptive_test_start_gdpr2_enabled_cb',     'adaptive-level-test-before', 'adaptive_test_before_section' );
-    add_settings_field( 'adaptive_test_start_gdpr2_message',     __( 'Follow-up Consent Message', 'idiomiq-adaptive-placement-test' ),'adaptive_test_start_gdpr2_message_cb',    'adaptive-level-test-before', 'adaptive_test_before_section' );
-    add_settings_field( 'adaptive_test_start_button_text',       __( 'Button Text', 'idiomiq-adaptive-placement-test' ),             'adaptive_test_start_button_text_cb',       'adaptive-level-test-before', 'adaptive_test_before_section' );
+    add_settings_section( 'iiqapt_before_section', '', null, 'iiqapt-before' );
+    add_settings_field( 'iiqapt_start_title',             __( 'Title', 'idiomiq-adaptive-placement-test' ),                   'iiqapt_start_title_cb',             'iiqapt-before', 'iiqapt_before_section' );
+    add_settings_field( 'iiqapt_start_subtitle',          __( 'Subtitle', 'idiomiq-adaptive-placement-test' ),                'iiqapt_start_subtitle_cb',          'iiqapt-before', 'iiqapt_before_section' );
+    add_settings_field( 'iiqapt_start_body',              __( 'Body', 'idiomiq-adaptive-placement-test' ),                    'iiqapt_start_body_cb',              'iiqapt-before', 'iiqapt_before_section' );
+    add_settings_field( 'iiqapt_start_email_placeholder', __( 'Email Placeholder', 'idiomiq-adaptive-placement-test' ),       'iiqapt_start_email_placeholder_cb', 'iiqapt-before', 'iiqapt_before_section' );
+    add_settings_field( 'iiqapt_start_gdpr2_enabled',     __( 'Follow-up Consent', 'idiomiq-adaptive-placement-test' ),       'iiqapt_start_gdpr2_enabled_cb',     'iiqapt-before', 'iiqapt_before_section' );
+    add_settings_field( 'iiqapt_start_gdpr2_message',     __( 'Follow-up Consent Message', 'idiomiq-adaptive-placement-test' ),'iiqapt_start_gdpr2_message_cb',    'iiqapt-before', 'iiqapt_before_section' );
+    add_settings_field( 'iiqapt_start_button_text',       __( 'Button Text', 'idiomiq-adaptive-placement-test' ),             'iiqapt_start_button_text_cb',       'iiqapt-before', 'iiqapt_before_section' );
 
 
     // During tab — content/layout
-    add_settings_section( 'adaptive_test_during_section', '', null, 'adaptive-level-test-during' );
-    add_settings_field( 'adaptive_test_during_loading',        __( 'Loading Text',      'idiomiq-adaptive-placement-test' ), 'adaptive_test_during_loading_cb',        'adaptive-level-test-during', 'adaptive_test_during_section' );
-    add_settings_field( 'adaptive_test_during_analysing',      __( 'Analysing Text',    'idiomiq-adaptive-placement-test' ), 'adaptive_test_during_analysing_cb',      'adaptive-level-test-during', 'adaptive_test_during_section' );
-    add_settings_field( 'adaptive_test_during_show_progress',  __( 'Progress Bar',      'idiomiq-adaptive-placement-test' ), 'adaptive_test_during_show_progress_cb',  'adaptive-level-test-during', 'adaptive_test_during_section' );
-    add_settings_field( 'adaptive_test_during_show_counter',   __( 'Question Counter',  'idiomiq-adaptive-placement-test' ), 'adaptive_test_during_show_counter_cb',   'adaptive-level-test-during', 'adaptive_test_during_section' );
-    add_settings_field( 'adaptive_test_during_counter_format', __( 'Counter Format',    'idiomiq-adaptive-placement-test' ), 'adaptive_test_during_counter_format_cb', 'adaptive-level-test-during', 'adaptive_test_during_section' );
-    add_settings_field( 'adaptive_test_during_question_align', __( 'Question Alignment','idiomiq-adaptive-placement-test' ), 'adaptive_test_during_question_align_cb', 'adaptive-level-test-during', 'adaptive_test_during_section' );
-    add_settings_field( 'adaptive_test_during_options_align',  __( 'Options Alignment', 'idiomiq-adaptive-placement-test' ), 'adaptive_test_during_options_align_cb',  'adaptive-level-test-during', 'adaptive_test_during_section' );
-    add_settings_field( 'adaptive_test_during_dyslexic',    __( 'Dyslexia Toggle', 'idiomiq-adaptive-placement-test' ), 'adaptive_test_during_dyslexic_cb',    'adaptive-level-test-during', 'adaptive_test_during_section' );
+    add_settings_section( 'iiqapt_during_section', '', null, 'iiqapt-during' );
+    add_settings_field( 'iiqapt_during_loading',        __( 'Loading Text',      'idiomiq-adaptive-placement-test' ), 'iiqapt_during_loading_cb',        'iiqapt-during', 'iiqapt_during_section' );
+    add_settings_field( 'iiqapt_during_analysing',      __( 'Analysing Text',    'idiomiq-adaptive-placement-test' ), 'iiqapt_during_analysing_cb',      'iiqapt-during', 'iiqapt_during_section' );
+    add_settings_field( 'iiqapt_during_show_progress',  __( 'Progress Bar',      'idiomiq-adaptive-placement-test' ), 'iiqapt_during_show_progress_cb',  'iiqapt-during', 'iiqapt_during_section' );
+    add_settings_field( 'iiqapt_during_show_counter',   __( 'Question Counter',  'idiomiq-adaptive-placement-test' ), 'iiqapt_during_show_counter_cb',   'iiqapt-during', 'iiqapt_during_section' );
+    add_settings_field( 'iiqapt_during_counter_format', __( 'Counter Format',    'idiomiq-adaptive-placement-test' ), 'iiqapt_during_counter_format_cb', 'iiqapt-during', 'iiqapt_during_section' );
+    add_settings_field( 'iiqapt_during_question_align', __( 'Question Alignment','idiomiq-adaptive-placement-test' ), 'iiqapt_during_question_align_cb', 'iiqapt-during', 'iiqapt_during_section' );
+    add_settings_field( 'iiqapt_during_options_align',  __( 'Options Alignment', 'idiomiq-adaptive-placement-test' ), 'iiqapt_during_options_align_cb',  'iiqapt-during', 'iiqapt_during_section' );
+    add_settings_field( 'iiqapt_during_dyslexic',    __( 'Dyslexia Toggle', 'idiomiq-adaptive-placement-test' ), 'iiqapt_during_dyslexic_cb',    'iiqapt-during', 'iiqapt_during_section' );
 
 
 
     // After tab — content
-    add_settings_section( 'adaptive_test_after_section', '', null, 'adaptive-level-test-after' );
-    add_settings_field( 'adaptive_test_after_title',      __( 'Title',          'idiomiq-adaptive-placement-test' ), 'adaptive_test_after_title_cb',      'adaptive-level-test-after', 'adaptive_test_after_section' );
-    add_settings_field( 'adaptive_test_after_subheading', __( 'Subheading',     'idiomiq-adaptive-placement-test' ), 'adaptive_test_after_subheading_cb', 'adaptive-level-test-after', 'adaptive_test_after_section' );
-    add_settings_field( 'adaptive_test_after_body',       __( 'Body',           'idiomiq-adaptive-placement-test' ), 'adaptive_test_after_body_cb',       'adaptive-level-test-after', 'adaptive_test_after_section' );
-    add_settings_field( 'adaptive_test_show_error_rate',  __( 'Error Rate Display', 'idiomiq-adaptive-placement-test' ), 'adaptive_test_show_error_rate_cb',  'adaptive-level-test-after', 'adaptive_test_after_section' );
-    add_settings_field( 'adaptive_test_error_rate',       __( 'Error Rate Label', 'idiomiq-adaptive-placement-test' ), 'adaptive_test_error_rate_cb',       'adaptive-level-test-after', 'adaptive_test_after_section' );
+    add_settings_section( 'iiqapt_after_section', '', null, 'iiqapt-after' );
+    add_settings_field( 'iiqapt_after_title',      __( 'Title',          'idiomiq-adaptive-placement-test' ), 'iiqapt_after_title_cb',      'iiqapt-after', 'iiqapt_after_section' );
+    add_settings_field( 'iiqapt_after_subheading', __( 'Subheading',     'idiomiq-adaptive-placement-test' ), 'iiqapt_after_subheading_cb', 'iiqapt-after', 'iiqapt_after_section' );
+    add_settings_field( 'iiqapt_after_body',       __( 'Body',           'idiomiq-adaptive-placement-test' ), 'iiqapt_after_body_cb',       'iiqapt-after', 'iiqapt_after_section' );
+    add_settings_field( 'iiqapt_show_error_rate',  __( 'Error Rate Display', 'idiomiq-adaptive-placement-test' ), 'iiqapt_show_error_rate_cb',  'iiqapt-after', 'iiqapt_after_section' );
+    add_settings_field( 'iiqapt_error_rate',       __( 'Error Rate Label', 'idiomiq-adaptive-placement-test' ), 'iiqapt_error_rate_cb',       'iiqapt-after', 'iiqapt_after_section' );
 
 
 
-    add_settings_section( 'adaptive_test_general_section',    '',                                              null, 'adaptive-level-test-general-settings' );
-    add_settings_field( 'adaptive_test_max_batches',         __( 'Max Batches',         'idiomiq-adaptive-placement-test' ), 'adaptive_test_max_batches_cb',         'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
-    add_settings_field( 'adaptive_test_target_error',        __( 'Target Confidence',   'idiomiq-adaptive-placement-test' ), 'adaptive_test_target_error_cb',        'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
-    add_settings_field( 'adaptive_test_strong_label',        __( 'Strong Label',        'idiomiq-adaptive-placement-test' ), 'adaptive_test_strong_label_cb',        'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
-    add_settings_field( 'adaptive_test_borderline_label',    __( 'Borderline Label',    'idiomiq-adaptive-placement-test' ), 'adaptive_test_borderline_label_cb',    'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
-    add_settings_field( 'adaptive_test_primary_color',       __( 'Primary Colour',      'idiomiq-adaptive-placement-test' ), 'adaptive_test_primary_color_cb',       'adaptive-level-test-general-settings', 'adaptive_test_general_section' );
-    add_settings_section( 'adaptive_test_general_misc_section', '', null, 'adaptive-level-test-general-settings' );
-    add_settings_field( 'adaptive_test_log_retention_days',  __( 'Log Retention',       'idiomiq-adaptive-placement-test' ), 'adaptive_test_log_retention_days_cb',  'adaptive-level-test-general-settings', 'adaptive_test_general_misc_section' );
-    add_settings_field( 'adaptive_test_rate_limit',          __( 'Rate Limit',          'idiomiq-adaptive-placement-test' ), 'adaptive_test_rate_limit_cb',          'adaptive-level-test-general-settings', 'adaptive_test_general_misc_section' );
-    add_settings_field( 'adaptive_test_delete_on_uninstall', __( 'Uninstall',           'idiomiq-adaptive-placement-test' ), 'adaptive_test_delete_on_uninstall_cb', 'adaptive-level-test-general-settings', 'adaptive_test_general_misc_section' );
+    add_settings_section( 'iiqapt_general_section',    '',                                              null, 'iiqapt-general-settings' );
+    add_settings_field( 'iiqapt_max_batches',         __( 'Max Batches',         'idiomiq-adaptive-placement-test' ), 'iiqapt_max_batches_cb',         'iiqapt-general-settings', 'iiqapt_general_section' );
+    add_settings_field( 'iiqapt_target_error',        __( 'Target Confidence',   'idiomiq-adaptive-placement-test' ), 'iiqapt_target_error_cb',        'iiqapt-general-settings', 'iiqapt_general_section' );
+    add_settings_field( 'iiqapt_strong_label',        __( 'Strong Label',        'idiomiq-adaptive-placement-test' ), 'iiqapt_strong_label_cb',        'iiqapt-general-settings', 'iiqapt_general_section' );
+    add_settings_field( 'iiqapt_borderline_label',    __( 'Borderline Label',    'idiomiq-adaptive-placement-test' ), 'iiqapt_borderline_label_cb',    'iiqapt-general-settings', 'iiqapt_general_section' );
+    add_settings_field( 'iiqapt_primary_color',       __( 'Primary Colour',      'idiomiq-adaptive-placement-test' ), 'iiqapt_primary_color_cb',       'iiqapt-general-settings', 'iiqapt_general_section' );
+    add_settings_section( 'iiqapt_general_misc_section', '', null, 'iiqapt-general-settings' );
+    add_settings_field( 'iiqapt_log_retention_days',  __( 'Log Retention',       'idiomiq-adaptive-placement-test' ), 'iiqapt_log_retention_days_cb',  'iiqapt-general-settings', 'iiqapt_general_misc_section' );
+    add_settings_field( 'iiqapt_rate_limit',          __( 'Rate Limit',          'idiomiq-adaptive-placement-test' ), 'iiqapt_rate_limit_cb',          'iiqapt-general-settings', 'iiqapt_general_misc_section' );
+    add_settings_field( 'iiqapt_delete_on_uninstall', __( 'Uninstall',           'idiomiq-adaptive-placement-test' ), 'iiqapt_delete_on_uninstall_cb', 'iiqapt-general-settings', 'iiqapt_general_misc_section' );
 
     // Messages tab
-    add_settings_section( 'adaptive_test_msg_student_section', '', null, 'adaptive-level-test-msg-student' );
-    add_settings_field( 'adaptive_test_email_subject', __( 'Subject', 'idiomiq-adaptive-placement-test' ), 'adaptive_test_email_subject_cb', 'adaptive-level-test-msg-student', 'adaptive_test_msg_student_section' );
-    add_settings_field( 'adaptive_test_email_body',    __( 'Body',    'idiomiq-adaptive-placement-test' ), 'adaptive_test_email_body_cb',    'adaptive-level-test-msg-student', 'adaptive_test_msg_student_section' );
+    add_settings_section( 'iiqapt_msg_student_section', '', null, 'iiqapt-msg-student' );
+    add_settings_field( 'iiqapt_email_subject', __( 'Subject', 'idiomiq-adaptive-placement-test' ), 'iiqapt_email_subject_cb', 'iiqapt-msg-student', 'iiqapt_msg_student_section' );
+    add_settings_field( 'iiqapt_email_body',    __( 'Body',    'idiomiq-adaptive-placement-test' ), 'iiqapt_email_body_cb',    'iiqapt-msg-student', 'iiqapt_msg_student_section' );
 
-    add_settings_section( 'adaptive_test_msg_admin_section', '', null, 'adaptive-level-test-msg-admin' );
-    add_settings_field( 'adaptive_test_admin_email',         __( 'Recipients', 'idiomiq-adaptive-placement-test' ), 'adaptive_test_admin_email_cb',         'adaptive-level-test-msg-admin', 'adaptive_test_msg_admin_section' );
-    add_settings_field( 'adaptive_test_admin_email_subject', __( 'Subject',    'idiomiq-adaptive-placement-test' ), 'adaptive_test_admin_email_subject_cb', 'adaptive-level-test-msg-admin', 'adaptive_test_msg_admin_section' );
-    add_settings_field( 'adaptive_test_admin_email_body',    __( 'Body',       'idiomiq-adaptive-placement-test' ), 'adaptive_test_admin_email_body_cb',    'adaptive-level-test-msg-admin', 'adaptive_test_msg_admin_section' );
+    add_settings_section( 'iiqapt_msg_admin_section', '', null, 'iiqapt-msg-admin' );
+    add_settings_field( 'iiqapt_admin_email',         __( 'Recipients', 'idiomiq-adaptive-placement-test' ), 'iiqapt_admin_email_cb',         'iiqapt-msg-admin', 'iiqapt_msg_admin_section' );
+    add_settings_field( 'iiqapt_admin_email_subject', __( 'Subject',    'idiomiq-adaptive-placement-test' ), 'iiqapt_admin_email_subject_cb', 'iiqapt-msg-admin', 'iiqapt_msg_admin_section' );
+    add_settings_field( 'iiqapt_admin_email_body',    __( 'Body',       'idiomiq-adaptive-placement-test' ), 'iiqapt_admin_email_body_cb',    'iiqapt-msg-admin', 'iiqapt_msg_admin_section' );
 
-    add_settings_section( 'adaptive_test_msg_footer_section', '', null, 'adaptive-level-test-msg-footer' );
-    add_settings_field( 'adaptive_test_email_footer', __( 'Footer HTML', 'idiomiq-adaptive-placement-test' ), 'adaptive_test_email_footer_cb', 'adaptive-level-test-msg-footer', 'adaptive_test_msg_footer_section' );
+    add_settings_section( 'iiqapt_msg_footer_section', '', null, 'iiqapt-msg-footer' );
+    add_settings_field( 'iiqapt_email_footer', __( 'Footer HTML', 'idiomiq-adaptive-placement-test' ), 'iiqapt_email_footer_cb', 'iiqapt-msg-footer', 'iiqapt_msg_footer_section' );
 }
-add_action('admin_init', 'adaptive_test_register_settings');
+add_action('admin_init', 'iiqapt_register_settings');
 
-function adaptive_test_email_subject_cb() {
+function iiqapt_email_subject_cb() {
     $default = __( 'Your English Level Test Results', 'idiomiq-adaptive-placement-test' );
-    $subject = get_option( 'adaptive_test_email_subject' ) ?: $default;
-    echo '<input type="text" name="adaptive_test_email_subject" value="' . esc_attr( $subject ) . '" class="large-text">';
+    $subject = get_option( 'iiqapt_email_subject' ) ?: $default;
+    echo '<input type="text" name="iiqapt_email_subject" value="' . esc_attr( $subject ) . '" class="large-text">';
 }
 
-function adaptive_test_html_textarea( $name, $value, $rows, $field_id ) {
+function iiqapt_html_textarea( $name, $value, $rows, $field_id ) {
     $has_content    = '' !== trim( $value );
     $textarea_style = $has_content ? 'display:none;' : '';
     $preview_style  = $has_content ? '' : 'display:none;';
@@ -623,7 +623,7 @@ function adaptive_test_html_textarea( $name, $value, $rows, $field_id ) {
     echo '</div>';
 }
 
-function adaptive_test_weight_select( $name, $val ) {
+function iiqapt_weight_select( $name, $val ) {
     $weights = [ '400' => 'Normal', '500' => 'Medium', '600' => 'Semi Bold', '700' => 'Bold' ];
     echo '<select name="' . esc_attr( $name ) . '" style="width:auto;">';
     foreach ( $weights as $w => $label ) {
@@ -632,13 +632,13 @@ function adaptive_test_weight_select( $name, $val ) {
     echo '</select>';
 }
 
-function adaptive_test_color_size_weight( $cn, $cv, $sn, $sv, $wn, $wv ) {
+function iiqapt_color_size_weight( $cn, $cv, $sn, $sv, $wn, $wv ) {
     echo '<input type="color" name="' . esc_attr( $cn ) . '" value="' . esc_attr( $cv ) . '" style="vertical-align:middle;">';
     echo ' <input type="number" name="' . esc_attr( $sn ) . '" value="' . esc_attr( $sv ) . '" min="8" max="100" style="width:65px; margin-left:8px;"> px ';
-    adaptive_test_weight_select( $wn, $wv );
+    iiqapt_weight_select( $wn, $wv );
 }
 
-function adaptive_test_border_row( $wn, $wv, $rn, $rv, $cn, $cv ) {
+function iiqapt_border_row( $wn, $wv, $rn, $rv, $cn, $cv ) {
     echo '<input type="color" name="' . esc_attr( $cn ) . '" value="' . esc_attr( $cv ) . '" style="vertical-align:middle;">';
     echo ' <input type="number" name="' . esc_attr( $wn ) . '" value="' . esc_attr( $wv ) . '" min="0" max="20" style="width:60px; margin-left:8px;"> px width ';
     echo '<input type="number" name="' . esc_attr( $rn ) . '" value="' . esc_attr( $rv ) . '" min="0" max="100" style="width:60px; margin-left:8px;"> px radius';
@@ -646,22 +646,22 @@ function adaptive_test_border_row( $wn, $wv, $rn, $rv, $cn, $cv ) {
 
 
 
-function adaptive_test_email_body_cb() {
+function iiqapt_email_body_cb() {
     $default = "<p>Dear Student,</p>\n<p>Thank you for completing our English level test.</p>\n<p>Your estimated CEFR level is: <strong>%s</strong></p>\n<p>A member of our team will be in touch shortly to discuss your results and recommend the right course for you.</p>";
-    $body    = get_option( 'adaptive_test_email_body' ) ?: $default;
-    adaptive_test_html_textarea( 'adaptive_test_email_body', $body, 8, 'esl-email-body' );
+    $body    = get_option( 'iiqapt_email_body' ) ?: $default;
+    iiqapt_html_textarea( 'iiqapt_email_body', $body, 8, 'iiqapt-email-body' );
     // translators: %s is a CEFR level code such as B1 or C2.
     echo '<p class="description">' . esc_html__( 'Use %s as a placeholder for the student\'s CEFR level (e.g. B1). HTML is supported.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
-function adaptive_test_sort_link( $column, $label, $current_orderby, $current_order, $bank_filter, $email_filter = '' ) {
+function iiqapt_sort_link( $column, $label, $current_orderby, $current_order, $bank_filter, $email_filter = '' ) {
     $new_order = ( $current_orderby === $column && $current_order === 'DESC' ) ? 'asc' : 'desc';
     $indicator = '';
     if ( $current_orderby === $column ) {
         $indicator = 'DESC' === $current_order ? ' &#9660;' : ' &#9650;';
     }
     $url = add_query_arg( [
-        'page'         => 'adaptive-level-test',
+        'page'         => 'iiqapt',
         'tab'          => 'logs',
         'orderby'      => $column,
         'order'        => $new_order,
@@ -671,12 +671,12 @@ function adaptive_test_sort_link( $column, $label, $current_orderby, $current_or
     return '<a href="' . esc_url( $url ) . '">' . esc_html( $label ) . $indicator . '</a>';
 }
 
-function adaptive_test_sanitize_font_weight( $value ) {
+function iiqapt_sanitize_font_weight( $value ) {
     $allowed = [ '400', '500', '600', '700' ];
     return in_array( $value, $allowed, true ) ? $value : '400';
 }
 
-function adaptive_test_sanitize_admin_emails( $value ) {
+function iiqapt_sanitize_admin_emails( $value ) {
     $value = trim( $value );
     if ( '' === $value ) {
         return '';
@@ -685,325 +685,325 @@ function adaptive_test_sanitize_admin_emails( $value ) {
     return implode( ', ', $emails );
 }
 
-function adaptive_test_admin_email_cb() {
+function iiqapt_admin_email_cb() {
     $default = get_option( 'admin_email' );
-    $stored  = get_option( 'adaptive_test_admin_email' );
+    $stored  = get_option( 'iiqapt_admin_email' );
     $value   = ( false === $stored ) ? $default : $stored;
-    echo '<input type="text" name="adaptive_test_admin_email" value="' . esc_attr( $value ) . '" class="large-text">';
+    echo '<input type="text" name="iiqapt_admin_email" value="' . esc_attr( $value ) . '" class="large-text">';
     // translators: %s is the site admin email address.
     echo '<p class="description">' . sprintf( esc_html__( 'Comma-separated list of notification recipients. Defaults to the site admin (%s). Clear to disable all notifications.', 'idiomiq-adaptive-placement-test' ), esc_html( $default ) ) . '</p>';
 }
 
-function adaptive_test_admin_email_subject_cb() {
+function iiqapt_admin_email_subject_cb() {
     $default = __( 'New Level Test Completed', 'idiomiq-adaptive-placement-test' );
-    $subject = get_option( 'adaptive_test_admin_email_subject' ) ?: $default;
-    echo '<input type="text" name="adaptive_test_admin_email_subject" value="' . esc_attr( $subject ) . '" class="large-text">';
+    $subject = get_option( 'iiqapt_admin_email_subject' ) ?: $default;
+    echo '<input type="text" name="iiqapt_admin_email_subject" value="' . esc_attr( $subject ) . '" class="large-text">';
 }
 
-function adaptive_test_admin_email_body_cb() {
+function iiqapt_admin_email_body_cb() {
     $default = "<p>A student has completed the English level test.</p>\n<ul>\n<li><strong>Email:</strong> %email%</li>\n<li><strong>Result:</strong> %level%</li>\n<li><strong>Question Bank:</strong> %bank%</li>\n</ul>";
-    $body    = get_option( 'adaptive_test_admin_email_body' ) ?: $default;
-    adaptive_test_html_textarea( 'adaptive_test_admin_email_body', $body, 8, 'esl-admin-email-body' );
+    $body    = get_option( 'iiqapt_admin_email_body' ) ?: $default;
+    iiqapt_html_textarea( 'iiqapt_admin_email_body', $body, 8, 'iiqapt-admin-email-body' );
     // translators: %email%, %level%, %bank% are literal template tokens users type in the email body, not printf format specifiers.
     echo '<p class="description">' . esc_html__( 'Placeholders: %email%, %level%, %bank%. HTML is supported.', 'idiomiq-adaptive-placement-test' ) . '</p>'; // phpcs:ignore WordPress.WP.I18n.UnorderedPlaceholdersText
 }
 
-function adaptive_test_email_footer_cb() {
+function iiqapt_email_footer_cb() {
     $default = "<hr style=\"margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;\">\n<p style=\"font-size: 0.85em; color: #6b7280;\">You are receiving this email because you completed a level test on our website.</p>";
-    $footer  = get_option( 'adaptive_test_email_footer' ) ?: $default;
-    adaptive_test_html_textarea( 'adaptive_test_email_footer', $footer, 5, 'esl-email-footer' );
+    $footer  = get_option( 'iiqapt_email_footer' ) ?: $default;
+    iiqapt_html_textarea( 'iiqapt_email_footer', $footer, 5, 'iiqapt-email-footer' );
     echo '<p class="description">' . esc_html__( 'Appended to all emails (student and admin). Accepts plain text or HTML. Clear to disable.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
-function adaptive_test_start_title_cb() {
-    $value = get_option( 'adaptive_test_start_title', __( 'Start Your Level Test', 'idiomiq-adaptive-placement-test' ) );
-    adaptive_test_html_textarea( 'adaptive_test_start_title', $value, 2, 'esl-start-title' );
+function iiqapt_start_title_cb() {
+    $value = get_option( 'iiqapt_start_title', __( 'Start Your Level Test', 'idiomiq-adaptive-placement-test' ) );
+    iiqapt_html_textarea( 'iiqapt_start_title', $value, 2, 'iiqapt-start-title' );
 }
 
-function adaptive_test_start_subtitle_cb() {
-    $value = get_option( 'adaptive_test_start_subtitle', __( 'Enter your email address to begin the test.', 'idiomiq-adaptive-placement-test' ) );
-    adaptive_test_html_textarea( 'adaptive_test_start_subtitle', $value, 2, 'esl-start-subtitle' );
+function iiqapt_start_subtitle_cb() {
+    $value = get_option( 'iiqapt_start_subtitle', __( 'Enter your email address to begin the test.', 'idiomiq-adaptive-placement-test' ) );
+    iiqapt_html_textarea( 'iiqapt_start_subtitle', $value, 2, 'iiqapt-start-subtitle' );
 }
 
-function adaptive_test_start_body_cb() {
+function iiqapt_start_body_cb() {
     $default = __( 'By starting the test, you agree for your results to be sent to the email address that you provide.', 'idiomiq-adaptive-placement-test' );
-    $value   = get_option( 'adaptive_test_start_body', $default );
-    adaptive_test_html_textarea( 'adaptive_test_start_body', $value, 5, 'esl-start-body' );
+    $value   = get_option( 'iiqapt_start_body', $default );
+    iiqapt_html_textarea( 'iiqapt_start_body', $value, 5, 'iiqapt-start-body' );
     echo '<p class="description">' . esc_html__( 'Optional. Displayed above the email input. HTML is supported.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
-function adaptive_test_start_email_placeholder_cb() {
-    $value = get_option( 'adaptive_test_start_email_placeholder', 'name@example.com' );
-    echo '<input type="text" name="adaptive_test_start_email_placeholder" value="' . esc_attr( $value ) . '" class="regular-text">';
+function iiqapt_start_email_placeholder_cb() {
+    $value = get_option( 'iiqapt_start_email_placeholder', 'name@example.com' );
+    echo '<input type="text" name="iiqapt_start_email_placeholder" value="' . esc_attr( $value ) . '" class="regular-text">';
 }
 
-function adaptive_test_start_gdpr2_enabled_cb() {
-    $enabled = get_option( 'adaptive_test_start_gdpr2_enabled', 0 );
-    echo '<label><input type="checkbox" id="esl-gdpr2-cb" name="adaptive_test_start_gdpr2_enabled" value="1" ' . checked( 1, $enabled, false ) . '> ' . esc_html__( 'Show a follow-up contact consent checkbox (optional for the user)', 'idiomiq-adaptive-placement-test' ) . '</label>';
+function iiqapt_start_gdpr2_enabled_cb() {
+    $enabled = get_option( 'iiqapt_start_gdpr2_enabled', 0 );
+    echo '<label><input type="checkbox" id="iiqapt-gdpr2-cb" name="iiqapt_start_gdpr2_enabled" value="1" ' . checked( 1, $enabled, false ) . '> ' . esc_html__( 'Show a follow-up contact consent checkbox (optional for the user)', 'idiomiq-adaptive-placement-test' ) . '</label>';
 }
 
-function adaptive_test_start_gdpr2_message_cb() {
+function iiqapt_start_gdpr2_message_cb() {
     $default = __( "I'd like to receive information about English courses and relevant offers. I understand I can withdraw this consent at any time.", 'idiomiq-adaptive-placement-test' );
-    $value   = get_option( 'adaptive_test_start_gdpr2_message', $default );
-    echo '<div id="esl-gdpr2-msg-cell">';
-    adaptive_test_html_textarea( 'adaptive_test_start_gdpr2_message', $value, 3, 'esl-start-gdpr2' );
+    $value   = get_option( 'iiqapt_start_gdpr2_message', $default );
+    echo '<div id="iiqapt-gdpr2-msg-cell">';
+    iiqapt_html_textarea( 'iiqapt_start_gdpr2_message', $value, 3, 'iiqapt-start-gdpr2' );
     echo '<p class="description">' . esc_html__( 'Optional — user can tick or skip.', 'idiomiq-adaptive-placement-test' ) . '</p>';
     echo '</div>';
 }
 
-function adaptive_test_start_button_text_cb() {
-    $value = get_option( 'adaptive_test_start_button_text', __( 'Start Test', 'idiomiq-adaptive-placement-test' ) );
-    echo '<input type="text" name="adaptive_test_start_button_text" value="' . esc_attr( $value ) . '" class="regular-text">';
+function iiqapt_start_button_text_cb() {
+    $value = get_option( 'iiqapt_start_button_text', __( 'Start Test', 'idiomiq-adaptive-placement-test' ) );
+    echo '<input type="text" name="iiqapt_start_button_text" value="' . esc_attr( $value ) . '" class="regular-text">';
 }
 
-function adaptive_test_during_loading_cb() {
-    $value = get_option( 'adaptive_test_during_loading', __( 'Loading question...', 'idiomiq-adaptive-placement-test' ) );
-    echo '<input type="text" name="adaptive_test_during_loading" value="' . esc_attr( $value ) . '" class="regular-text">';
+function iiqapt_during_loading_cb() {
+    $value = get_option( 'iiqapt_during_loading', __( 'Loading question...', 'idiomiq-adaptive-placement-test' ) );
+    echo '<input type="text" name="iiqapt_during_loading" value="' . esc_attr( $value ) . '" class="regular-text">';
 }
 
-function adaptive_test_during_analysing_cb() {
-    $value = get_option( 'adaptive_test_during_analysing', __( 'Analysing your answers...', 'idiomiq-adaptive-placement-test' ) );
-    echo '<input type="text" name="adaptive_test_during_analysing" value="' . esc_attr( $value ) . '" class="regular-text">';
+function iiqapt_during_analysing_cb() {
+    $value = get_option( 'iiqapt_during_analysing', __( 'Analysing your answers...', 'idiomiq-adaptive-placement-test' ) );
+    echo '<input type="text" name="iiqapt_during_analysing" value="' . esc_attr( $value ) . '" class="regular-text">';
 }
 
-function adaptive_test_during_show_progress_cb() {
-    $value = get_option( 'adaptive_test_during_show_progress', 1 );
-    echo '<label><input type="checkbox" name="adaptive_test_during_show_progress" value="1" ' . checked( 1, $value, false ) . '> ' . esc_html__( 'Show progress bar during the quiz', 'idiomiq-adaptive-placement-test' ) . '</label>';
+function iiqapt_during_show_progress_cb() {
+    $value = get_option( 'iiqapt_during_show_progress', 1 );
+    echo '<label><input type="checkbox" name="iiqapt_during_show_progress" value="1" ' . checked( 1, $value, false ) . '> ' . esc_html__( 'Show progress bar during the quiz', 'idiomiq-adaptive-placement-test' ) . '</label>';
 }
 
-function adaptive_test_during_show_counter_cb() {
-    $value = get_option( 'adaptive_test_during_show_counter', 0 );
-    echo '<label><input type="checkbox" id="esl-counter-cb" name="adaptive_test_during_show_counter" value="1" ' . checked( 1, $value, false ) . '> ' . esc_html__( 'Show question counter (e.g. Question 3 of 5)', 'idiomiq-adaptive-placement-test' ) . '</label>';
+function iiqapt_during_show_counter_cb() {
+    $value = get_option( 'iiqapt_during_show_counter', 0 );
+    echo '<label><input type="checkbox" id="iiqapt-counter-cb" name="iiqapt_during_show_counter" value="1" ' . checked( 1, $value, false ) . '> ' . esc_html__( 'Show question counter (e.g. Question 3 of 5)', 'idiomiq-adaptive-placement-test' ) . '</label>';
 }
 
-function adaptive_test_during_counter_format_cb() {
-    $value = get_option( 'adaptive_test_during_counter_format', 'Question %n% of %total%' );
-    echo '<div id="esl-counter-format-row">';
-    echo '<input type="text" name="adaptive_test_during_counter_format" value="' . esc_attr( $value ) . '" class="regular-text">';
+function iiqapt_during_counter_format_cb() {
+    $value = get_option( 'iiqapt_during_counter_format', 'Question %n% of %total%' );
+    echo '<div id="iiqapt-counter-format-row">';
+    echo '<input type="text" name="iiqapt_during_counter_format" value="' . esc_attr( $value ) . '" class="regular-text">';
     echo '<p class="description">' . esc_html__( 'Placeholders: %n% = current question number, %total% = questions per batch (5).', 'idiomiq-adaptive-placement-test' ) . '</p>';
     echo '</div>';
 }
 
-function adaptive_test_during_question_align_cb() {
-    $value   = get_option( 'adaptive_test_during_question_align', 'center' );
+function iiqapt_during_question_align_cb() {
+    $value   = get_option( 'iiqapt_during_question_align', 'center' );
     $options = [ 'left' => __( 'Left', 'idiomiq-adaptive-placement-test' ), 'center' => __( 'Center', 'idiomiq-adaptive-placement-test' ), 'right' => __( 'Right', 'idiomiq-adaptive-placement-test' ) ];
-    echo '<select name="adaptive_test_during_question_align">';
+    echo '<select name="iiqapt_during_question_align">';
     foreach ( $options as $val => $label ) {
         echo '<option value="' . esc_attr( $val ) . '" ' . selected( $value, $val, false ) . '>' . esc_html( $label ) . '</option>';
     }
     echo '</select>';
 }
 
-function adaptive_test_during_options_align_cb() {
-    $value   = get_option( 'adaptive_test_during_options_align', 'center' );
+function iiqapt_during_options_align_cb() {
+    $value   = get_option( 'iiqapt_during_options_align', 'center' );
     $options = [ 'left' => __( 'Left', 'idiomiq-adaptive-placement-test' ), 'center' => __( 'Center', 'idiomiq-adaptive-placement-test' ), 'right' => __( 'Right', 'idiomiq-adaptive-placement-test' ) ];
-    echo '<select name="adaptive_test_during_options_align">';
+    echo '<select name="iiqapt_during_options_align">';
     foreach ( $options as $val => $label ) {
         echo '<option value="' . esc_attr( $val ) . '" ' . selected( $value, $val, false ) . '>' . esc_html( $label ) . '</option>';
     }
     echo '</select>';
 }
 
-function adaptive_test_show_error_rate_cb() {
-    $enabled = get_option( 'adaptive_test_show_error_rate', 1 );
-    echo '<label><input type="checkbox" id="esl-show-error-rate-cb" name="adaptive_test_show_error_rate" value="1" ' . checked( 1, $enabled, false ) . '> ' . esc_html__( 'Show error rate margin on the results scale', 'idiomiq-adaptive-placement-test' ) . '</label>';
+function iiqapt_show_error_rate_cb() {
+    $enabled = get_option( 'iiqapt_show_error_rate', 1 );
+    echo '<label><input type="checkbox" id="iiqapt-show-error-rate-cb" name="iiqapt_show_error_rate" value="1" ' . checked( 1, $enabled, false ) . '> ' . esc_html__( 'Show error rate margin on the results scale', 'idiomiq-adaptive-placement-test' ) . '</label>';
 }
 
-function adaptive_test_error_rate_cb() {
+function iiqapt_error_rate_cb() {
     $default_label = __( 'Margin of Error: ±{rate}%', 'idiomiq-adaptive-placement-test' );
-    $label = get_option( 'adaptive_test_error_rate_label', $default_label );
-    echo '<div id="esl-error-rate-cell">';
-    adaptive_test_html_textarea( 'adaptive_test_error_rate_label', $label, 2, 'esl-error-rate-label' );
+    $label = get_option( 'iiqapt_error_rate_label', $default_label );
+    echo '<div id="iiqapt-error-rate-cell">';
+    iiqapt_html_textarea( 'iiqapt_error_rate_label', $label, 2, 'iiqapt-error-rate-label' );
     echo '<p class="description">' . esc_html__( 'Use {rate} for the computed error percentage from the test result.', 'idiomiq-adaptive-placement-test' ) . '</p>';
     echo '</div>';
 }
 
-function adaptive_test_after_title_cb() {
-    $value = get_option( 'adaptive_test_after_title', __( 'Test Complete', 'idiomiq-adaptive-placement-test' ) );
-    adaptive_test_html_textarea( 'adaptive_test_after_title', $value, 2, 'esl-after-title' );
+function iiqapt_after_title_cb() {
+    $value = get_option( 'iiqapt_after_title', __( 'Test Complete', 'idiomiq-adaptive-placement-test' ) );
+    iiqapt_html_textarea( 'iiqapt_after_title', $value, 2, 'iiqapt-after-title' );
 }
 
-function adaptive_test_after_subheading_cb() {
-    $value = get_option( 'adaptive_test_after_subheading', __( 'Your estimated level is:', 'idiomiq-adaptive-placement-test' ) );
-    adaptive_test_html_textarea( 'adaptive_test_after_subheading', $value, 2, 'esl-after-subheading' );
+function iiqapt_after_subheading_cb() {
+    $value = get_option( 'iiqapt_after_subheading', __( 'Your estimated level is:', 'idiomiq-adaptive-placement-test' ) );
+    iiqapt_html_textarea( 'iiqapt_after_subheading', $value, 2, 'iiqapt-after-subheading' );
 }
 
-function adaptive_test_after_body_cb() {
+function iiqapt_after_body_cb() {
     $default = __( 'A copy of your result has been emailed to you.', 'idiomiq-adaptive-placement-test' );
-    $value   = get_option( 'adaptive_test_after_body', $default );
-    adaptive_test_html_textarea( 'adaptive_test_after_body', $value, 3, 'esl-after-body' );
+    $value   = get_option( 'iiqapt_after_body', $default );
+    iiqapt_html_textarea( 'iiqapt_after_body', $value, 3, 'iiqapt-after-body' );
     echo '<p class="description">' . esc_html__( 'Displayed below the scale and above the retake button. HTML is supported.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
-function adaptive_test_during_dyslexic_cb() {
-    $enabled = get_option( 'adaptive_test_during_dyslexic_enabled', 1 );
-    $off     = get_option( 'adaptive_test_during_dyslexic_off', __( 'Change to dyslexia friendly font', 'idiomiq-adaptive-placement-test' ) );
-    $on      = get_option( 'adaptive_test_during_dyslexic_on',  __( 'Change to regular font',           'idiomiq-adaptive-placement-test' ) );
-    echo '<p><label><input type="checkbox" id="esl-dyslexic-cb" name="adaptive_test_during_dyslexic_enabled" value="1" ' . checked( 1, $enabled, false ) . '> ' . esc_html__( 'Show dyslexia-friendly font toggle during the test', 'idiomiq-adaptive-placement-test' ) . '</label></p>';
-    echo '<div id="esl-dyslexic-details" style="' . ( $enabled ? '' : 'display:none;' ) . '">';
-    echo '<p style="margin-top:8px;"><label>' . esc_html__( 'Button label (off):', 'idiomiq-adaptive-placement-test' ) . ' <input type="text" name="adaptive_test_during_dyslexic_off" value="' . esc_attr( $off ) . '" class="regular-text"></label></p>';
-    echo '<p><label>' . esc_html__( 'Button label (on):',  'idiomiq-adaptive-placement-test' ) . ' <input type="text" name="adaptive_test_during_dyslexic_on"  value="' . esc_attr( $on  ) . '" class="regular-text"></label></p>';
+function iiqapt_during_dyslexic_cb() {
+    $enabled = get_option( 'iiqapt_during_dyslexic_enabled', 1 );
+    $off     = get_option( 'iiqapt_during_dyslexic_off', __( 'Change to dyslexia friendly font', 'idiomiq-adaptive-placement-test' ) );
+    $on      = get_option( 'iiqapt_during_dyslexic_on',  __( 'Change to regular font',           'idiomiq-adaptive-placement-test' ) );
+    echo '<p><label><input type="checkbox" id="iiqapt-dyslexic-cb" name="iiqapt_during_dyslexic_enabled" value="1" ' . checked( 1, $enabled, false ) . '> ' . esc_html__( 'Show dyslexia-friendly font toggle during the test', 'idiomiq-adaptive-placement-test' ) . '</label></p>';
+    echo '<div id="iiqapt-dyslexic-details" style="' . ( $enabled ? '' : 'display:none;' ) . '">';
+    echo '<p style="margin-top:8px;"><label>' . esc_html__( 'Button label (off):', 'idiomiq-adaptive-placement-test' ) . ' <input type="text" name="iiqapt_during_dyslexic_off" value="' . esc_attr( $off ) . '" class="regular-text"></label></p>';
+    echo '<p><label>' . esc_html__( 'Button label (on):',  'idiomiq-adaptive-placement-test' ) . ' <input type="text" name="iiqapt_during_dyslexic_on"  value="' . esc_attr( $on  ) . '" class="regular-text"></label></p>';
     echo '<p class="description">' . esc_html__( 'Text shown on the font-toggle button before and after switching to the dyslexia-friendly font.', 'idiomiq-adaptive-placement-test' ) . '</p>';
     echo '</div>';
 }
 
 
-function adaptive_test_primary_color_cb() {
-    $value = get_option( 'adaptive_test_primary_color', '' ) ?: '#2563eb';
-    echo '<input type="color" name="adaptive_test_primary_color" value="' . esc_attr( $value ) . '">';
+function iiqapt_primary_color_cb() {
+    $value = get_option( 'iiqapt_primary_color', '' ) ?: '#2563eb';
+    echo '<input type="color" name="iiqapt_primary_color" value="' . esc_attr( $value ) . '">';
     echo '<p class="description">' . esc_html__( 'Sets the main accent colour used for buttons, progress bars, and highlights. Individual colour overrides in the Customise tab take precedence.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
-function adaptive_test_log_retention_days_cb() {
-    $value = absint( get_option( 'adaptive_test_log_retention_days', 90 ) );
-    echo '<input type="number" name="adaptive_test_log_retention_days" value="' . esc_attr( $value ) . '" min="0" max="3650" style="width:80px;"> ';
+function iiqapt_log_retention_days_cb() {
+    $value = absint( get_option( 'iiqapt_log_retention_days', 90 ) );
+    echo '<input type="number" name="iiqapt_log_retention_days" value="' . esc_attr( $value ) . '" min="0" max="3650" style="width:80px;"> ';
     echo '<span>' . esc_html__( 'days', 'idiomiq-adaptive-placement-test' ) . '</span>';
     echo '<p class="description">' . esc_html__( 'Attempt logs older than this are automatically deleted each day. Set to 0 to keep logs indefinitely.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
-function adaptive_test_rate_limit_cb() {
-    $value = (int) get_option( 'adaptive_test_rate_limit', 5 );
-    echo '<input type="number" name="adaptive_test_rate_limit" value="' . esc_attr( $value ) . '" min="1" max="100" style="width:80px;"> ';
+function iiqapt_rate_limit_cb() {
+    $value = (int) get_option( 'iiqapt_rate_limit', 5 );
+    echo '<input type="number" name="iiqapt_rate_limit" value="' . esc_attr( $value ) . '" min="1" max="100" style="width:80px;"> ';
     echo '<span>' . esc_html__( 'test starts per IP address per hour', 'idiomiq-adaptive-placement-test' ) . '</span>';
     echo '<p class="description">' . esc_html__( 'Limits how many times the same IP address can start the test within one hour. Helps prevent automated abuse. Raise this if you have multiple students sharing the same network connection.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
-function adaptive_test_delete_on_uninstall_cb() {
-    $checked = (bool) get_option( 'adaptive_test_delete_on_uninstall', 0 );
+function iiqapt_delete_on_uninstall_cb() {
+    $checked = (bool) get_option( 'iiqapt_delete_on_uninstall', 0 );
     echo '<label>';
-    echo '<input type="checkbox" name="adaptive_test_delete_on_uninstall" value="1"' . checked( $checked, true, false ) . '>';
+    echo '<input type="checkbox" name="iiqapt_delete_on_uninstall" value="1"' . checked( $checked, true, false ) . '>';
     echo ' ' . esc_html__( 'Remove all plugin data when the plugin is deleted', 'idiomiq-adaptive-placement-test' );
     echo '</label>';
     echo '<p class="description" style="color:#b32d2e;">' . esc_html__( 'If checked, deleting this plugin will permanently drop all database tables and settings. This cannot be undone.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
-function adaptive_test_max_batches_cb() {
-    $value = max( 1, (int) get_option( 'adaptive_test_max_batches', 10 ) );
-    echo '<input type="number" name="adaptive_test_max_batches" value="' . esc_attr( $value ) . '" min="1" max="20" style="width:70px;"> ';
+function iiqapt_max_batches_cb() {
+    $value = max( 1, (int) get_option( 'iiqapt_max_batches', 10 ) );
+    echo '<input type="number" name="iiqapt_max_batches" value="' . esc_attr( $value ) . '" min="1" max="20" style="width:70px;"> ';
     echo '<span>' . esc_html__( 'batches of 5 questions', 'idiomiq-adaptive-placement-test' ) . '</span>';
     echo '<p class="description">' . esc_html__( 'The test stops early when the confidence threshold is reached; this is the hard ceiling. Each batch is 5 questions, so 10 batches = up to 50 questions.', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
-function adaptive_test_target_error_cb() {
-    $value = max( 1, (int) get_option( 'adaptive_test_target_error', 8 ) );
-    echo '<input type="number" name="adaptive_test_target_error" value="' . esc_attr( $value ) . '" min="1" max="50" style="width:70px;"> %';
+function iiqapt_target_error_cb() {
+    $value = max( 1, (int) get_option( 'iiqapt_target_error', 8 ) );
+    echo '<input type="number" name="iiqapt_target_error" value="' . esc_attr( $value ) . '" min="1" max="50" style="width:70px;"> %';
     echo '<p class="description">' . esc_html__( 'The test stops as soon as the ability estimate is accurate to within this margin. Lower values give more precision but a longer test. 8% corresponds to the DIALANG standard (SE ≤ 0.32 logits).', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
-function adaptive_test_strong_label_cb() {
-    $value = get_option( 'adaptive_test_strong_label', __( 'Strong', 'idiomiq-adaptive-placement-test' ) );
-    echo '<input type="text" name="adaptive_test_strong_label" value="' . esc_attr( $value ) . '" class="regular-text">';
+function iiqapt_strong_label_cb() {
+    $value = get_option( 'iiqapt_strong_label', __( 'Strong', 'idiomiq-adaptive-placement-test' ) );
+    echo '<input type="text" name="iiqapt_strong_label" value="' . esc_attr( $value ) . '" class="regular-text">';
     echo '<p class="description">' . esc_html__( 'Prepended to the level in the results log when the student\'s ability is in the upper third of the level segment. e.g. "Strong B2".', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
-function adaptive_test_borderline_label_cb() {
-    $value = get_option( 'adaptive_test_borderline_label', __( 'Borderline', 'idiomiq-adaptive-placement-test' ) );
-    echo '<input type="text" name="adaptive_test_borderline_label" value="' . esc_attr( $value ) . '" class="regular-text">';
+function iiqapt_borderline_label_cb() {
+    $value = get_option( 'iiqapt_borderline_label', __( 'Borderline', 'idiomiq-adaptive-placement-test' ) );
+    echo '<input type="text" name="iiqapt_borderline_label" value="' . esc_attr( $value ) . '" class="regular-text">';
     echo '<p class="description">' . esc_html__( 'Prepended to the level in the results log when the student\'s ability is in the lower third of the level segment. e.g. "Borderline B2".', 'idiomiq-adaptive-placement-test' ) . '</p>';
 }
 
 /**
  * Add the settings page to the admin menu.
  */
-function adaptive_test_add_admin_menu() {
+function iiqapt_add_admin_menu() {
     add_options_page(
-        __('Adaptive Level Test Administration', 'idiomiq-adaptive-placement-test'),
-        __('Adaptive Level Test', 'idiomiq-adaptive-placement-test'),
+        __('IdiomIQ Adaptive Placement Test', 'idiomiq-adaptive-placement-test'),
+        __('IdiomIQ Adaptive Placement Test', 'idiomiq-adaptive-placement-test'),
         'edit_others_posts',
-        'adaptive-level-test',
-        'adaptive_test_settings_page_html'
+        'iiqapt',
+        'iiqapt_settings_page_html'
     );
 }
-add_action('admin_menu', 'adaptive_test_add_admin_menu');
+add_action('admin_menu', 'iiqapt_add_admin_menu');
 
-function adaptive_test_admin_enqueue() {
+function iiqapt_admin_enqueue() {
     $screen = get_current_screen();
-    if ( ! $screen || 'settings_page_adaptive-level-test' !== $screen->id ) return;
+    if ( ! $screen || 'settings_page_iiqapt' !== $screen->id ) return;
 
     // ── CSS ──────────────────────────────────────────────────────────────────
-    wp_register_style( 'adaptive-test-admin', false, [], ADAPTIVE_LEVEL_TEST_VERSION ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- version constant used above
-    wp_enqueue_style( 'adaptive-test-admin' );
+    wp_register_style( 'iiqapt-test-admin', false, [], IIQAPT_VERSION ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- version constant used above
+    wp_enqueue_style( 'iiqapt-test-admin' );
 
     $font_url   = esc_url( plugins_url( '../assets/fonts/OpenDyslexic-Regular.woff2', __FILE__ ) );
     $inline_css  = "@font-face{font-family:'OpenDyslexic';src:url('{$font_url}')format('woff2');font-weight:normal;font-style:normal;font-display:swap;}";
-    $inline_css .= "#esl-prev-card.esl-dyslexic #esl-prev-question,#esl-prev-card.esl-dyslexic .esl-prev-option{font-family:'OpenDyslexic',sans-serif;}";
-    $inline_css .= '#esl-unsaved-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99999;align-items:center;justify-content:center;}';
-    $inline_css .= '#esl-unsaved-overlay.esl-visible{display:flex;}';
-    $inline_css .= '#esl-unsaved-dialog{background:#fff;border-radius:4px;padding:24px 28px;max-width:420px;width:90%;box-shadow:0 4px 24px rgba(0,0,0,.18);}';
-    $inline_css .= '#esl-unsaved-dialog h3{margin:0 0 8px;font-size:1rem;color:#1d2327;}';
-    $inline_css .= '#esl-unsaved-dialog p{margin:0 0 16px;color:#50575e;font-size:0.9rem;line-height:1.5;}';
-    $inline_css .= '#esl-unsaved-dialog ul{margin:0 0 20px;padding-left:20px;color:#50575e;font-size:0.9rem;}';
-    $inline_css .= '.esl-unsaved-actions{display:flex;gap:10px;justify-content:flex-end;}';
-    $inline_css .= '#esl-unsaved-leave{background:none;border:1px solid #c3c4c7;color:#50575e;padding:6px 14px;border-radius:3px;cursor:pointer;font-size:0.875rem;}';
-    $inline_css .= '#esl-unsaved-stay{background:#2271b1;border:none;color:#fff;padding:6px 14px;border-radius:3px;cursor:pointer;font-size:0.875rem;font-weight:600;}';
-    $inline_css .= '#esl-unsaved-stay:focus{outline:2px solid #2271b1;outline-offset:2px;}';
-    $inline_css .= '.esl-subnav a{display:inline-block;padding:5px 10px;margin-right:4px;margin-bottom:-1px;border:1px solid #c3c4c7;border-bottom:none;border-radius:0;text-decoration:none;color:#50575e;background:#dcdcde;font-size:14px;font-weight:600;line-height:1.71428571;}';
-    $inline_css .= '.esl-subnav a:hover{background:#fff;color:#1d2327;}';
-    $inline_css .= '.esl-subnav a.active{background:#f0f0f1;color:#1d2327;border-bottom:1px solid #f0f0f1;}';
-    wp_add_inline_style( 'adaptive-test-admin', $inline_css );
+    $inline_css .= "#iiqapt-prev-card.iiqapt-dyslexic #iiqapt-prev-question,#iiqapt-prev-card.iiqapt-dyslexic .iiqapt-prev-option{font-family:'OpenDyslexic',sans-serif;}";
+    $inline_css .= '#iiqapt-unsaved-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99999;align-items:center;justify-content:center;}';
+    $inline_css .= '#iiqapt-unsaved-overlay.iiqapt-visible{display:flex;}';
+    $inline_css .= '#iiqapt-unsaved-dialog{background:#fff;border-radius:4px;padding:24px 28px;max-width:420px;width:90%;box-shadow:0 4px 24px rgba(0,0,0,.18);}';
+    $inline_css .= '#iiqapt-unsaved-dialog h3{margin:0 0 8px;font-size:1rem;color:#1d2327;}';
+    $inline_css .= '#iiqapt-unsaved-dialog p{margin:0 0 16px;color:#50575e;font-size:0.9rem;line-height:1.5;}';
+    $inline_css .= '#iiqapt-unsaved-dialog ul{margin:0 0 20px;padding-left:20px;color:#50575e;font-size:0.9rem;}';
+    $inline_css .= '.iiqapt-unsaved-actions{display:flex;gap:10px;justify-content:flex-end;}';
+    $inline_css .= '#iiqapt-unsaved-leave{background:none;border:1px solid #c3c4c7;color:#50575e;padding:6px 14px;border-radius:3px;cursor:pointer;font-size:0.875rem;}';
+    $inline_css .= '#iiqapt-unsaved-stay{background:#2271b1;border:none;color:#fff;padding:6px 14px;border-radius:3px;cursor:pointer;font-size:0.875rem;font-weight:600;}';
+    $inline_css .= '#iiqapt-unsaved-stay:focus{outline:2px solid #2271b1;outline-offset:2px;}';
+    $inline_css .= '.iiqapt-subnav a{display:inline-block;padding:5px 10px;margin-right:4px;margin-bottom:-1px;border:1px solid #c3c4c7;border-bottom:none;border-radius:0;text-decoration:none;color:#50575e;background:#dcdcde;font-size:14px;font-weight:600;line-height:1.71428571;}';
+    $inline_css .= '.iiqapt-subnav a:hover{background:#fff;color:#1d2327;}';
+    $inline_css .= '.iiqapt-subnav a.active{background:#f0f0f1;color:#1d2327;border-bottom:1px solid #f0f0f1;}';
+    wp_add_inline_style( 'iiqapt-test-admin', $inline_css );
 
     // ── JS ───────────────────────────────────────────────────────────────────
     wp_enqueue_script(
-        'adaptive-test-admin-preview',
+        'iiqapt-test-admin-preview',
         plugins_url( '../assets/js/admin-preview.js', __FILE__ ),
         [],
-        ADAPTIVE_LEVEL_TEST_VERSION,
+        IIQAPT_VERSION,
         true
     );
-    wp_localize_script( 'adaptive-test-admin-preview', 'eslAdminData', [
-        'primaryColor'  => get_option( 'adaptive_test_primary_color', '' ) ?: '#2563eb',
+    wp_localize_script( 'iiqapt-test-admin-preview', 'iiqaptAdminData', [
+        'primaryColor'  => get_option( 'iiqapt_primary_color', '' ) ?: '#2563eb',
         'labelEditHtml' => __( 'Edit HTML', 'idiomiq-adaptive-placement-test' ),
         'labelPreview'  => __( 'Preview', 'idiomiq-adaptive-placement-test' ),
     ] );
 
     wp_enqueue_script(
-        'adaptive-test-admin-unsaved',
+        'iiqapt-test-admin-unsaved',
         plugins_url( '../assets/js/admin-unsaved.js', __FILE__ ),
         [],
-        ADAPTIVE_LEVEL_TEST_VERSION,
+        IIQAPT_VERSION,
         true
     );
 
     // Inline select-all for the logs bulk form (guarded: element only exists on logs tab).
-    wp_register_script( 'adaptive-test-admin-inline', false, [ 'adaptive-test-admin-unsaved' ], ADAPTIVE_LEVEL_TEST_VERSION, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- version constant used above
-    wp_enqueue_script( 'adaptive-test-admin-inline' );
+    wp_register_script( 'iiqapt-test-admin-inline', false, [ 'iiqapt-test-admin-unsaved' ], IIQAPT_VERSION, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- version constant used above
+    wp_enqueue_script( 'iiqapt-test-admin-inline' );
     wp_add_inline_script(
-        'adaptive-test-admin-inline',
-        '(function(){var el=document.getElementById("esl-select-all");if(el){el.addEventListener("change",function(){document.querySelectorAll("#esl-logs-bulk-form input[name=\'log_ids[]\']").forEach(function(cb){cb.checked=this.checked;},this);});}})()'
+        'iiqapt-test-admin-inline',
+        '(function(){var el=document.getElementById("iiqapt-select-all");if(el){el.addEventListener("change",function(){document.querySelectorAll("#iiqapt-logs-bulk-form input[name=\'log_ids[]\']").forEach(function(cb){cb.checked=this.checked;},this);});}})()'
     );
 
 
 }
-add_action( 'admin_enqueue_scripts', 'adaptive_test_admin_enqueue' );
+add_action( 'admin_enqueue_scripts', 'iiqapt_admin_enqueue' );
 
 
 
-function adaptive_test_unsaved_changes_js() {
+function iiqapt_unsaved_changes_js() {
     $screen = get_current_screen();
-    if ( ! $screen || 'settings_page_adaptive-level-test' !== $screen->id ) return;
+    if ( ! $screen || 'settings_page_iiqapt' !== $screen->id ) return;
     ?>
-    <div id="esl-unsaved-overlay" role="dialog" aria-modal="true" aria-labelledby="esl-unsaved-title">
-        <div id="esl-unsaved-dialog">
-            <h3 id="esl-unsaved-title">Unsaved changes</h3>
+    <div id="iiqapt-unsaved-overlay" role="dialog" aria-modal="true" aria-labelledby="iiqapt-unsaved-title">
+        <div id="iiqapt-unsaved-dialog">
+            <h3 id="iiqapt-unsaved-title">Unsaved changes</h3>
             <p>You have unsaved changes to:</p>
-            <ul id="esl-unsaved-list"></ul>
-            <div class="esl-unsaved-actions">
-                <button id="esl-unsaved-leave" type="button">Leave without saving</button>
-                <button id="esl-unsaved-stay"  type="button">Stay on page</button>
+            <ul id="iiqapt-unsaved-list"></ul>
+            <div class="iiqapt-unsaved-actions">
+                <button id="iiqapt-unsaved-leave" type="button">Leave without saving</button>
+                <button id="iiqapt-unsaved-stay"  type="button">Stay on page</button>
             </div>
         </div>
     </div>
     <?php
 }
-add_action( 'admin_footer', 'adaptive_test_unsaved_changes_js' );
+add_action( 'admin_footer', 'iiqapt_unsaved_changes_js' );
 
-function adaptive_test_settings_page_html() {
+function iiqapt_settings_page_html() {
     if ( ! current_user_can( 'edit_others_posts' ) ) {
         return;
     }
     $is_admin = current_user_can( 'manage_options' );
 
-    // phpcs:disable WordPress.Security.NonceVerification.Recommended -- all GET reads in this function are display-only (tab, sub-tab, filter, sort, message params); all data-mutating paths are handled by adaptive_test_handle_question_actions() which calls check_admin_referer()
+    // phpcs:disable WordPress.Security.NonceVerification.Recommended -- all GET reads in this function are display-only (tab, sub-tab, filter, sort, message params); all data-mutating paths are handled by iiqapt_handle_question_actions() which calls check_admin_referer()
     $allowed_tabs = [ 'general', 'quiz', 'messages', 'questions', 'logs' ];
     $active_tab   = ( isset( $_GET['tab'] ) && in_array( $_GET['tab'], $allowed_tabs, true ) )
         ? sanitize_key( wp_unslash( $_GET['tab'] ) )
@@ -1044,35 +1044,35 @@ function adaptive_test_settings_page_html() {
         <?php endif; ?>
 
         <?php if ( isset( $_GET['settings-updated'] ) ) :
-            $adaptive_test_save_info = get_transient( 'adaptive_test_save_' . get_current_user_id() );
-            delete_transient( 'adaptive_test_save_' . get_current_user_id() );
-            if ( $adaptive_test_save_info ) :
-                if ( $adaptive_test_save_info['changed'] ) : ?>
-                    <div class="notice notice-success is-dismissible"><p><strong><?php echo esc_html( $adaptive_test_save_info['label'] ); ?></strong> <?php esc_html_e( 'saved.', 'idiomiq-adaptive-placement-test' ); ?></p></div>
+            $iiqapt_save_info = get_transient( 'iiqapt_save_' . get_current_user_id() );
+            delete_transient( 'iiqapt_save_' . get_current_user_id() );
+            if ( $iiqapt_save_info ) :
+                if ( $iiqapt_save_info['changed'] ) : ?>
+                    <div class="notice notice-success is-dismissible"><p><strong><?php echo esc_html( $iiqapt_save_info['label'] ); ?></strong> <?php esc_html_e( 'saved.', 'idiomiq-adaptive-placement-test' ); ?></p></div>
                 <?php else : ?>
-                    <div class="notice notice-info is-dismissible"><p><strong><?php echo esc_html( $adaptive_test_save_info['label'] ); ?></strong> — <?php esc_html_e( 'no changes detected.', 'idiomiq-adaptive-placement-test' ); ?></p></div>
+                    <div class="notice notice-info is-dismissible"><p><strong><?php echo esc_html( $iiqapt_save_info['label'] ); ?></strong> — <?php esc_html_e( 'no changes detected.', 'idiomiq-adaptive-placement-test' ); ?></p></div>
                 <?php endif;
             endif;
         endif; ?>
 
         <?php if ( $is_admin ) : ?>
         <nav class="nav-tab-wrapper">
-            <a href="?page=adaptive-level-test&tab=general" class="nav-tab <?php echo 'general' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'General Settings', 'idiomiq-adaptive-placement-test' ); ?></a>
-            <a href="?page=adaptive-level-test&tab=quiz" class="nav-tab <?php echo 'quiz' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Quiz Settings', 'idiomiq-adaptive-placement-test' ); ?></a>
-            <a href="?page=adaptive-level-test&tab=messages" class="nav-tab <?php echo 'messages' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Messages', 'idiomiq-adaptive-placement-test' ); ?></a>
-            <a href="?page=adaptive-level-test&tab=questions" class="nav-tab <?php echo 'questions' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Questions', 'idiomiq-adaptive-placement-test' ); ?></a>
-            <a href="?page=adaptive-level-test&tab=logs" class="nav-tab <?php echo 'logs' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Attempt Logs', 'idiomiq-adaptive-placement-test' ); ?></a>
+            <a href="?page=iiqapt&tab=general" class="nav-tab <?php echo 'general' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'General Settings', 'idiomiq-adaptive-placement-test' ); ?></a>
+            <a href="?page=iiqapt&tab=quiz" class="nav-tab <?php echo 'quiz' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Quiz Settings', 'idiomiq-adaptive-placement-test' ); ?></a>
+            <a href="?page=iiqapt&tab=messages" class="nav-tab <?php echo 'messages' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Messages', 'idiomiq-adaptive-placement-test' ); ?></a>
+            <a href="?page=iiqapt&tab=questions" class="nav-tab <?php echo 'questions' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Questions', 'idiomiq-adaptive-placement-test' ); ?></a>
+            <a href="?page=iiqapt&tab=logs" class="nav-tab <?php echo 'logs' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Attempt Logs', 'idiomiq-adaptive-placement-test' ); ?></a>
         </nav>
         <?php endif; ?>
 
         <?php if ($active_tab == 'general'): ?>
             <form action="options.php" method="post" style="margin-top: 20px;">
-                <?php settings_fields('adaptive_test_options'); ?>
+                <?php settings_fields('iiqapt_options'); ?>
 
 
                 <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
                     <h2 style="margin-top:0;"><?php esc_html_e( 'Plugin Settings', 'idiomiq-adaptive-placement-test' ); ?></h2>
-                    <?php do_settings_sections('adaptive-level-test-general-settings'); ?>
+                    <?php do_settings_sections('iiqapt-general-settings'); ?>
                 </div>
 
                 <?php submit_button(__('Save Settings', 'idiomiq-adaptive-placement-test')); ?>
@@ -1087,9 +1087,9 @@ function adaptive_test_settings_page_html() {
                 'after'  => __( '3 — After the Quiz',  'idiomiq-adaptive-placement-test' ),
             ];
             ?>
-            <div class="esl-subnav" style="margin: 16px 0 0; border-bottom: 1px solid #c3c4c7;">
+            <div class="iiqapt-subnav" style="margin: 16px 0 0; border-bottom: 1px solid #c3c4c7;">
                 <?php foreach ( $sub_nav as $key => $label ) : ?>
-                    <a href="<?php echo esc_url( add_query_arg( [ 'page' => 'adaptive-level-test', 'tab' => 'quiz', 'sub' => $key ], admin_url( 'options-general.php' ) ) ); ?>" <?php echo $active_sub === $key ? 'class="active"' : ''; ?>>
+                    <a href="<?php echo esc_url( add_query_arg( [ 'page' => 'iiqapt', 'tab' => 'quiz', 'sub' => $key ], admin_url( 'options-general.php' ) ) ); ?>" <?php echo $active_sub === $key ? 'class="active"' : ''; ?>>
                         <?php echo esc_html( $label ); ?>
                     </a>
                 <?php endforeach; ?>
@@ -1108,37 +1108,37 @@ function adaptive_test_settings_page_html() {
                     ?>
                     <!-- Content form -->
                     <form action="options.php" method="post">
-                        <?php settings_fields( 'adaptive_test_' . $active_sub . '_options' ); ?>
+                        <?php settings_fields( 'iiqapt_' . $active_sub . '_options' ); ?>
                         <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
                             <h2 style="margin-top:0;"><?php echo esc_html( $sub_panel_titles[ $active_sub ] ); ?></h2>
-                            <?php do_settings_sections( 'adaptive-level-test-' . $active_sub ); ?>
+                            <?php do_settings_sections( 'iiqapt-' . $active_sub ); ?>
                         </div>
                         <?php submit_button( __( 'Save Settings', 'idiomiq-adaptive-placement-test' ) ); ?>
                     </form>
 
-                    <?php do_action( 'adaptive_test_after_' . $active_sub . '_settings' ); ?>
+                    <?php do_action( 'iiqapt_after_' . $active_sub . '_settings' ); ?>
                     <?php if ( 'before' === $active_sub ) : ?>
                         <hr>
                         <h3><?php esc_html_e( 'Reset Start Screen', 'idiomiq-adaptive-placement-test' ); ?></h3>
                         <form method="post" action="">
-                            <input type="hidden" name="adaptive_test_action" value="reset_start_screen">
-                            <?php wp_nonce_field( 'adaptive_test_reset_start_screen_nonce' ); ?>
+                            <input type="hidden" name="iiqapt_action" value="reset_start_screen">
+                            <?php wp_nonce_field( 'iiqapt_reset_start_screen_nonce' ); ?>
                             <?php submit_button( __( 'Reset to Defaults', 'idiomiq-adaptive-placement-test' ), 'secondary', 'submit', false, [ 'onclick' => "return confirm('" . esc_js( __( 'Reset all Quiz Start Screen settings to their defaults?', 'idiomiq-adaptive-placement-test' ) ) . "');" ] ); ?>
                         </form>
                     <?php elseif ( 'during' === $active_sub ) : ?>
                         <hr>
                         <h3><?php esc_html_e( 'Reset During the Quiz', 'idiomiq-adaptive-placement-test' ); ?></h3>
                         <form method="post" action="">
-                            <input type="hidden" name="adaptive_test_action" value="reset_during">
-                            <?php wp_nonce_field( 'adaptive_test_reset_during_nonce' ); ?>
+                            <input type="hidden" name="iiqapt_action" value="reset_during">
+                            <?php wp_nonce_field( 'iiqapt_reset_during_nonce' ); ?>
                             <?php submit_button( __( 'Reset to Defaults', 'idiomiq-adaptive-placement-test' ), 'secondary', 'submit', false, [ 'onclick' => "return confirm('" . esc_js( __( 'Reset all During the Quiz settings to their defaults?', 'idiomiq-adaptive-placement-test' ) ) . "');" ] ); ?>
                         </form>
                     <?php elseif ( 'after' === $active_sub ) : ?>
                         <hr>
                         <h3><?php esc_html_e( 'Reset After the Quiz', 'idiomiq-adaptive-placement-test' ); ?></h3>
                         <form method="post" action="">
-                            <input type="hidden" name="adaptive_test_action" value="reset_after">
-                            <?php wp_nonce_field( 'adaptive_test_reset_after_nonce' ); ?>
+                            <input type="hidden" name="iiqapt_action" value="reset_after">
+                            <?php wp_nonce_field( 'iiqapt_reset_after_nonce' ); ?>
                             <?php submit_button( __( 'Reset to Defaults', 'idiomiq-adaptive-placement-test' ), 'secondary', 'submit', false, [ 'onclick' => "return confirm('" . esc_js( __( 'Reset all After the Quiz settings to their defaults?', 'idiomiq-adaptive-placement-test' ) ) . "');" ] ); ?>
                         </form>
                     <?php endif; ?>
@@ -1150,73 +1150,73 @@ function adaptive_test_settings_page_html() {
                         <h2 style="margin-top:0; text-align:center; font-size:0.8em; letter-spacing:.12em; text-transform:uppercase; color:#6b7280; border-bottom:1px solid #ddd; padding-bottom:12px; margin-bottom:16px;">Preview</h2>
 
                         <?php
-                        $pv_primary = get_option( 'adaptive_test_primary_color', '' ) ?: '#2563eb';
+                        $pv_primary = get_option( 'iiqapt_primary_color', '' ) ?: '#2563eb';
                         if ( 'before' === $active_sub ) :
-                            $pv_title        = get_option( 'adaptive_test_start_title',    __( 'Start Your Level Test', 'idiomiq-adaptive-placement-test' ) );
-                            $pv_subtitle     = get_option( 'adaptive_test_start_subtitle', __( 'Enter your email address to begin the test.', 'idiomiq-adaptive-placement-test' ) );
-                            $pv_body         = get_option( 'adaptive_test_start_body', '' );
-                            $pv_ph           = get_option( 'adaptive_test_start_email_placeholder', 'name@example.com' );
-                            $pv_btn          = get_option( 'adaptive_test_start_button_text', __( 'Start Test', 'idiomiq-adaptive-placement-test' ) );
-                            $pv_gdpr2_on     = (bool) get_option( 'adaptive_test_start_gdpr2_enabled', 0 );
-                            $pv_gdpr2        = get_option( 'adaptive_test_start_gdpr2_message', __( "I'd like to receive information about English courses and relevant offers. I understand I can withdraw this consent at any time.", 'idiomiq-adaptive-placement-test' ) );
-                            $pv_btn_color    = get_option( 'adaptive_test_before_btn_color',         $pv_primary ) ?: $pv_primary;
-                            $pv_btn_txt      = get_option( 'adaptive_test_before_btn_text_color',    '#ffffff' ) ?: '#ffffff';
-                            $pv_btn_bdc      = get_option( 'adaptive_test_before_btn_border_color',  $pv_primary ) ?: $pv_primary;
-                            $pv_btn_bdw      = absint( get_option( 'adaptive_test_before_btn_border_width',  2 ) );
-                            $pv_btn_bdr      = absint( get_option( 'adaptive_test_before_btn_border_radius', 12 ) );
-                            $pv_bg           = get_option( 'adaptive_test_before_box_bg',            '#ffffff' ) ?: '#ffffff';
-                            $pv_radius       = absint( get_option( 'adaptive_test_before_box_border_radius', 16 ) );
-                            $pv_bdr_w        = absint( get_option( 'adaptive_test_before_box_border_width', 0 ) );
-                            $pv_bdr_c        = get_option( 'adaptive_test_before_box_border_color', '#e5e7eb' ) ?: '#e5e7eb';
-                            $pv_shadow       = get_option( 'adaptive_test_before_box_shadow', 1 ) ? '0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06)' : 'none';
+                            $pv_title        = get_option( 'iiqapt_start_title',    __( 'Start Your Level Test', 'idiomiq-adaptive-placement-test' ) );
+                            $pv_subtitle     = get_option( 'iiqapt_start_subtitle', __( 'Enter your email address to begin the test.', 'idiomiq-adaptive-placement-test' ) );
+                            $pv_body         = get_option( 'iiqapt_start_body', '' );
+                            $pv_ph           = get_option( 'iiqapt_start_email_placeholder', 'name@example.com' );
+                            $pv_btn          = get_option( 'iiqapt_start_button_text', __( 'Start Test', 'idiomiq-adaptive-placement-test' ) );
+                            $pv_gdpr2_on     = (bool) get_option( 'iiqapt_start_gdpr2_enabled', 0 );
+                            $pv_gdpr2        = get_option( 'iiqapt_start_gdpr2_message', __( "I'd like to receive information about English courses and relevant offers. I understand I can withdraw this consent at any time.", 'idiomiq-adaptive-placement-test' ) );
+                            $pv_btn_color    = get_option( 'iiqapt_before_btn_color',         $pv_primary ) ?: $pv_primary;
+                            $pv_btn_txt      = get_option( 'iiqapt_before_btn_text_color',    '#ffffff' ) ?: '#ffffff';
+                            $pv_btn_bdc      = get_option( 'iiqapt_before_btn_border_color',  $pv_primary ) ?: $pv_primary;
+                            $pv_btn_bdw      = absint( get_option( 'iiqapt_before_btn_border_width',  2 ) );
+                            $pv_btn_bdr      = absint( get_option( 'iiqapt_before_btn_border_radius', 12 ) );
+                            $pv_bg           = get_option( 'iiqapt_before_box_bg',            '#ffffff' ) ?: '#ffffff';
+                            $pv_radius       = absint( get_option( 'iiqapt_before_box_border_radius', 16 ) );
+                            $pv_bdr_w        = absint( get_option( 'iiqapt_before_box_border_width', 0 ) );
+                            $pv_bdr_c        = get_option( 'iiqapt_before_box_border_color', '#e5e7eb' ) ?: '#e5e7eb';
+                            $pv_shadow       = get_option( 'iiqapt_before_box_shadow', 1 ) ? '0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06)' : 'none';
                             $pv_card_border  = $pv_bdr_w ? $pv_bdr_w . 'px solid ' . $pv_bdr_c : 'none';
                         ?>
                         <div style="background:#f3f4f6; padding:16px; border-radius:8px;">
-                            <div id="esl-prev-card" style="background:<?php echo esc_attr( $pv_bg ); ?>; border-radius:<?php echo absint( $pv_radius ); ?>px; border:<?php echo esc_attr( $pv_card_border ); ?>; box-shadow:<?php echo esc_attr( $pv_shadow ); ?>; padding:28px; box-sizing:border-box;">
-                                <div id="esl-prev-title" style="font-size:1.1em; font-weight:700; text-align:center; margin:0 0 10px; line-height:1.3;"><?php echo wp_kses_post( $pv_title ); ?></div>
-                                <div id="esl-prev-subtitle" style="text-align:center; color:#6b7280; margin:0 0 10px; font-size:0.85em;"><?php echo wp_kses_post( $pv_subtitle ); ?></div>
-                                <div id="esl-prev-body" style="<?php echo esc_attr( $pv_body ? '' : 'display:none;' ); ?> text-align:center; margin:0 0 10px; font-size:0.78em; color:#6b7280;"><?php echo wp_kses_post( $pv_body ); ?></div>
-                                <input type="text" id="esl-prev-email" disabled placeholder="<?php echo esc_attr( $pv_ph ); ?>" style="width:100%; text-align:center; border:2px solid #e5e7eb; border-radius:10px; padding:10px; box-sizing:border-box; font-size:0.82em; color:#9ca3af; background:#fff; margin-bottom:10px;">
-                                <div id="esl-prev-gdpr" style="<?php echo $pv_gdpr2_on ? 'display:flex;' : 'display:none;'; ?> align-items:flex-start; gap:6px; margin:6px 0 10px; font-size:0.78em; color:#6b7280;">
-                                    <span>☐</span><span id="esl-prev-gdpr-msg"><?php echo wp_kses_post( $pv_gdpr2 ); ?></span>
+                            <div id="iiqapt-prev-card" style="background:<?php echo esc_attr( $pv_bg ); ?>; border-radius:<?php echo absint( $pv_radius ); ?>px; border:<?php echo esc_attr( $pv_card_border ); ?>; box-shadow:<?php echo esc_attr( $pv_shadow ); ?>; padding:28px; box-sizing:border-box;">
+                                <div id="iiqapt-prev-title" style="font-size:1.1em; font-weight:700; text-align:center; margin:0 0 10px; line-height:1.3;"><?php echo wp_kses_post( $pv_title ); ?></div>
+                                <div id="iiqapt-prev-subtitle" style="text-align:center; color:#6b7280; margin:0 0 10px; font-size:0.85em;"><?php echo wp_kses_post( $pv_subtitle ); ?></div>
+                                <div id="iiqapt-prev-body" style="<?php echo esc_attr( $pv_body ? '' : 'display:none;' ); ?> text-align:center; margin:0 0 10px; font-size:0.78em; color:#6b7280;"><?php echo wp_kses_post( $pv_body ); ?></div>
+                                <input type="text" id="iiqapt-prev-email" disabled placeholder="<?php echo esc_attr( $pv_ph ); ?>" style="width:100%; text-align:center; border:2px solid #e5e7eb; border-radius:10px; padding:10px; box-sizing:border-box; font-size:0.82em; color:#9ca3af; background:#fff; margin-bottom:10px;">
+                                <div id="iiqapt-prev-gdpr" style="<?php echo $pv_gdpr2_on ? 'display:flex;' : 'display:none;'; ?> align-items:flex-start; gap:6px; margin:6px 0 10px; font-size:0.78em; color:#6b7280;">
+                                    <span>☐</span><span id="iiqapt-prev-gdpr-msg"><?php echo wp_kses_post( $pv_gdpr2 ); ?></span>
                                 </div>
-                                <button type="button" id="esl-prev-btn" disabled style="width:100%; background:<?php echo esc_attr( $pv_btn_color ); ?>; color:<?php echo esc_attr( $pv_btn_txt ); ?>; border:<?php echo absint( $pv_btn_bdw ); ?>px solid <?php echo esc_attr( $pv_btn_bdc ); ?>; border-radius:<?php echo absint( $pv_btn_bdr ); ?>px; padding:11px; font-weight:600; font-size:0.88em; cursor:default;"><?php echo esc_html( $pv_btn ); ?></button>
+                                <button type="button" id="iiqapt-prev-btn" disabled style="width:100%; background:<?php echo esc_attr( $pv_btn_color ); ?>; color:<?php echo esc_attr( $pv_btn_txt ); ?>; border:<?php echo absint( $pv_btn_bdw ); ?>px solid <?php echo esc_attr( $pv_btn_bdc ); ?>; border-radius:<?php echo absint( $pv_btn_bdr ); ?>px; padding:11px; font-weight:600; font-size:0.88em; cursor:default;"><?php echo esc_html( $pv_btn ); ?></button>
                             </div>
                         </div>
 
                         <?php elseif ( 'during' === $active_sub ) :
-                            $pv_show_prog      = (bool) get_option( 'adaptive_test_during_show_progress', 1 );
-                            $pv_show_ctr       = (bool) get_option( 'adaptive_test_during_show_counter', 0 );
-                            $pv_ctr_fmt        = get_option( 'adaptive_test_during_counter_format', 'Question %n% of %total%' );
-                            $pv_q_align        = get_option( 'adaptive_test_during_question_align', 'center' );
-                            $pv_opt_align      = get_option( 'adaptive_test_during_options_align', 'center' );
-                            $pv_bg             = get_option( 'adaptive_test_during_box_bg',            '#ffffff' ) ?: '#ffffff';
-                            $pv_text           = get_option( 'adaptive_test_during_box_text_color',    '#1f2937' ) ?: '#1f2937';
-                            $pv_radius         = absint( get_option( 'adaptive_test_during_box_border_radius', 16 ) );
-                            $pv_bdr_w          = absint( get_option( 'adaptive_test_during_box_border_width', 0 ) );
-                            $pv_bdr_c          = get_option( 'adaptive_test_during_box_border_color', '#e5e7eb' ) ?: '#e5e7eb';
-                            $pv_shadow         = get_option( 'adaptive_test_during_box_shadow', 1 ) ? '0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06)' : 'none';
+                            $pv_show_prog      = (bool) get_option( 'iiqapt_during_show_progress', 1 );
+                            $pv_show_ctr       = (bool) get_option( 'iiqapt_during_show_counter', 0 );
+                            $pv_ctr_fmt        = get_option( 'iiqapt_during_counter_format', 'Question %n% of %total%' );
+                            $pv_q_align        = get_option( 'iiqapt_during_question_align', 'center' );
+                            $pv_opt_align      = get_option( 'iiqapt_during_options_align', 'center' );
+                            $pv_bg             = get_option( 'iiqapt_during_box_bg',            '#ffffff' ) ?: '#ffffff';
+                            $pv_text           = get_option( 'iiqapt_during_box_text_color',    '#1f2937' ) ?: '#1f2937';
+                            $pv_radius         = absint( get_option( 'iiqapt_during_box_border_radius', 16 ) );
+                            $pv_bdr_w          = absint( get_option( 'iiqapt_during_box_border_width', 0 ) );
+                            $pv_bdr_c          = get_option( 'iiqapt_during_box_border_color', '#e5e7eb' ) ?: '#e5e7eb';
+                            $pv_shadow         = get_option( 'iiqapt_during_box_shadow', 1 ) ? '0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06)' : 'none';
                             $pv_card_bdr       = $pv_bdr_w ? $pv_bdr_w . 'px solid ' . $pv_bdr_c : 'none';
-                            $pv_ctr_color      = get_option( 'adaptive_test_during_counter_color',        '#6b7280' ) ?: '#6b7280';
-                            $pv_prog_color     = get_option( 'adaptive_test_during_progress_color',       $pv_primary ) ?: $pv_primary;
-                            $pv_sel_color      = get_option( 'adaptive_test_during_option_selected_color', $pv_primary ) ?: $pv_primary;
-                            $pv_sel_text       = get_option( 'adaptive_test_during_option_selected_text', '#ffffff' ) ?: '#ffffff';
-                            $pv_opt_bw         = absint( get_option( 'adaptive_test_during_option_border_width',  2 ) );
-                            $pv_opt_rad        = absint( get_option( 'adaptive_test_during_option_border_radius', 12 ) );
-                            $pv_opt_bc         = get_option( 'adaptive_test_during_option_border_color', '#e5e7eb' ) ?: '#e5e7eb';
+                            $pv_ctr_color      = get_option( 'iiqapt_during_counter_color',        '#6b7280' ) ?: '#6b7280';
+                            $pv_prog_color     = get_option( 'iiqapt_during_progress_color',       $pv_primary ) ?: $pv_primary;
+                            $pv_sel_color      = get_option( 'iiqapt_during_option_selected_color', $pv_primary ) ?: $pv_primary;
+                            $pv_sel_text       = get_option( 'iiqapt_during_option_selected_text', '#ffffff' ) ?: '#ffffff';
+                            $pv_opt_bw         = absint( get_option( 'iiqapt_during_option_border_width',  2 ) );
+                            $pv_opt_rad        = absint( get_option( 'iiqapt_during_option_border_radius', 12 ) );
+                            $pv_opt_bc         = get_option( 'iiqapt_during_option_border_color', '#e5e7eb' ) ?: '#e5e7eb';
                             $pv_ctr_text       = str_replace( [ '%n%', '%total%' ], [ '2', '5' ], $pv_ctr_fmt );
-                            $pv_dyslexic_on     = (bool) get_option( 'adaptive_test_during_dyslexic_enabled', 1 );
-                            $pv_dyslexic_label  = get_option( 'adaptive_test_during_dyslexic_off', __( 'Change to dyslexia friendly font', 'idiomiq-adaptive-placement-test' ) );
-                            $pv_dys_color       = get_option( 'adaptive_test_during_dyslexic_color',  '#6b7280' ) ?: '#6b7280';
-                            $pv_dys_bg          = get_option( 'adaptive_test_during_dyslexic_bg',     '#ffffff' ) ?: '#ffffff';
-                            $pv_dys_size        = absint( get_option( 'adaptive_test_during_dyslexic_size', 11 ) );
-                            $pv_dys_bdw         = absint( get_option( 'adaptive_test_during_dyslexic_border_width',  1 ) );
-                            $pv_dys_bdc         = get_option( 'adaptive_test_during_dyslexic_border_color', '#e5e7eb' ) ?: '#e5e7eb';
-                            $pv_dys_bdr         = absint( get_option( 'adaptive_test_during_dyslexic_border_radius', 20 ) );
+                            $pv_dyslexic_on     = (bool) get_option( 'iiqapt_during_dyslexic_enabled', 1 );
+                            $pv_dyslexic_label  = get_option( 'iiqapt_during_dyslexic_off', __( 'Change to dyslexia friendly font', 'idiomiq-adaptive-placement-test' ) );
+                            $pv_dys_color       = get_option( 'iiqapt_during_dyslexic_color',  '#6b7280' ) ?: '#6b7280';
+                            $pv_dys_bg          = get_option( 'iiqapt_during_dyslexic_bg',     '#ffffff' ) ?: '#ffffff';
+                            $pv_dys_size        = absint( get_option( 'iiqapt_during_dyslexic_size', 11 ) );
+                            $pv_dys_bdw         = absint( get_option( 'iiqapt_during_dyslexic_border_width',  1 ) );
+                            $pv_dys_bdc         = get_option( 'iiqapt_during_dyslexic_border_color', '#e5e7eb' ) ?: '#e5e7eb';
+                            $pv_dys_bdr         = absint( get_option( 'iiqapt_during_dyslexic_border_radius', 20 ) );
                             $pv_dys_border      = $pv_dys_bdw ? $pv_dys_bdw . 'px solid ' . esc_attr( $pv_dys_bdc ) : 'none';
                             // Random preview question from default bank
                             global $wpdb;
-                            $pv_rq = $wpdb->get_row( "SELECT question_text, options, answer FROM {$wpdb->prefix}adaptive_questions WHERE bank_id = 1 ORDER BY RAND() LIMIT 1", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
+                            $pv_rq = $wpdb->get_row( "SELECT question_text, options, answer FROM {$wpdb->prefix}iiqapt_questions WHERE bank_id = 1 ORDER BY RAND() LIMIT 1", ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared
                             $pv_question_text  = $pv_rq ? $pv_rq['question_text'] : 'She ________ usually drink coffee.';
                             $pv_options_raw    = $pv_rq ? json_decode( $pv_rq['options'], true ) : null;
                             $pv_q_options      = is_array( $pv_options_raw ) ? $pv_options_raw : ["doesn't", "don't", "isn't", "not"];
@@ -1224,79 +1224,79 @@ function adaptive_test_settings_page_html() {
                             shuffle( $pv_q_options );
                         ?>
                         <div style="background:#f3f4f6; padding:16px; border-radius:8px;">
-                            <div id="esl-prev-card" style="position:relative; overflow:hidden; background:<?php echo esc_attr( $pv_bg ); ?>; border-radius:<?php echo absint( $pv_radius ); ?>px; border:<?php echo esc_attr( $pv_card_bdr ); ?>; box-shadow:<?php echo esc_attr( $pv_shadow ); ?>; padding:28px; box-sizing:border-box; color:<?php echo esc_attr( $pv_text ); ?>;">
-                                <button type="button" id="esl-prev-dyslexic-toggle" style="<?php echo $pv_dyslexic_on ? '' : 'display:none;'; ?> position:absolute; top:6px; left:6px; background:<?php echo esc_attr( $pv_dys_bg ); ?>; border:<?php echo esc_attr( $pv_dys_border ); ?>; border-radius:<?php echo absint( $pv_dys_bdr ); ?>px; padding:8px 14px; font-size:<?php echo absint( $pv_dys_size ); ?>px; color:<?php echo esc_attr( $pv_dys_color ); ?>; cursor:pointer; line-height:1.6;"><?php echo esc_html( $pv_dyslexic_label ); ?></button>
-                                <div id="esl-prev-progress-wrap" style="<?php echo $pv_show_prog ? '' : 'display:none;'; ?> background:#e5e7eb; height:6px; border-radius:10px; margin-top:<?php echo $pv_dyslexic_on ? '28' : '0'; ?>px; margin-bottom:20px; overflow:hidden;">
-                                    <div id="esl-prev-progress-bar" style="background:<?php echo esc_attr( $pv_prog_color ); ?>; width:40%; height:100%;"></div>
+                            <div id="iiqapt-prev-card" style="position:relative; overflow:hidden; background:<?php echo esc_attr( $pv_bg ); ?>; border-radius:<?php echo absint( $pv_radius ); ?>px; border:<?php echo esc_attr( $pv_card_bdr ); ?>; box-shadow:<?php echo esc_attr( $pv_shadow ); ?>; padding:28px; box-sizing:border-box; color:<?php echo esc_attr( $pv_text ); ?>;">
+                                <button type="button" id="iiqapt-prev-dyslexic-toggle" style="<?php echo $pv_dyslexic_on ? '' : 'display:none;'; ?> position:absolute; top:6px; left:6px; background:<?php echo esc_attr( $pv_dys_bg ); ?>; border:<?php echo esc_attr( $pv_dys_border ); ?>; border-radius:<?php echo absint( $pv_dys_bdr ); ?>px; padding:8px 14px; font-size:<?php echo absint( $pv_dys_size ); ?>px; color:<?php echo esc_attr( $pv_dys_color ); ?>; cursor:pointer; line-height:1.6;"><?php echo esc_html( $pv_dyslexic_label ); ?></button>
+                                <div id="iiqapt-prev-progress-wrap" style="<?php echo $pv_show_prog ? '' : 'display:none;'; ?> background:#e5e7eb; height:6px; border-radius:10px; margin-top:<?php echo $pv_dyslexic_on ? '28' : '0'; ?>px; margin-bottom:20px; overflow:hidden;">
+                                    <div id="iiqapt-prev-progress-bar" style="background:<?php echo esc_attr( $pv_prog_color ); ?>; width:40%; height:100%;"></div>
                                 </div>
-                                <div id="esl-prev-counter" style="<?php echo $pv_show_ctr ? '' : 'display:none;'; ?> text-align:center; font-size:0.8em; color:<?php echo esc_attr( $pv_ctr_color ); ?>; margin-bottom:10px;"><?php echo esc_html( $pv_ctr_text ); ?></div>
-                                <p id="esl-prev-question" style="font-size:0.95em; font-weight:700; text-align:<?php echo esc_attr( $pv_q_align ); ?>; margin:0 0 16px; line-height:1.4; color:inherit;"><?php echo esc_html( $pv_question_text ); ?></p>
+                                <div id="iiqapt-prev-counter" style="<?php echo $pv_show_ctr ? '' : 'display:none;'; ?> text-align:center; font-size:0.8em; color:<?php echo esc_attr( $pv_ctr_color ); ?>; margin-bottom:10px;"><?php echo esc_html( $pv_ctr_text ); ?></div>
+                                <p id="iiqapt-prev-question" style="font-size:0.95em; font-weight:700; text-align:<?php echo esc_attr( $pv_q_align ); ?>; margin:0 0 16px; line-height:1.4; color:inherit;"><?php echo esc_html( $pv_question_text ); ?></p>
                                 <div style="display:flex; flex-direction:column; gap:8px;">
                                     <?php foreach ( $pv_q_options as $pv_opt ) :
                                         $is_selected = ( strtolower( $pv_opt ) === strtolower( $pv_q_answer ) );
                                         if ( $is_selected ) : ?>
-                                    <div class="esl-prev-option esl-prev-selected" style="border:<?php echo absint( $pv_opt_bw ); ?>px solid <?php echo esc_attr( $pv_sel_color ); ?>; border-radius:<?php echo absint( $pv_opt_rad ); ?>px; padding:9px 12px; font-size:0.82em; background:<?php echo esc_attr( $pv_sel_color ); ?>; color:<?php echo esc_attr( $pv_sel_text ); ?>; text-align:<?php echo esc_attr( $pv_opt_align ); ?>;"><?php echo esc_html( $pv_opt ); ?></div>
+                                    <div class="iiqapt-prev-option iiqapt-prev-selected" style="border:<?php echo absint( $pv_opt_bw ); ?>px solid <?php echo esc_attr( $pv_sel_color ); ?>; border-radius:<?php echo absint( $pv_opt_rad ); ?>px; padding:9px 12px; font-size:0.82em; background:<?php echo esc_attr( $pv_sel_color ); ?>; color:<?php echo esc_attr( $pv_sel_text ); ?>; text-align:<?php echo esc_attr( $pv_opt_align ); ?>;"><?php echo esc_html( $pv_opt ); ?></div>
                                         <?php else : ?>
-                                    <div class="esl-prev-option" style="border:<?php echo absint( $pv_opt_bw ); ?>px solid <?php echo esc_attr( $pv_opt_bc ); ?>; border-radius:<?php echo absint( $pv_opt_rad ); ?>px; padding:9px 12px; font-size:0.82em; color:inherit; text-align:<?php echo esc_attr( $pv_opt_align ); ?>;"><?php echo esc_html( $pv_opt ); ?></div>
+                                    <div class="iiqapt-prev-option" style="border:<?php echo absint( $pv_opt_bw ); ?>px solid <?php echo esc_attr( $pv_opt_bc ); ?>; border-radius:<?php echo absint( $pv_opt_rad ); ?>px; padding:9px 12px; font-size:0.82em; color:inherit; text-align:<?php echo esc_attr( $pv_opt_align ); ?>;"><?php echo esc_html( $pv_opt ); ?></div>
                                         <?php endif;
                                     endforeach; ?>
                                 </div>
                             </div>
-                            <?php do_action( 'adaptive_test_during_preview_footer' ); ?>
+                            <?php do_action( 'iiqapt_during_preview_footer' ); ?>
                         </div>
 
                         <?php elseif ( 'after' === $active_sub ) :
-                            $pv_bg               = get_option( 'adaptive_test_after_box_bg',            '#ffffff' ) ?: '#ffffff';
-                            $pv_text             = get_option( 'adaptive_test_after_box_text_color',    '#1f2937' ) ?: '#1f2937';
-                            $pv_radius           = absint( get_option( 'adaptive_test_after_box_border_radius', 16 ) );
-                            $pv_bdr_w            = absint( get_option( 'adaptive_test_after_box_border_width', 0 ) );
-                            $pv_bdr_c            = get_option( 'adaptive_test_after_box_border_color', '#e5e7eb' ) ?: '#e5e7eb';
-                            $pv_shadow           = get_option( 'adaptive_test_after_box_shadow', 1 ) ? '0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06)' : 'none';
+                            $pv_bg               = get_option( 'iiqapt_after_box_bg',            '#ffffff' ) ?: '#ffffff';
+                            $pv_text             = get_option( 'iiqapt_after_box_text_color',    '#1f2937' ) ?: '#1f2937';
+                            $pv_radius           = absint( get_option( 'iiqapt_after_box_border_radius', 16 ) );
+                            $pv_bdr_w            = absint( get_option( 'iiqapt_after_box_border_width', 0 ) );
+                            $pv_bdr_c            = get_option( 'iiqapt_after_box_border_color', '#e5e7eb' ) ?: '#e5e7eb';
+                            $pv_shadow           = get_option( 'iiqapt_after_box_shadow', 1 ) ? '0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06)' : 'none';
                             $pv_card_bdr         = $pv_bdr_w ? $pv_bdr_w . 'px solid ' . $pv_bdr_c : 'none';
-                            $pv_result_color     = get_option( 'adaptive_test_after_result_color',      $pv_primary ) ?: $pv_primary;
-                            $pv_retake_color     = get_option( 'adaptive_test_after_retake_color',         $pv_primary ) ?: $pv_primary;
-                            $pv_retake_text      = get_option( 'adaptive_test_after_retake_text_color',    '#ffffff' ) ?: '#ffffff';
-                            $pv_retake_bdc       = get_option( 'adaptive_test_after_retake_border_color',  $pv_primary ) ?: $pv_primary;
-                            $pv_retake_bdw       = absint( get_option( 'adaptive_test_after_retake_border_width',  2 ) );
-                            $pv_retake_bdr_val   = absint( get_option( 'adaptive_test_after_retake_border_radius', 8 ) );
-                            $pv_after_title      = get_option( 'adaptive_test_after_title',      __( 'Test Complete', 'idiomiq-adaptive-placement-test' ) );
-                            $pv_after_subheading = get_option( 'adaptive_test_after_subheading', __( 'Your estimated level is:', 'idiomiq-adaptive-placement-test' ) );
-                            $pv_after_body       = get_option( 'adaptive_test_after_body',       __( 'A copy of your result has been emailed to you.', 'idiomiq-adaptive-placement-test' ) );
-                            $pv_title_color      = get_option( 'adaptive_test_after_title_color',      '#1f2937' ) ?: '#1f2937';
-                            $pv_title_size       = absint( get_option( 'adaptive_test_after_title_size',      24 ) );
-                            $pv_title_weight     = get_option( 'adaptive_test_after_title_weight',     '700' ) ?: '700';
-                            $pv_sub_color        = get_option( 'adaptive_test_after_subheading_color', '#6b7280' ) ?: '#6b7280';
-                            $pv_sub_size         = absint( get_option( 'adaptive_test_after_subheading_size',  16 ) );
-                            $pv_sub_weight       = get_option( 'adaptive_test_after_subheading_weight','400' ) ?: '400';
-                            $pv_body_color         = get_option( 'adaptive_test_after_body_color',       '#6b7280' ) ?: '#6b7280';
-                            $pv_body_size          = absint( get_option( 'adaptive_test_after_body_size',        14 ) );
-                            $pv_body_weight        = get_option( 'adaptive_test_after_body_weight',      '400' ) ?: '400';
+                            $pv_result_color     = get_option( 'iiqapt_after_result_color',      $pv_primary ) ?: $pv_primary;
+                            $pv_retake_color     = get_option( 'iiqapt_after_retake_color',         $pv_primary ) ?: $pv_primary;
+                            $pv_retake_text      = get_option( 'iiqapt_after_retake_text_color',    '#ffffff' ) ?: '#ffffff';
+                            $pv_retake_bdc       = get_option( 'iiqapt_after_retake_border_color',  $pv_primary ) ?: $pv_primary;
+                            $pv_retake_bdw       = absint( get_option( 'iiqapt_after_retake_border_width',  2 ) );
+                            $pv_retake_bdr_val   = absint( get_option( 'iiqapt_after_retake_border_radius', 8 ) );
+                            $pv_after_title      = get_option( 'iiqapt_after_title',      __( 'Test Complete', 'idiomiq-adaptive-placement-test' ) );
+                            $pv_after_subheading = get_option( 'iiqapt_after_subheading', __( 'Your estimated level is:', 'idiomiq-adaptive-placement-test' ) );
+                            $pv_after_body       = get_option( 'iiqapt_after_body',       __( 'A copy of your result has been emailed to you.', 'idiomiq-adaptive-placement-test' ) );
+                            $pv_title_color      = get_option( 'iiqapt_after_title_color',      '#1f2937' ) ?: '#1f2937';
+                            $pv_title_size       = absint( get_option( 'iiqapt_after_title_size',      24 ) );
+                            $pv_title_weight     = get_option( 'iiqapt_after_title_weight',     '700' ) ?: '700';
+                            $pv_sub_color        = get_option( 'iiqapt_after_subheading_color', '#6b7280' ) ?: '#6b7280';
+                            $pv_sub_size         = absint( get_option( 'iiqapt_after_subheading_size',  16 ) );
+                            $pv_sub_weight       = get_option( 'iiqapt_after_subheading_weight','400' ) ?: '400';
+                            $pv_body_color         = get_option( 'iiqapt_after_body_color',       '#6b7280' ) ?: '#6b7280';
+                            $pv_body_size          = absint( get_option( 'iiqapt_after_body_size',        14 ) );
+                            $pv_body_weight        = get_option( 'iiqapt_after_body_weight',      '400' ) ?: '400';
                         ?>
                         <div style="background:#f3f4f6; padding:16px; border-radius:8px;">
-                            <div id="esl-prev-card" style="background:<?php echo esc_attr( $pv_bg ); ?>; border-radius:<?php echo absint( $pv_radius ); ?>px; border:<?php echo esc_attr( $pv_card_bdr ); ?>; box-shadow:<?php echo esc_attr( $pv_shadow ); ?>; padding:28px; box-sizing:border-box; text-align:center; color:<?php echo esc_attr( $pv_text ); ?>;">
-                                <p id="esl-prev-after-title" style="color:<?php echo esc_attr( $pv_title_color ); ?>; font-size:<?php echo absint( $pv_title_size ); ?>px; font-weight:<?php echo esc_attr( $pv_title_weight ); ?>; margin:0 0 6px;"><?php echo wp_kses_post( $pv_after_title ); ?></p>
-                                <p id="esl-prev-after-subheading" style="color:<?php echo esc_attr( $pv_sub_color ); ?>; font-size:<?php echo absint( $pv_sub_size ); ?>px; font-weight:<?php echo esc_attr( $pv_sub_weight ); ?>; margin:0 0 4px;"><?php echo wp_kses_post( $pv_after_subheading ); ?></p>
-                                <p id="esl-prev-result-level" style="font-size:2.8em; font-weight:700; color:<?php echo esc_attr( $pv_result_color ); ?>; margin:4px 0 16px; line-height:1;">B2</p>
+                            <div id="iiqapt-prev-card" style="background:<?php echo esc_attr( $pv_bg ); ?>; border-radius:<?php echo absint( $pv_radius ); ?>px; border:<?php echo esc_attr( $pv_card_bdr ); ?>; box-shadow:<?php echo esc_attr( $pv_shadow ); ?>; padding:28px; box-sizing:border-box; text-align:center; color:<?php echo esc_attr( $pv_text ); ?>;">
+                                <p id="iiqapt-prev-after-title" style="color:<?php echo esc_attr( $pv_title_color ); ?>; font-size:<?php echo absint( $pv_title_size ); ?>px; font-weight:<?php echo esc_attr( $pv_title_weight ); ?>; margin:0 0 6px;"><?php echo wp_kses_post( $pv_after_title ); ?></p>
+                                <p id="iiqapt-prev-after-subheading" style="color:<?php echo esc_attr( $pv_sub_color ); ?>; font-size:<?php echo absint( $pv_sub_size ); ?>px; font-weight:<?php echo esc_attr( $pv_sub_weight ); ?>; margin:0 0 4px;"><?php echo wp_kses_post( $pv_after_subheading ); ?></p>
+                                <p id="iiqapt-prev-result-level" style="font-size:2.8em; font-weight:700; color:<?php echo esc_attr( $pv_result_color ); ?>; margin:4px 0 16px; line-height:1;">B2</p>
                                 <div style="background:#e5e7eb; height:10px; border-radius:6px; position:relative; margin-bottom:28px;">
                                     <?php
-                                    $pv_show_err  = (bool) get_option( 'adaptive_test_show_error_rate', 1 );
+                                    $pv_show_err  = (bool) get_option( 'iiqapt_show_error_rate', 1 );
                                     $pv_err_rate  = 12; // example value; actual rate is computed by the test
                                     $pv_ind_width = max( 5, $pv_err_rate * 2 );
                                     $pv_left_pos  = 50 - ( $pv_ind_width / 2 );
                                     ?>
-                                    <div id="esl-prev-scale-bar" style="position:absolute; top:-5px; left:<?php echo intval( $pv_left_pos ); ?>%; width:<?php echo absint( $pv_ind_width ); ?>%; height:20px; background:<?php echo esc_attr( $pv_result_color ); ?>; border-radius:10px; opacity:.8;<?php echo $pv_show_err ? '' : 'display:none;'; ?>"></div>
+                                    <div id="iiqapt-prev-scale-bar" style="position:absolute; top:-5px; left:<?php echo intval( $pv_left_pos ); ?>%; width:<?php echo absint( $pv_ind_width ); ?>%; height:20px; background:<?php echo esc_attr( $pv_result_color ); ?>; border-radius:10px; opacity:.8;<?php echo $pv_show_err ? '' : 'display:none;'; ?>"></div>
                                 </div>
                                 <div style="display:flex; justify-content:space-around; margin-top:-22px; margin-bottom:20px; font-size:0.78em; font-weight:600; color:#6b7280;">
-                                    <span>A2</span><span>B1</span><span id="esl-prev-active-label" style="color:<?php echo esc_attr( $pv_result_color ); ?>; font-weight:800;">B2</span><span>C1</span><span>C2</span>
+                                    <span>A2</span><span>B1</span><span id="iiqapt-prev-active-label" style="color:<?php echo esc_attr( $pv_result_color ); ?>; font-weight:800;">B2</span><span>C1</span><span>C2</span>
                                 </div>
                                 <?php
-                                $pv_err_label = get_option( 'adaptive_test_error_rate_label', __( 'Margin of Error: ±{rate}%', 'idiomiq-adaptive-placement-test' ) );
+                                $pv_err_label = get_option( 'iiqapt_error_rate_label', __( 'Margin of Error: ±{rate}%', 'idiomiq-adaptive-placement-test' ) );
                                 $pv_err_label_text = $pv_err_label ?: __( 'Margin of Error: ±{rate}%', 'idiomiq-adaptive-placement-test' );
                                 $pv_err_label_text = str_replace( '{rate}', $pv_err_rate, $pv_err_label_text );
                                 ?>
-                                <p id="esl-prev-error-margin" style="font-size:0.85em; color:#6b7280; margin:0 0 14px;<?php echo $pv_show_err ? '' : 'display:none;'; ?>"><?php echo wp_kses_post( $pv_err_label_text ); ?></p>
-                                <p id="esl-prev-after-body" style="color:<?php echo esc_attr( $pv_body_color ); ?>; font-size:<?php echo absint( $pv_body_size ); ?>px; font-weight:<?php echo esc_attr( $pv_body_weight ); ?>; margin:0 0 16px;"><?php echo wp_kses_post( $pv_after_body ); ?></p>
-                                <button type="button" id="esl-prev-retake" disabled style="background:<?php echo esc_attr( $pv_retake_color ); ?>; color:<?php echo esc_attr( $pv_retake_text ); ?>; border:<?php echo absint( $pv_retake_bdw ); ?>px solid <?php echo esc_attr( $pv_retake_bdc ); ?>; border-radius:<?php echo absint( $pv_retake_bdr_val ); ?>px; padding:10px 22px; font-weight:600; cursor:default; font-size:0.85em;">Retake Test</button>
+                                <p id="iiqapt-prev-error-margin" style="font-size:0.85em; color:#6b7280; margin:0 0 14px;<?php echo $pv_show_err ? '' : 'display:none;'; ?>"><?php echo wp_kses_post( $pv_err_label_text ); ?></p>
+                                <p id="iiqapt-prev-after-body" style="color:<?php echo esc_attr( $pv_body_color ); ?>; font-size:<?php echo absint( $pv_body_size ); ?>px; font-weight:<?php echo esc_attr( $pv_body_weight ); ?>; margin:0 0 16px;"><?php echo wp_kses_post( $pv_after_body ); ?></p>
+                                <button type="button" id="iiqapt-prev-retake" disabled style="background:<?php echo esc_attr( $pv_retake_color ); ?>; color:<?php echo esc_attr( $pv_retake_text ); ?>; border:<?php echo absint( $pv_retake_bdw ); ?>px solid <?php echo esc_attr( $pv_retake_bdc ); ?>; border-radius:<?php echo absint( $pv_retake_bdr_val ); ?>px; padding:10px 22px; font-weight:600; cursor:default; font-size:0.85em;">Retake Test</button>
                             </div>
                         </div>
                         <?php endif; ?>
@@ -1307,21 +1307,21 @@ function adaptive_test_settings_page_html() {
             </div><?php // end flex container ?>
         <?php elseif ($active_tab == 'messages'): ?>
             <form action="options.php" method="post" style="margin-top:20px;">
-                <?php settings_fields('adaptive_test_msg_options'); ?>
+                <?php settings_fields('iiqapt_msg_options'); ?>
 
                 <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
                     <h2><?php esc_html_e( 'Student Email', 'idiomiq-adaptive-placement-test' ); ?></h2>
-                    <?php do_settings_sections('adaptive-level-test-msg-student'); ?>
+                    <?php do_settings_sections('iiqapt-msg-student'); ?>
                 </div>
 
                 <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
                     <h2><?php esc_html_e( 'Admin Notification Email', 'idiomiq-adaptive-placement-test' ); ?></h2>
-                    <?php do_settings_sections('adaptive-level-test-msg-admin'); ?>
+                    <?php do_settings_sections('iiqapt-msg-admin'); ?>
                 </div>
 
                 <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
                     <h2><?php esc_html_e( 'Email Footer', 'idiomiq-adaptive-placement-test' ); ?></h2>
-                    <?php do_settings_sections('adaptive-level-test-msg-footer'); ?>
+                    <?php do_settings_sections('iiqapt-msg-footer'); ?>
                 </div>
 
                 <?php submit_button(__('Save Settings', 'idiomiq-adaptive-placement-test')); ?>
@@ -1329,16 +1329,16 @@ function adaptive_test_settings_page_html() {
                 <hr>
                 <h3><?php esc_html_e( 'Reset Templates', 'idiomiq-adaptive-placement-test' ); ?></h3>
                 <form method="post" action="">
-                    <input type="hidden" name="adaptive_test_action" value="reset_email_templates">
-                    <?php wp_nonce_field('adaptive_test_reset_email_nonce'); ?>
+                    <input type="hidden" name="iiqapt_action" value="reset_email_templates">
+                    <?php wp_nonce_field('iiqapt_reset_email_nonce'); ?>
                     <?php submit_button(__('Reset to Defaults', 'idiomiq-adaptive-placement-test'), 'secondary', 'submit', false, ['onclick' => "return confirm('" . esc_js(__('Are you sure you want to reset all email templates to default?', 'idiomiq-adaptive-placement-test')) . "');"]); ?>
                 </form>
             </form>
         <?php elseif ($active_tab == 'questions'): ?>
             <?php
             global $wpdb;
-            $table_name = $wpdb->prefix . 'adaptive_questions';
-            $banks_table = $wpdb->prefix . 'adaptive_question_banks';
+            $table_name = $wpdb->prefix . 'iiqapt_questions';
+            $banks_table = $wpdb->prefix . 'iiqapt_question_banks';
             
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
             $banks = $wpdb->get_results( "SELECT * FROM {$banks_table}" );
@@ -1374,17 +1374,17 @@ function adaptive_test_settings_page_html() {
             <div style="background: #fff; padding: 15px; border: 1px solid #ccd0d4; margin-bottom: 20px;">
                 <?php if ( $rename_bank ) : ?>
                     <form method="post" action="" style="display:flex; gap:10px; align-items:center;">
-                        <input type="hidden" name="adaptive_test_action" value="rename_bank">
+                        <input type="hidden" name="iiqapt_action" value="rename_bank">
                         <input type="hidden" name="bank_id" value="<?php echo absint( $rename_bank->id ); ?>">
-                        <?php wp_nonce_field( 'adaptive_test_rename_bank_nonce' ); ?>
+                        <?php wp_nonce_field( 'iiqapt_rename_bank_nonce' ); ?>
                         <input type="text" name="bank_name" value="<?php echo esc_attr( $rename_bank->name ); ?>" required class="regular-text">
                         <?php submit_button( __( 'Save Name', 'idiomiq-adaptive-placement-test' ), 'primary', 'submit', false ); ?>
                         <a href="<?php echo esc_url( remove_query_arg( [ 'action', 'id' ] ) ); ?>" class="button"><?php esc_html_e( 'Cancel', 'idiomiq-adaptive-placement-test' ); ?></a>
                     </form>
                 <?php else : ?>
                     <form method="post" action="" style="display:flex; gap:10px; align-items:center;">
-                        <input type="hidden" name="adaptive_test_action" value="save_bank">
-                        <?php wp_nonce_field('adaptive_test_save_bank_nonce'); ?>
+                        <input type="hidden" name="iiqapt_action" value="save_bank">
+                        <?php wp_nonce_field('iiqapt_save_bank_nonce'); ?>
                         <input type="text" name="bank_name" placeholder="<?php esc_attr_e( 'New Bank Name', 'idiomiq-adaptive-placement-test' ); ?>" required class="regular-text">
                         <?php submit_button( __( 'Create Bank', 'idiomiq-adaptive-placement-test' ), 'secondary', 'submit', false ); ?>
                     </form>
@@ -1405,12 +1405,12 @@ function adaptive_test_settings_page_html() {
                         <tr>
                             <td><?php echo absint( $b->id ); ?></td>
                             <td><?php echo esc_html( $b->name ); ?><?php if ( $b->is_default ) echo ' <strong>' . esc_html__( '(Default)', 'idiomiq-adaptive-placement-test' ) . '</strong>'; ?></td>
-                            <td><code>[adaptive_level_test bank="<?php echo absint( $b->id ); ?>"]</code></td>
+                            <td><code>[iiqapt bank="<?php echo absint( $b->id ); ?>"]</code></td>
                             <td>
                                 <a href="<?php echo esc_url( add_query_arg( [ 'action' => 'rename_bank', 'id' => $b->id ] ) ); ?>"><?php esc_html_e( 'Rename', 'idiomiq-adaptive-placement-test' ); ?></a> |
-                                <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'duplicate_bank', 'id' => $b->id ] ), 'adaptive_test_duplicate_bank_nonce' ) ); ?>"><?php esc_html_e( 'Duplicate', 'idiomiq-adaptive-placement-test' ); ?></a>
+                                <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'duplicate_bank', 'id' => $b->id ] ), 'iiqapt_duplicate_bank_nonce' ) ); ?>"><?php esc_html_e( 'Duplicate', 'idiomiq-adaptive-placement-test' ); ?></a>
                                 <?php if ( ! $b->is_default ) : ?>
-                                    | <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'delete_bank', 'id' => $b->id ] ), 'adaptive_test_delete_bank_nonce' ) ); ?>" style="color: #b32d2e;" onclick="return confirm('<?php echo esc_js( __( 'Delete this bank?', 'idiomiq-adaptive-placement-test' ) ); ?>');"><?php esc_html_e( 'Delete', 'idiomiq-adaptive-placement-test' ); ?></a>
+                                    | <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'delete_bank', 'id' => $b->id ] ), 'iiqapt_delete_bank_nonce' ) ); ?>" style="color: #b32d2e;" onclick="return confirm('<?php echo esc_js( __( 'Delete this bank?', 'idiomiq-adaptive-placement-test' ) ); ?>');"><?php esc_html_e( 'Delete', 'idiomiq-adaptive-placement-test' ); ?></a>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -1421,7 +1421,7 @@ function adaptive_test_settings_page_html() {
             <h2><?php esc_html_e( 'Manage Questions', 'idiomiq-adaptive-placement-test' ); ?></h2>
             <div style="margin-bottom: 15px;">
                 <label><?php esc_html_e( 'Select Bank:', 'idiomiq-adaptive-placement-test' ); ?></label>
-                <select onchange="window.location.href='?page=adaptive-level-test&tab=questions&bank_id='+this.value">
+                <select onchange="window.location.href='?page=iiqapt&tab=questions&bank_id='+this.value">
                     <?php foreach ( $banks as $b ) : ?>
                         <option value="<?php echo absint( $b->id ); ?>" <?php selected( $current_bank_id, $b->id ); ?>><?php echo esc_html( $b->name ); ?></option>
                     <?php endforeach; ?>
@@ -1432,11 +1432,11 @@ function adaptive_test_settings_page_html() {
         <div class="card" style="max-width: 100%; padding: 20px; margin-bottom: 20px;">
             <h3><?php echo $edit_question ? esc_html__( 'Edit Question', 'idiomiq-adaptive-placement-test' ) : esc_html__( 'Add New Question', 'idiomiq-adaptive-placement-test' ); ?></h3>
             <form method="post" action="">
-                <input type="hidden" name="adaptive_test_action" value="save_question">
+                <input type="hidden" name="iiqapt_action" value="save_question">
                 <?php if ($edit_question): ?>
                     <input type="hidden" name="question_id" value="<?php echo esc_attr($edit_question->id); ?>">
                 <?php endif; ?>
-                <?php wp_nonce_field('adaptive_test_save_question_nonce'); ?>
+                <?php wp_nonce_field('iiqapt_save_question_nonce'); ?>
 
                 <table class="form-table">
                     <tr>
@@ -1511,7 +1511,7 @@ function adaptive_test_settings_page_html() {
                             <?php if ( $current_bank_is_default ) : ?>
                                 <span style="color: #999; cursor: not-allowed;" title="<?php esc_attr_e( 'Cannot delete questions from default bank', 'idiomiq-adaptive-placement-test' ); ?>"><?php esc_html_e( 'Delete', 'idiomiq-adaptive-placement-test' ); ?></span>
                             <?php else : ?>
-                                <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'delete_question', 'id' => $q->id ] ), 'adaptive_test_delete_question_nonce' ) ); ?>" style="color: #b32d2e;" onclick="return confirm('<?php echo esc_js( __( 'Are you sure?', 'idiomiq-adaptive-placement-test' ) ); ?>');"><?php esc_html_e( 'Delete', 'idiomiq-adaptive-placement-test' ); ?></a>
+                                <a href="<?php echo esc_url( wp_nonce_url( add_query_arg( [ 'action' => 'delete_question', 'id' => $q->id ] ), 'iiqapt_delete_question_nonce' ) ); ?>" style="color: #b32d2e;" onclick="return confirm('<?php echo esc_js( __( 'Are you sure?', 'idiomiq-adaptive-placement-test' ) ); ?>');"><?php esc_html_e( 'Delete', 'idiomiq-adaptive-placement-test' ); ?></a>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -1527,8 +1527,8 @@ function adaptive_test_settings_page_html() {
                 <h3><?php esc_html_e( 'Export Questions', 'idiomiq-adaptive-placement-test' ); ?></h3>
                 <p><?php esc_html_e( 'Download all questions as a CSV file.', 'idiomiq-adaptive-placement-test' ); ?></p>
                 <form method="post" action="">
-                    <input type="hidden" name="adaptive_test_action" value="export_csv">
-                    <?php wp_nonce_field( 'adaptive_test_tool_action_nonce' ); ?>
+                    <input type="hidden" name="iiqapt_action" value="export_csv">
+                    <?php wp_nonce_field( 'iiqapt_tool_action_nonce' ); ?>
                     <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                         <select name="export_bank_id">
                             <?php foreach ( $banks as $b ) : ?>
@@ -1545,8 +1545,8 @@ function adaptive_test_settings_page_html() {
                 <p><?php esc_html_e( 'Upload a CSV file to add questions. The CSV should have headers: id, question_text, options, answer, level.', 'idiomiq-adaptive-placement-test' ); ?></p>
                 <p class="description"><?php esc_html_e( 'Note: The "options" column should be pipe-separated (e.g., Option A|Option B|Option C|Option D).', 'idiomiq-adaptive-placement-test' ); ?></p>
                 <form method="post" action="" enctype="multipart/form-data">
-                    <input type="hidden" name="adaptive_test_action" value="import_csv">
-                    <?php wp_nonce_field( 'adaptive_test_tool_action_nonce' ); ?>
+                    <input type="hidden" name="iiqapt_action" value="import_csv">
+                    <?php wp_nonce_field( 'iiqapt_tool_action_nonce' ); ?>
                     <p><input type="file" name="csv_file" accept=".csv" required></p>
                     <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                         <select name="import_bank_id">
@@ -1563,8 +1563,8 @@ function adaptive_test_settings_page_html() {
                 <h3><?php esc_html_e( 'Reset Database', 'idiomiq-adaptive-placement-test' ); ?></h3>
                 <p><?php esc_html_e( 'Warning: This will delete ALL existing questions and re-insert the default sample questions.', 'idiomiq-adaptive-placement-test' ); ?></p>
                 <form method="post" action="">
-                    <input type="hidden" name="adaptive_test_action" value="reseed_questions">
-                    <?php wp_nonce_field('adaptive_test_tool_action_nonce'); ?>
+                    <input type="hidden" name="iiqapt_action" value="reseed_questions">
+                    <?php wp_nonce_field('iiqapt_tool_action_nonce'); ?>
                     <?php submit_button(__('Re-seed Questions', 'idiomiq-adaptive-placement-test'), 'delete', 'submit', true, ['onclick' => "return confirm('" . esc_js(__('Are you sure you want to delete all questions and reset the database?', 'idiomiq-adaptive-placement-test')) . "');"]); ?>
                 </form>
             </div>
@@ -1573,7 +1573,7 @@ function adaptive_test_settings_page_html() {
         <?php elseif ($active_tab == 'logs'): ?>
             <?php
             global $wpdb;
-            $logs_table = $wpdb->prefix . 'adaptive_attempt_logs';
+            $logs_table = $wpdb->prefix . 'iiqapt_attempt_logs';
 
             // Validate sort params
             $allowed_orderby = [ 'date', 'email', 'level', 'bank_name' ];
@@ -1615,7 +1615,7 @@ function adaptive_test_settings_page_html() {
                 <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
                     <!-- Filter form (email + bank) -->
                     <form method="get" action="" style="display:flex; gap:6px; align-items:center;">
-                        <input type="hidden" name="page" value="adaptive-level-test">
+                        <input type="hidden" name="page" value="iiqapt">
                         <input type="hidden" name="tab" value="logs">
                         <input type="hidden" name="orderby" value="<?php echo esc_attr( $orderby ); ?>">
                         <input type="hidden" name="order" value="<?php echo esc_attr( strtolower( $order ) ); ?>">
@@ -1628,15 +1628,15 @@ function adaptive_test_settings_page_html() {
                         </select>
                         <?php submit_button( __( 'Filter', 'idiomiq-adaptive-placement-test' ), 'secondary', 'submit', false ); ?>
                         <?php if ( $email_filter || $bank_filter ) : ?>
-                            <a href="<?php echo esc_url( admin_url( 'options-general.php?page=adaptive-level-test&tab=logs' ) ); ?>" class="button button-secondary"><?php esc_html_e( 'Clear', 'idiomiq-adaptive-placement-test' ); ?></a>
+                            <a href="<?php echo esc_url( admin_url( 'options-general.php?page=iiqapt&tab=logs' ) ); ?>" class="button button-secondary"><?php esc_html_e( 'Clear', 'idiomiq-adaptive-placement-test' ); ?></a>
                         <?php endif; ?>
                     </form>
                     <?php if ( $is_admin ) : ?>
                     <!-- Export -->
                     <form method="post" action="">
-                        <input type="hidden" name="adaptive_test_action" value="export_logs_csv">
+                        <input type="hidden" name="iiqapt_action" value="export_logs_csv">
                         <input type="hidden" name="bank_filter" value="<?php echo esc_attr( $bank_filter ); ?>">
-                        <?php wp_nonce_field( 'adaptive_test_export_logs_nonce' ); ?>
+                        <?php wp_nonce_field( 'iiqapt_export_logs_nonce' ); ?>
                         <?php submit_button( __( 'Export CSV', 'idiomiq-adaptive-placement-test' ), 'secondary', 'submit', false ); ?>
                     </form>
                     <?php endif; ?>
@@ -1644,8 +1644,8 @@ function adaptive_test_settings_page_html() {
                 <?php if ( $is_admin ) : ?>
                 <!-- Delete old -->
                 <form method="post" action="">
-                    <input type="hidden" name="adaptive_test_action" value="delete_logs">
-                    <?php wp_nonce_field( 'adaptive_test_delete_logs_nonce' ); ?>
+                    <input type="hidden" name="iiqapt_action" value="delete_logs">
+                    <?php wp_nonce_field( 'iiqapt_delete_logs_nonce' ); ?>
                     <label><?php esc_html_e( 'Delete attempts older than:', 'idiomiq-adaptive-placement-test' ); ?></label>
                     <input type="number" name="log_days" value="30" style="width:60px;"> <?php esc_html_e( 'days', 'idiomiq-adaptive-placement-test' ); ?>
                     <?php submit_button( __( 'Delete Old Attempts', 'idiomiq-adaptive-placement-test' ), 'delete', 'submit', false ); ?>
@@ -1654,20 +1654,20 @@ function adaptive_test_settings_page_html() {
             </div>
 
             <!-- Bulk-action form wraps the table -->
-            <form method="post" action="" id="esl-logs-bulk-form">
+            <form method="post" action="" id="iiqapt-logs-bulk-form">
                 <?php if ( $is_admin ) : ?>
-                <input type="hidden" name="adaptive_test_action" value="bulk_delete_logs">
-                <?php wp_nonce_field( 'adaptive_test_bulk_delete_logs_nonce' ); ?>
+                <input type="hidden" name="iiqapt_action" value="bulk_delete_logs">
+                <?php wp_nonce_field( 'iiqapt_bulk_delete_logs_nonce' ); ?>
                 <?php endif; ?>
 
                 <table class="wp-list-table widefat fixed striped">
                     <thead>
                         <tr>
-                            <?php if ( $is_admin ) : ?><th style="width:32px;"><input type="checkbox" id="esl-select-all" title="<?php esc_attr_e( 'Select all', 'idiomiq-adaptive-placement-test' ); ?>"></th><?php endif; ?>
-                            <th><?php echo adaptive_test_sort_link( 'date',      __( 'Date', 'idiomiq-adaptive-placement-test' ),          $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
-                            <th><?php echo adaptive_test_sort_link( 'email',     __( 'Email', 'idiomiq-adaptive-placement-test' ),         $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
-                            <th><?php echo adaptive_test_sort_link( 'bank_name', __( 'Question Bank', 'idiomiq-adaptive-placement-test' ), $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
-                            <th><?php echo adaptive_test_sort_link( 'level',     __( 'Result', 'idiomiq-adaptive-placement-test' ),        $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
+                            <?php if ( $is_admin ) : ?><th style="width:32px;"><input type="checkbox" id="iiqapt-select-all" title="<?php esc_attr_e( 'Select all', 'idiomiq-adaptive-placement-test' ); ?>"></th><?php endif; ?>
+                            <th><?php echo iiqapt_sort_link( 'date',      __( 'Date', 'idiomiq-adaptive-placement-test' ),          $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
+                            <th><?php echo iiqapt_sort_link( 'email',     __( 'Email', 'idiomiq-adaptive-placement-test' ),         $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
+                            <th><?php echo iiqapt_sort_link( 'bank_name', __( 'Question Bank', 'idiomiq-adaptive-placement-test' ), $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
+                            <th><?php echo iiqapt_sort_link( 'level',     __( 'Result', 'idiomiq-adaptive-placement-test' ),        $orderby, $order, $bank_filter, $email_filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
                             <th><?php esc_html_e( 'Confidence', 'idiomiq-adaptive-placement-test' ); ?></th>
                             <th><?php esc_html_e( 'Time Taken', 'idiomiq-adaptive-placement-test' ); ?></th>
                             <th></th>
@@ -1675,8 +1675,8 @@ function adaptive_test_settings_page_html() {
                     </thead>
                     <tbody>
                         <?php
-                        $strong_label      = get_option( 'adaptive_test_strong_label',      __( 'Strong',      'idiomiq-adaptive-placement-test' ) );
-                        $borderline_label  = get_option( 'adaptive_test_borderline_label',  __( 'Borderline',  'idiomiq-adaptive-placement-test' ) );
+                        $strong_label      = get_option( 'iiqapt_strong_label',      __( 'Strong',      'idiomiq-adaptive-placement-test' ) );
+                        $borderline_label  = get_option( 'iiqapt_borderline_label',  __( 'Borderline',  'idiomiq-adaptive-placement-test' ) );
                         $level_centres     = [ 'A2' => -2.0, 'B1' => -1.0, 'B2' => 0.0, 'C1' => 1.0, 'C2' => 2.0 ];
                         foreach ( $logs as $log ) :
                             $sub   = $log->sub_level ?? '';
@@ -1698,8 +1698,8 @@ function adaptive_test_settings_page_html() {
                             $dur_raw        = isset( $log->duration_seconds ) && $log->duration_seconds > 0 ? (int) $log->duration_seconds : null;
                             $duration_fmt   = null !== $dur_raw ? ( $dur_raw >= 60 ? floor( $dur_raw / 60 ) . 'm ' . ( $dur_raw % 60 ) . 's' : $dur_raw . 's' ) : '—';
                             $delete_url = wp_nonce_url(
-                                admin_url( 'options-general.php?page=adaptive-level-test&tab=logs&action=delete_log&id=' . $log->id ),
-                                'adaptive_test_delete_log_nonce'
+                                admin_url( 'options-general.php?page=iiqapt&tab=logs&action=delete_log&id=' . $log->id ),
+                                'iiqapt_delete_log_nonce'
                             );
                         ?>
                             <tr>
@@ -1711,7 +1711,7 @@ function adaptive_test_settings_page_html() {
                                 <td><?php echo esc_html( $confidence ); ?></td>
                                 <td><?php echo esc_html( $duration_fmt ); ?></td>
                                 <td style="white-space:nowrap;">
-                                    <?php do_action( 'adaptive_test_log_row_actions', $log ); ?>
+                                    <?php do_action( 'iiqapt_log_row_actions', $log ); ?>
                                     <?php if ( $is_admin ) : ?>
                                     <a href="<?php echo esc_url( $delete_url ); ?>" class="button button-small" style="color:#dc2626;" onclick="return confirm('<?php echo esc_js( __( 'Delete this attempt?', 'idiomiq-adaptive-placement-test' ) ); ?>')"><?php esc_html_e( 'Delete', 'idiomiq-adaptive-placement-test' ); ?></a>
                                     <?php endif; ?>
@@ -1724,7 +1724,7 @@ function adaptive_test_settings_page_html() {
                 <?php if ( $is_admin ) : ?>
                 <div style="margin-top:8px;">
                     <button type="submit" class="button button-secondary"
-                        onclick="return document.querySelectorAll('#esl-logs-bulk-form input[name=\'log_ids[]\']:checked').length > 0 || (alert('<?php echo esc_js( __( 'Please select at least one attempt.', 'idiomiq-adaptive-placement-test' ) ); ?>'), false);"
+                        onclick="return document.querySelectorAll('#iiqapt-logs-bulk-form input[name=\'log_ids[]\']:checked').length > 0 || (alert('<?php echo esc_js( __( 'Please select at least one attempt.', 'idiomiq-adaptive-placement-test' ) ); ?>'), false);"
                     ><?php esc_html_e( 'Delete Selected', 'idiomiq-adaptive-placement-test' ); ?></button>
                 </div>
                 <?php endif; ?>
@@ -1739,21 +1739,21 @@ function adaptive_test_settings_page_html() {
 /**
  * Dashboard Widget: Recent Test Stats
  */
-function adaptive_test_add_dashboard_widget() {
+function iiqapt_add_dashboard_widget() {
     wp_add_dashboard_widget(
-        'adaptive_level_test_stats',
+        'iiqapt_stats',
         __('Adaptive Test Statistics', 'idiomiq-adaptive-placement-test'),
-        'adaptive_test_dashboard_widget_callback'
+        'iiqapt_dashboard_widget_callback'
     );
 }
-add_action('wp_dashboard_setup', 'adaptive_test_add_dashboard_widget');
+add_action('wp_dashboard_setup', 'iiqapt_add_dashboard_widget');
 
-function adaptive_test_dashboard_widget_callback() {
+function iiqapt_dashboard_widget_callback() {
     if ( ! current_user_can( 'edit_others_posts' ) ) {
         return;
     }
     global $wpdb;
-    $logs_table = $wpdb->prefix . 'adaptive_attempt_logs';
+    $logs_table = $wpdb->prefix . 'iiqapt_attempt_logs';
 
     if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $logs_table ) ) ) !== $logs_table ) {
         echo '<p>' . esc_html__( 'No test data available yet.', 'idiomiq-adaptive-placement-test' ) . '</p>';
@@ -1782,6 +1782,6 @@ function adaptive_test_dashboard_widget_callback() {
     } else {
         echo '<p>' . esc_html__( 'No recent tests found.', 'idiomiq-adaptive-placement-test' ) . '</p>';
     }
-    echo '<p><a href="' . esc_url( admin_url( 'options-general.php?page=adaptive-level-test&tab=logs' ) ) . '" class="button button-primary">' . esc_html__( 'View All Attempts', 'idiomiq-adaptive-placement-test' ) . '</a></p>';
+    echo '<p><a href="' . esc_url( admin_url( 'options-general.php?page=iiqapt&tab=logs' ) ) . '" class="button button-primary">' . esc_html__( 'View All Attempts', 'idiomiq-adaptive-placement-test' ) . '</a></p>';
     echo '</div>';
 }
