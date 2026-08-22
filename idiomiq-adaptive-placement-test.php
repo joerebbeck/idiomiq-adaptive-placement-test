@@ -125,7 +125,7 @@ add_action( 'plugins_loaded', 'iiqapt_update_db_check' );
 function iiqapt_shortcode( $atts ) {
     $atts = shortcode_atts( [ 'bank' => 1 ], $atts, 'iiqapt' );
     ob_start();
-    set_query_var( 'adaptive_bank_id', intval( $atts['bank'] ) );
+    set_query_var( 'iiqapt_bank_id', intval( $atts['bank'] ) );
     include IIQAPT_PLUGIN_PATH . 'templates/quiz-container.php';
     return ob_get_clean();
 }

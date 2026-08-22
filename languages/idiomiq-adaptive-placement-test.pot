@@ -2,986 +2,908 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: IdiomIQ Adaptive Placement Test 1.3.1\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/adaptive-level-test-free\n"
+"Project-Id-Version: IdiomIQ Adaptive Placement Test 1.3.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/idiomiq_adaptive_placement_test\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-09T20:19:58+00:00\n"
+"POT-Creation-Date: 2026-08-22T11:43:48+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: idiomiq-adaptive-placement-test\n"
 
 #. Plugin Name of the plugin
-#: index.php
-#: includes/admin-settings.php:963
-msgid "Adaptive Level Test"
+#: idiomiq-adaptive-placement-test.php
+#: includes/admin-settings.php:910
+#: includes/admin-settings.php:911
+msgid "IdiomIQ Adaptive Placement Test"
 msgstr ""
 
 #. Plugin URI of the plugin
-#. Author URI of the plugin
-#: index.php
-msgid "https://idiomiq.com"
+#: idiomiq-adaptive-placement-test.php
+msgid "https://idiomiq.com/iiqapt"
 msgstr ""
 
 #. Description of the plugin
-#: index.php
-msgid "An adaptive test for ESL students to determine their CEFR level (A2-C2)."
+#: idiomiq-adaptive-placement-test.php
+msgid "Adaptive CEFR placement test (A2–C2) for schools and educators. Preconfigured English bank; Bayesian IRT for efficiency and more accurate results."
 msgstr ""
 
 #. Author of the plugin
-#: index.php
+#: idiomiq-adaptive-placement-test.php
 msgid "IdiomIQ"
 msgstr ""
 
-#: includes/admin-settings.php:121
+#. Author URI of the plugin
+#: idiomiq-adaptive-placement-test.php
+msgid "https://idiomiq.com"
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:161
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:162
+msgid "Error loading test."
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:163
+msgid "Connection Error"
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:164
+#: includes/admin-settings.php:765
+msgid "Analysing your answers..."
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:165
+#: includes/admin-settings.php:822
+#: includes/admin-settings.php:1262
+msgid "Test Complete"
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:166
+msgid "Your estimated English level is:"
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:167
+msgid "A copy of your results has been sent to your email."
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:168
+msgid "Error submitting answers."
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:169
+msgid "Please refresh the page and try again."
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:170
+msgid "Please try again."
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:171
+msgid "Unknown error occurred."
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:172
+msgid "Retake Test"
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:173
+#: includes/admin-settings.php:760
+#: templates/quiz-container.php:76
+msgid "Loading question..."
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:174
+#: includes/admin-settings.php:840
+#: includes/admin-settings.php:1209
+#: templates/quiz-container.php:37
+msgid "Change to dyslexia friendly font"
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:175
+#: includes/admin-settings.php:841
+msgid "Change to regular font"
+msgstr ""
+
+#: idiomiq-adaptive-placement-test.php:187
+msgid "Settings"
+msgstr ""
+
+#: includes/admin-settings.php:97
 msgid "Questions in the Default Question Bank cannot be deleted. You can edit them or duplicate the bank to create a custom set."
 msgstr ""
 
-#: includes/admin-settings.php:158
+#: includes/admin-settings.php:129
 msgid "Cannot delete the default question bank."
 msgstr ""
 
 #. translators: %d is the WordPress post ID that uses this question bank.
-#: includes/admin-settings.php:167
+#: includes/admin-settings.php:138
 #, php-format
 msgid "Cannot delete this bank. It is currently used on post ID %d."
 msgstr ""
 
-#: includes/admin-settings.php:298
+#: includes/admin-settings.php:264
 msgid "Only CSV files are allowed."
 msgstr ""
 
-#: includes/admin-settings.php:594
-#: includes/admin-settings.php:618
+#: includes/admin-settings.php:548
+#: includes/admin-settings.php:572
 msgid "Title"
 msgstr ""
 
-#: includes/admin-settings.php:595
+#: includes/admin-settings.php:549
 msgid "Subtitle"
 msgstr ""
 
-#: includes/admin-settings.php:596
-#: includes/admin-settings.php:620
-#: includes/admin-settings.php:640
-#: includes/admin-settings.php:645
+#: includes/admin-settings.php:550
+#: includes/admin-settings.php:574
+#: includes/admin-settings.php:594
+#: includes/admin-settings.php:599
 msgid "Body"
 msgstr ""
 
-#: includes/admin-settings.php:597
+#: includes/admin-settings.php:551
 msgid "Email Placeholder"
 msgstr ""
 
-#: includes/admin-settings.php:598
+#: includes/admin-settings.php:552
 msgid "Follow-up Consent"
 msgstr ""
 
-#: includes/admin-settings.php:599
+#: includes/admin-settings.php:553
 msgid "Follow-up Consent Message"
 msgstr ""
 
-#: includes/admin-settings.php:600
+#: includes/admin-settings.php:554
 msgid "Button Text"
 msgstr ""
 
-#: includes/admin-settings.php:605
+#: includes/admin-settings.php:559
 msgid "Loading Text"
 msgstr ""
 
-#: includes/admin-settings.php:606
+#: includes/admin-settings.php:560
 msgid "Analysing Text"
 msgstr ""
 
-#: includes/admin-settings.php:607
+#: includes/admin-settings.php:561
 msgid "Progress Bar"
 msgstr ""
 
-#: includes/admin-settings.php:608
+#: includes/admin-settings.php:562
 msgid "Question Counter"
 msgstr ""
 
-#: includes/admin-settings.php:609
+#: includes/admin-settings.php:563
 msgid "Counter Format"
 msgstr ""
 
-#: includes/admin-settings.php:610
+#: includes/admin-settings.php:564
 msgid "Question Alignment"
 msgstr ""
 
-#: includes/admin-settings.php:611
+#: includes/admin-settings.php:565
 msgid "Options Alignment"
 msgstr ""
 
-#: includes/admin-settings.php:612
+#: includes/admin-settings.php:566
 msgid "Dyslexia Toggle"
 msgstr ""
 
-#: includes/admin-settings.php:613
-msgid "Encouragement"
-msgstr ""
-
-#: includes/admin-settings.php:619
+#: includes/admin-settings.php:573
 msgid "Subheading"
 msgstr ""
 
-#: includes/admin-settings.php:621
+#: includes/admin-settings.php:575
 msgid "Error Rate Display"
 msgstr ""
 
-#: includes/admin-settings.php:622
-msgid "Error Rate (%)"
+#: includes/admin-settings.php:576
+msgid "Error Rate Label"
 msgstr ""
 
-#: includes/admin-settings.php:627
+#: includes/admin-settings.php:581
 msgid "Max Batches"
 msgstr ""
 
-#: includes/admin-settings.php:628
+#: includes/admin-settings.php:582
 msgid "Target Confidence"
 msgstr ""
 
-#: includes/admin-settings.php:629
+#: includes/admin-settings.php:583
 msgid "Strong Label"
 msgstr ""
 
-#: includes/admin-settings.php:630
+#: includes/admin-settings.php:584
 msgid "Borderline Label"
 msgstr ""
 
-#: includes/admin-settings.php:631
+#: includes/admin-settings.php:585
 msgid "Primary Colour"
 msgstr ""
 
-#: includes/admin-settings.php:633
+#: includes/admin-settings.php:587
 msgid "Log Retention"
 msgstr ""
 
-#: includes/admin-settings.php:634
+#: includes/admin-settings.php:588
 msgid "Rate Limit"
 msgstr ""
 
-#: includes/admin-settings.php:635
+#: includes/admin-settings.php:589
 msgid "Uninstall"
 msgstr ""
 
-#: includes/admin-settings.php:639
-#: includes/admin-settings.php:644
+#: includes/admin-settings.php:593
+#: includes/admin-settings.php:598
 msgid "Subject"
 msgstr ""
 
-#: includes/admin-settings.php:643
+#: includes/admin-settings.php:597
 msgid "Recipients"
 msgstr ""
 
-#: includes/admin-settings.php:648
+#: includes/admin-settings.php:602
 msgid "Footer HTML"
 msgstr ""
 
-#: includes/admin-settings.php:653
-#: includes/ajax.php:296
+#: includes/admin-settings.php:607
+#: includes/ajax.php:294
 msgid "Your English Level Test Results"
 msgstr ""
 
-#: includes/admin-settings.php:662
-#: includes/admin-settings.php:997
+#: includes/admin-settings.php:616
+#: includes/admin-settings.php:955
 msgid "Edit HTML"
 msgstr ""
 
-#: includes/admin-settings.php:662
-#: includes/admin-settings.php:997
+#: includes/admin-settings.php:616
+#: includes/admin-settings.php:956
 msgid "Preview"
 msgstr ""
 
 #. translators: %s is a CEFR level code such as B1 or C2.
-#: includes/admin-settings.php:700
+#: includes/admin-settings.php:654
 #, php-format
 msgid "Use %s as a placeholder for the student's CEFR level (e.g. B1). HTML is supported."
 msgstr ""
 
 #. translators: %s is the site admin email address.
-#: includes/admin-settings.php:740
+#: includes/admin-settings.php:694
 #, php-format
 msgid "Comma-separated list of notification recipients. Defaults to the site admin (%s). Clear to disable all notifications."
 msgstr ""
 
-#: includes/admin-settings.php:744
-#: includes/ajax.php:309
+#: includes/admin-settings.php:698
+#: includes/ajax.php:307
 msgid "New Level Test Completed"
 msgstr ""
 
 #. translators: %email%, %level%, %bank% are literal template tokens users type in the email body, not printf format specifiers.
-#: includes/admin-settings.php:754
+#: includes/admin-settings.php:708
 #, php-format
 msgid "Placeholders: %email%, %level%, %bank%. HTML is supported."
 msgstr ""
 
-#: includes/admin-settings.php:761
+#: includes/admin-settings.php:715
 msgid "Appended to all emails (student and admin). Accepts plain text or HTML. Clear to disable."
 msgstr ""
 
-#: includes/admin-settings.php:765
-#: includes/admin-settings.php:1836
+#: includes/admin-settings.php:719
+#: includes/admin-settings.php:1155
 #: templates/quiz-container.php:13
 msgid "Start Your Level Test"
 msgstr ""
 
-#: includes/admin-settings.php:770
-#: includes/admin-settings.php:1837
+#: includes/admin-settings.php:724
+#: includes/admin-settings.php:1156
 #: templates/quiz-container.php:14
 msgid "Enter your email address to begin the test."
 msgstr ""
 
-#: includes/admin-settings.php:775
+#: includes/admin-settings.php:729
 #: templates/quiz-container.php:15
 msgid "By starting the test, you agree for your results to be sent to the email address that you provide."
 msgstr ""
 
-#: includes/admin-settings.php:778
+#: includes/admin-settings.php:732
 msgid "Optional. Displayed above the email input. HTML is supported."
 msgstr ""
 
-#: includes/admin-settings.php:788
+#: includes/admin-settings.php:742
 msgid "Show a follow-up contact consent checkbox (optional for the user)"
 msgstr ""
 
-#: includes/admin-settings.php:792
-#: includes/admin-settings.php:1842
+#: includes/admin-settings.php:746
+#: includes/admin-settings.php:1161
 #: templates/quiz-container.php:18
 msgid "I'd like to receive information about English courses and relevant offers. I understand I can withdraw this consent at any time."
 msgstr ""
 
-#: includes/admin-settings.php:796
+#: includes/admin-settings.php:750
 msgid "Optional — user can tick or skip."
 msgstr ""
 
-#: includes/admin-settings.php:801
-#: includes/admin-settings.php:1840
+#: includes/admin-settings.php:755
+#: includes/admin-settings.php:1159
 #: templates/quiz-container.php:20
 msgid "Start Test"
 msgstr ""
 
-#: includes/admin-settings.php:806
-#: index.php:114
-#: templates/quiz-container.php:76
-msgid "Loading question..."
-msgstr ""
-
-#: includes/admin-settings.php:811
-#: index.php:105
-msgid "Analysing your answers..."
-msgstr ""
-
-#: includes/admin-settings.php:817
+#: includes/admin-settings.php:771
 msgid "Show progress bar during the quiz"
 msgstr ""
 
-#: includes/admin-settings.php:822
+#: includes/admin-settings.php:776
 msgid "Show question counter (e.g. Question 3 of 5)"
 msgstr ""
 
-#: includes/admin-settings.php:829
+#: includes/admin-settings.php:783
 msgid "Placeholders: %n% = current question number, %total% = questions per batch (5)."
 msgstr ""
 
-#: includes/admin-settings.php:835
-#: includes/admin-settings.php:845
+#: includes/admin-settings.php:789
+#: includes/admin-settings.php:799
 msgid "Left"
 msgstr ""
 
-#: includes/admin-settings.php:835
-#: includes/admin-settings.php:845
+#: includes/admin-settings.php:789
+#: includes/admin-settings.php:799
 msgid "Center"
 msgstr ""
 
-#: includes/admin-settings.php:835
-#: includes/admin-settings.php:845
+#: includes/admin-settings.php:789
+#: includes/admin-settings.php:799
 msgid "Right"
 msgstr ""
 
-#: includes/admin-settings.php:855
+#: includes/admin-settings.php:809
 msgid "Show error rate margin on the results scale"
 msgstr ""
 
-#: includes/admin-settings.php:859
-#: includes/admin-settings.php:1991
-#: includes/admin-settings.php:1992
+#: includes/admin-settings.php:813
+#: includes/admin-settings.php:1293
+#: includes/admin-settings.php:1294
 msgid "Margin of Error: ±{rate}%"
 msgstr ""
 
-#: includes/admin-settings.php:864
-msgid "Use {rate} for the percentage."
+#: includes/admin-settings.php:817
+msgid "Use {rate} for the computed error percentage from the test result."
 msgstr ""
 
-#: includes/admin-settings.php:866
-msgid "Margin of error displayed on the results scale."
-msgstr ""
-
-#: includes/admin-settings.php:871
-#: includes/admin-settings.php:1943
-#: index.php:106
-msgid "Test Complete"
-msgstr ""
-
-#: includes/admin-settings.php:876
-#: includes/admin-settings.php:1944
+#: includes/admin-settings.php:827
+#: includes/admin-settings.php:1263
 msgid "Your estimated level is:"
 msgstr ""
 
-#: includes/admin-settings.php:881
-#: includes/admin-settings.php:1945
+#: includes/admin-settings.php:832
+#: includes/admin-settings.php:1264
 msgid "A copy of your result has been emailed to you."
 msgstr ""
 
-#: includes/admin-settings.php:884
+#: includes/admin-settings.php:835
 msgid "Displayed below the scale and above the retake button. HTML is supported."
 msgstr ""
 
-#: includes/admin-settings.php:889
-#: includes/admin-settings.php:1890
-#: index.php:115
-#: templates/quiz-container.php:37
-msgid "Change to dyslexia friendly font"
-msgstr ""
-
-#: includes/admin-settings.php:890
-#: index.php:116
-msgid "Change to regular font"
-msgstr ""
-
-#: includes/admin-settings.php:891
+#: includes/admin-settings.php:842
 msgid "Show dyslexia-friendly font toggle during the test"
 msgstr ""
 
-#: includes/admin-settings.php:893
+#: includes/admin-settings.php:844
 msgid "Button label (off):"
 msgstr ""
 
-#: includes/admin-settings.php:894
+#: includes/admin-settings.php:845
 msgid "Button label (on):"
 msgstr ""
 
-#: includes/admin-settings.php:895
+#: includes/admin-settings.php:846
 msgid "Text shown on the font-toggle button before and after switching to the dyslexia-friendly font."
 msgstr ""
 
-#: includes/admin-settings.php:900
-msgid "Encouragement overlay is a Pro feature."
-msgstr ""
-
-#: includes/admin-settings.php:906
+#: includes/admin-settings.php:854
 msgid "Sets the main accent colour used for buttons, progress bars, and highlights. Individual colour overrides in the Customise tab take precedence."
 msgstr ""
 
-#: includes/admin-settings.php:912
-#: includes/admin-settings.php:2372
+#: includes/admin-settings.php:860
+#: includes/admin-settings.php:1650
 msgid "days"
 msgstr ""
 
-#: includes/admin-settings.php:913
+#: includes/admin-settings.php:861
 msgid "Attempt logs older than this are automatically deleted each day. Set to 0 to keep logs indefinitely."
 msgstr ""
 
-#: includes/admin-settings.php:919
+#: includes/admin-settings.php:867
 msgid "test starts per IP address per hour"
 msgstr ""
 
-#: includes/admin-settings.php:920
+#: includes/admin-settings.php:868
 msgid "Limits how many times the same IP address can start the test within one hour. Helps prevent automated abuse. Raise this if you have multiple students sharing the same network connection."
 msgstr ""
 
-#: includes/admin-settings.php:927
+#: includes/admin-settings.php:875
 msgid "Remove all plugin data when the plugin is deleted"
 msgstr ""
 
-#: includes/admin-settings.php:929
+#: includes/admin-settings.php:877
 msgid "If checked, deleting this plugin will permanently drop all database tables and settings. This cannot be undone."
 msgstr ""
 
-#: includes/admin-settings.php:935
+#: includes/admin-settings.php:883
 msgid "batches of 5 questions"
 msgstr ""
 
-#: includes/admin-settings.php:936
+#: includes/admin-settings.php:884
 msgid "The test stops early when the confidence threshold is reached; this is the hard ceiling. Each batch is 5 questions, so 10 batches = up to 50 questions."
 msgstr ""
 
-#: includes/admin-settings.php:942
+#: includes/admin-settings.php:890
 msgid "The test stops as soon as the ability estimate is accurate to within this margin. Lower values give more precision but a longer test. 8% corresponds to the DIALANG standard (SE ≤ 0.32 logits)."
 msgstr ""
 
-#: includes/admin-settings.php:946
-#: includes/admin-settings.php:2400
+#: includes/admin-settings.php:894
+#: includes/admin-settings.php:1678
 msgid "Strong"
 msgstr ""
 
-#: includes/admin-settings.php:948
+#: includes/admin-settings.php:896
 msgid "Prepended to the level in the results log when the student's ability is in the upper third of the level segment. e.g. \"Strong B2\"."
 msgstr ""
 
-#: includes/admin-settings.php:952
-#: includes/admin-settings.php:2401
+#: includes/admin-settings.php:900
+#: includes/admin-settings.php:1679
 msgid "Borderline"
 msgstr ""
 
-#: includes/admin-settings.php:954
+#: includes/admin-settings.php:902
 msgid "Prepended to the level in the results log when the student's ability is in the lower third of the level segment. e.g. \"Borderline B2\"."
 msgstr ""
 
-#: includes/admin-settings.php:962
-msgid "Adaptive Level Test Administration"
-msgstr ""
-
 #. translators: %d is the number of questions imported.
-#: includes/admin-settings.php:1662
+#: includes/admin-settings.php:1022
 #, php-format
 msgid "%d questions imported successfully."
 msgstr ""
 
-#. translators: %d is the number of questions skipped.
-#: includes/admin-settings.php:1666
+#. translators: %d is the number of questions skipped due to an unrecognised CEFR level.
+#: includes/admin-settings.php:1026
 #, php-format
-msgid "%d questions were not imported — the 150-question free plan limit has been reached."
+msgid "%d questions were not imported — they contained an unrecognised CEFR level and were skipped."
 msgstr ""
 
-#: includes/admin-settings.php:1668
-#: includes/admin-settings.php:1678
-#: includes/admin-settings.php:2163
-msgid "Upgrade to Pro for unlimited questions."
-msgstr ""
-
-#: includes/admin-settings.php:1673
+#: includes/admin-settings.php:1030
 msgid "Database reset and re-seeded with sample questions."
 msgstr ""
 
-#: includes/admin-settings.php:1676
-msgid "Free plan limit reached: question banks are capped at 150 questions."
-msgstr ""
-
-#: includes/admin-settings.php:1683
-msgid "Free plan limit reached: you can have a maximum of 3 question banks."
-msgstr ""
-
-#: includes/admin-settings.php:1685
-#: includes/admin-settings.php:2096
-msgid "Upgrade to Pro for unlimited banks."
-msgstr ""
-
-#: includes/admin-settings.php:1689
+#: includes/admin-settings.php:1032
 msgid "Question bank renamed successfully."
 msgstr ""
 
-#: includes/admin-settings.php:1691
+#: includes/admin-settings.php:1034
 msgid "Question bank duplicated successfully."
 msgstr ""
 
-#: includes/admin-settings.php:1693
+#: includes/admin-settings.php:1036
 msgid "Quiz start screen reset to defaults."
 msgstr ""
 
-#: includes/admin-settings.php:1695
+#: includes/admin-settings.php:1038
 msgid "During the Quiz settings reset to defaults."
 msgstr ""
 
-#: includes/admin-settings.php:1697
+#: includes/admin-settings.php:1040
 msgid "After the Quiz settings reset to defaults."
 msgstr ""
 
-#: includes/admin-settings.php:1699
+#: includes/admin-settings.php:1042
 msgid "Email templates reset to defaults."
 msgstr ""
 
-#: includes/admin-settings.php:1713
-msgid "You are over the free tier limits."
-msgstr ""
-
-#: includes/admin-settings.php:1714
-msgid "Your existing banks and questions are safe — you can still use, view, and edit them all. The free plan is limited to 3 banks and 150 questions per bank, so adding new content is blocked until you are within those limits, or"
-msgstr ""
-
-#: includes/admin-settings.php:1716
-msgid "upgrade to Pro."
-msgstr ""
-
-#: includes/admin-settings.php:1727
+#: includes/admin-settings.php:1051
 msgid "saved."
 msgstr ""
 
-#: includes/admin-settings.php:1729
+#: includes/admin-settings.php:1053
 msgid "no changes detected."
 msgstr ""
 
-#: includes/admin-settings.php:1736
+#: includes/admin-settings.php:1060
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin-settings.php:1737
+#: includes/admin-settings.php:1061
 msgid "Quiz Settings"
 msgstr ""
 
-#: includes/admin-settings.php:1738
+#: includes/admin-settings.php:1062
 msgid "Messages"
 msgstr ""
 
-#: includes/admin-settings.php:1739
+#: includes/admin-settings.php:1063
 msgid "Questions"
 msgstr ""
 
-#: includes/admin-settings.php:1740
-#: includes/admin-settings.php:2333
+#: includes/admin-settings.php:1064
+#: includes/admin-settings.php:1611
 msgid "Attempt Logs"
 msgstr ""
 
-#: includes/admin-settings.php:1750
+#: includes/admin-settings.php:1074
 msgid "Plugin Settings"
 msgstr ""
 
-#: includes/admin-settings.php:1754
-#: includes/admin-settings.php:1797
-#: includes/admin-settings.php:2035
+#: includes/admin-settings.php:1078
+#: includes/admin-settings.php:1116
+#: includes/admin-settings.php:1327
 msgid "Save Settings"
 msgstr ""
 
-#: includes/admin-settings.php:1761
+#: includes/admin-settings.php:1085
 msgid "1 — Before the Quiz"
 msgstr ""
 
-#: includes/admin-settings.php:1762
+#: includes/admin-settings.php:1086
 msgid "2 — During the Quiz"
 msgstr ""
 
-#: includes/admin-settings.php:1763
+#: includes/admin-settings.php:1087
 msgid "3 — After the Quiz"
 msgstr ""
 
-#: includes/admin-settings.php:1785
+#: includes/admin-settings.php:1104
 msgid "Before the Quiz"
 msgstr ""
 
-#: includes/admin-settings.php:1786
+#: includes/admin-settings.php:1105
 msgid "During the Quiz"
 msgstr ""
 
-#: includes/admin-settings.php:1787
+#: includes/admin-settings.php:1106
 msgid "After the Quiz"
 msgstr ""
 
-#: includes/admin-settings.php:1803
+#: includes/admin-settings.php:1122
 msgid "Reset Start Screen"
 msgstr ""
 
-#: includes/admin-settings.php:1807
-#: includes/admin-settings.php:1815
-#: includes/admin-settings.php:1823
-#: includes/admin-settings.php:2042
+#: includes/admin-settings.php:1126
+#: includes/admin-settings.php:1134
+#: includes/admin-settings.php:1142
+#: includes/admin-settings.php:1334
 msgid "Reset to Defaults"
 msgstr ""
 
-#: includes/admin-settings.php:1807
+#: includes/admin-settings.php:1126
 msgid "Reset all Quiz Start Screen settings to their defaults?"
 msgstr ""
 
-#: includes/admin-settings.php:1811
+#: includes/admin-settings.php:1130
 msgid "Reset During the Quiz"
 msgstr ""
 
-#: includes/admin-settings.php:1815
+#: includes/admin-settings.php:1134
 msgid "Reset all During the Quiz settings to their defaults?"
 msgstr ""
 
-#: includes/admin-settings.php:1819
+#: includes/admin-settings.php:1138
 msgid "Reset After the Quiz"
 msgstr ""
 
-#: includes/admin-settings.php:1823
+#: includes/admin-settings.php:1142
 msgid "Reset all After the Quiz settings to their defaults?"
 msgstr ""
 
-#: includes/admin-settings.php:1926
-msgid "Preview encouragement animation"
-msgstr ""
-
-#: includes/admin-settings.php:1926
-msgid "Preview encouragement"
-msgstr ""
-
-#: includes/admin-settings.php:1956
-msgid "Share your result!"
-msgstr ""
-
-#: includes/admin-settings.php:1957
-msgid "Let your friends and colleagues know your English level."
-msgstr ""
-
-#: includes/admin-settings.php:1960
-msgid "TikTok / Instagram"
-msgstr ""
-
-#: includes/admin-settings.php:1961
-msgid "Copy Link"
-msgstr ""
-
-#: includes/admin-settings.php:2021
+#: includes/admin-settings.php:1313
 msgid "Student Email"
 msgstr ""
 
-#: includes/admin-settings.php:2026
+#: includes/admin-settings.php:1318
 msgid "Admin Notification Email"
 msgstr ""
 
-#: includes/admin-settings.php:2031
+#: includes/admin-settings.php:1323
 msgid "Email Footer"
 msgstr ""
 
-#: includes/admin-settings.php:2038
+#: includes/admin-settings.php:1330
 msgid "Reset Templates"
 msgstr ""
 
-#: includes/admin-settings.php:2042
+#: includes/admin-settings.php:1334
 msgid "Are you sure you want to reset all email templates to default?"
 msgstr ""
 
-#: includes/admin-settings.php:2079
+#: includes/admin-settings.php:1371
 msgid "Question Banks"
 msgstr ""
 
-#: includes/admin-settings.php:2089
+#: includes/admin-settings.php:1381
 msgid "Save Name"
 msgstr ""
 
-#: includes/admin-settings.php:2090
-#: includes/admin-settings.php:2205
+#: includes/admin-settings.php:1382
+#: includes/admin-settings.php:1472
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin-settings.php:2094
-msgid "You have reached the free limit of 3 question banks."
-msgstr ""
-
-#: includes/admin-settings.php:2103
+#: includes/admin-settings.php:1388
 msgid "New Bank Name"
 msgstr ""
 
-#: includes/admin-settings.php:2104
+#: includes/admin-settings.php:1389
 msgid "Create Bank"
 msgstr ""
 
-#: includes/admin-settings.php:2112
-#: includes/admin-settings.php:2215
+#: includes/admin-settings.php:1397
+#: includes/admin-settings.php:1481
 msgid "ID"
 msgstr ""
 
-#: includes/admin-settings.php:2113
+#: includes/admin-settings.php:1398
 msgid "Name"
 msgstr ""
 
-#: includes/admin-settings.php:2114
+#: includes/admin-settings.php:1399
 msgid "Shortcode"
 msgstr ""
 
-#: includes/admin-settings.php:2115
-#: includes/admin-settings.php:2219
+#: includes/admin-settings.php:1400
+#: includes/admin-settings.php:1485
 msgid "Actions"
 msgstr ""
 
-#: includes/admin-settings.php:2122
+#: includes/admin-settings.php:1407
 msgid "(Default)"
 msgstr ""
 
-#: includes/admin-settings.php:2125
+#: includes/admin-settings.php:1410
 msgid "Rename"
 msgstr ""
 
-#: includes/admin-settings.php:2126
+#: includes/admin-settings.php:1411
 msgid "Duplicate"
 msgstr ""
 
-#: includes/admin-settings.php:2128
+#: includes/admin-settings.php:1413
 msgid "Delete this bank?"
 msgstr ""
 
-#: includes/admin-settings.php:2128
-#: includes/admin-settings.php:2234
-#: includes/admin-settings.php:2236
-#: includes/admin-settings.php:2438
+#: includes/admin-settings.php:1413
+#: includes/admin-settings.php:1512
+#: includes/admin-settings.php:1514
+#: includes/admin-settings.php:1716
 msgid "Delete"
 msgstr ""
 
-#: includes/admin-settings.php:2136
+#: includes/admin-settings.php:1421
 msgid "Manage Questions"
 msgstr ""
 
-#: includes/admin-settings.php:2138
+#: includes/admin-settings.php:1423
 msgid "Select Bank:"
 msgstr ""
 
-#: includes/admin-settings.php:2154
+#: includes/admin-settings.php:1433
 msgid "Edit Question"
 msgstr ""
 
-#: includes/admin-settings.php:2154
+#: includes/admin-settings.php:1433
 msgid "Add New Question"
 msgstr ""
 
-#: includes/admin-settings.php:2156
-msgid "questions (free limit)"
-msgstr ""
-
-#: includes/admin-settings.php:2161
-msgid "You have reached the free plan limit of 150 questions for this bank."
-msgstr ""
-
-#: includes/admin-settings.php:2177
-#: includes/admin-settings.php:2216
+#: includes/admin-settings.php:1444
+#: includes/admin-settings.php:1482
 msgid "Question"
 msgstr ""
 
-#: includes/admin-settings.php:2181
+#: includes/admin-settings.php:1448
 msgid "Options (comma separated)"
 msgstr ""
 
-#: includes/admin-settings.php:2185
+#: includes/admin-settings.php:1452
 msgid "Example: go,went,gone,going"
 msgstr ""
 
-#: includes/admin-settings.php:2189
+#: includes/admin-settings.php:1456
 msgid "Correct Answer"
 msgstr ""
 
-#: includes/admin-settings.php:2193
-#: includes/admin-settings.php:2217
+#: includes/admin-settings.php:1460
+#: includes/admin-settings.php:1483
 msgid "Level"
 msgstr ""
 
-#: includes/admin-settings.php:2203
+#: includes/admin-settings.php:1470
 msgid "Update Question"
 msgstr ""
 
-#: includes/admin-settings.php:2203
+#: includes/admin-settings.php:1470
 msgid "Add Question"
 msgstr ""
 
-#: includes/admin-settings.php:2218
-msgid "Answer"
+#: includes/admin-settings.php:1484
+msgid "Options"
 msgstr ""
 
-#: includes/admin-settings.php:2232
+#: includes/admin-settings.php:1510
 msgid "Edit"
 msgstr ""
 
-#: includes/admin-settings.php:2234
+#: includes/admin-settings.php:1512
 msgid "Cannot delete questions from default bank"
 msgstr ""
 
-#: includes/admin-settings.php:2236
+#: includes/admin-settings.php:1514
 msgid "Are you sure?"
 msgstr ""
 
-#: includes/admin-settings.php:2246
+#: includes/admin-settings.php:1524
 msgid "Tools"
 msgstr ""
 
-#: includes/admin-settings.php:2249
+#: includes/admin-settings.php:1527
 msgid "Export Questions"
 msgstr ""
 
-#: includes/admin-settings.php:2250
+#: includes/admin-settings.php:1528
 msgid "Download all questions as a CSV file."
 msgstr ""
 
-#: includes/admin-settings.php:2260
-#: includes/admin-settings.php:2362
+#: includes/admin-settings.php:1538
+#: includes/admin-settings.php:1640
 msgid "Export CSV"
 msgstr ""
 
-#: includes/admin-settings.php:2266
+#: includes/admin-settings.php:1544
 msgid "Import Questions"
 msgstr ""
 
-#: includes/admin-settings.php:2267
+#: includes/admin-settings.php:1545
 msgid "Upload a CSV file to add questions. The CSV should have headers: id, question_text, options, answer, level."
 msgstr ""
 
-#: includes/admin-settings.php:2268
+#: includes/admin-settings.php:1546
 msgid "Note: The \"options\" column should be pipe-separated (e.g., Option A|Option B|Option C|Option D)."
 msgstr ""
 
-#: includes/admin-settings.php:2279
+#: includes/admin-settings.php:1557
 msgid "Import CSV"
 msgstr ""
 
-#: includes/admin-settings.php:2285
+#: includes/admin-settings.php:1563
 msgid "Reset Database"
 msgstr ""
 
-#: includes/admin-settings.php:2286
+#: includes/admin-settings.php:1564
 msgid "Warning: This will delete ALL existing questions and re-insert the default sample questions."
 msgstr ""
 
-#: includes/admin-settings.php:2290
+#: includes/admin-settings.php:1568
 msgid "Re-seed Questions"
 msgstr ""
 
-#: includes/admin-settings.php:2290
+#: includes/admin-settings.php:1568
 msgid "Are you sure you want to delete all questions and reset the database?"
 msgstr ""
 
-#: includes/admin-settings.php:2344
+#: includes/admin-settings.php:1622
 msgid "All users"
 msgstr ""
 
-#: includes/admin-settings.php:2346
+#: includes/admin-settings.php:1624
 msgid "All Banks"
 msgstr ""
 
-#: includes/admin-settings.php:2351
+#: includes/admin-settings.php:1629
 msgid "Filter"
 msgstr ""
 
-#: includes/admin-settings.php:2353
+#: includes/admin-settings.php:1631
 msgid "Clear"
 msgstr ""
 
-#: includes/admin-settings.php:2371
+#: includes/admin-settings.php:1649
 msgid "Delete attempts older than:"
 msgstr ""
 
-#: includes/admin-settings.php:2373
+#: includes/admin-settings.php:1651
 msgid "Delete Old Attempts"
 msgstr ""
 
-#: includes/admin-settings.php:2388
+#: includes/admin-settings.php:1666
 msgid "Select all"
 msgstr ""
 
-#: includes/admin-settings.php:2389
+#: includes/admin-settings.php:1667
 msgid "Date"
 msgstr ""
 
-#: includes/admin-settings.php:2390
+#: includes/admin-settings.php:1668
 msgid "Email"
 msgstr ""
 
-#: includes/admin-settings.php:2391
+#: includes/admin-settings.php:1669
 msgid "Question Bank"
 msgstr ""
 
-#: includes/admin-settings.php:2392
+#: includes/admin-settings.php:1670
 msgid "Result"
 msgstr ""
 
-#: includes/admin-settings.php:2393
+#: includes/admin-settings.php:1671
 msgid "Confidence"
 msgstr ""
 
-#: includes/admin-settings.php:2394
+#: includes/admin-settings.php:1672
 msgid "Time Taken"
 msgstr ""
 
-#: includes/admin-settings.php:2438
+#: includes/admin-settings.php:1716
 msgid "Delete this attempt?"
 msgstr ""
 
-#: includes/admin-settings.php:2449
+#: includes/admin-settings.php:1727
 msgid "Please select at least one attempt."
 msgstr ""
 
-#: includes/admin-settings.php:2450
+#: includes/admin-settings.php:1728
 msgid "Delete Selected"
 msgstr ""
 
-#: includes/admin-settings.php:2476
+#: includes/admin-settings.php:1745
 msgid "Adaptive Test Statistics"
 msgstr ""
 
-#: includes/admin-settings.php:2490
+#: includes/admin-settings.php:1759
 msgid "No test data available yet."
 msgstr ""
 
-#: includes/admin-settings.php:2500
+#: includes/admin-settings.php:1769
 msgid "Total Tests Completed:"
 msgstr ""
 
-#: includes/admin-settings.php:2503
+#: includes/admin-settings.php:1772
 msgid "Recent Results:"
 msgstr ""
 
-#: includes/admin-settings.php:2514
+#: includes/admin-settings.php:1783
 msgid "No recent tests found."
 msgstr ""
 
-#: includes/admin-settings.php:2516
+#: includes/admin-settings.php:1785
 msgid "View All Attempts"
 msgstr ""
 
 #: includes/ajax.php:107
-#: includes/ajax.php:151
+#: includes/ajax.php:149
 msgid "Invalid nonce."
 msgstr ""
 
 #: includes/ajax.php:121
-#: includes/ajax.php:162
+#: includes/ajax.php:160
 msgid "Too many requests. Please try again later."
 msgstr ""
 
 #: includes/ajax.php:132
-#: includes/ajax.php:174
+#: includes/ajax.php:172
 msgid "Invalid question bank."
 msgstr ""
 
-#: includes/ajax.php:140
-msgid "No questions found for the starting level (B1)."
+#: includes/ajax.php:138
+msgid "No questions found for the starting level (A2)."
 msgstr ""
 
-#: includes/ajax.php:187
+#: includes/ajax.php:185
 msgid "No answers submitted."
 msgstr ""
 
-#: includes/ajax.php:236
+#: includes/ajax.php:234
 msgid "Could not determine current level."
-msgstr ""
-
-#: index.php:102
-msgid "Please enter a valid email address."
-msgstr ""
-
-#: index.php:103
-msgid "Error loading test."
-msgstr ""
-
-#: index.php:104
-msgid "Connection Error"
-msgstr ""
-
-#: index.php:107
-msgid "Your estimated English level is:"
-msgstr ""
-
-#: index.php:108
-msgid "A copy of your results has been sent to your email."
-msgstr ""
-
-#: index.php:109
-msgid "Error submitting answers."
-msgstr ""
-
-#: index.php:110
-msgid "Please refresh the page and try again."
-msgstr ""
-
-#: index.php:111
-msgid "Please try again."
-msgstr ""
-
-#: index.php:112
-msgid "Unknown error occurred."
-msgstr ""
-
-#: index.php:113
-msgid "Retake Test"
-msgstr ""
-
-#: index.php:128
-msgid "Settings"
 msgstr ""

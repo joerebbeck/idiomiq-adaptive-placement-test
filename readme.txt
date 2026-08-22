@@ -88,7 +88,7 @@ This plugin collects and stores personal data as described below. All data is he
 
 **Storage location:** The `{prefix}adaptive_attempt_logs` database table on your own server.
 
-**Retention period:** Configurable under **Settings → Adaptive Level Test → General Settings → Log Retention**. The default is 90 days; a daily scheduled event automatically removes records older than this threshold. Administrators can also delete individual records or the entire log from the Attempt Logs admin tab.
+**Retention period:** Configurable under **Settings → IdiomIQ Adaptive Placement Test → General Settings → Log Retention**. The default is 90 days; a daily scheduled event automatically removes records older than this threshold. Administrators can also delete individual records or the entire log from the Attempt Logs admin tab.
 
 **Data deletion on uninstall:** If **Delete data on uninstall** is enabled in General Settings, all plugin database tables and stored options are permanently removed when the plugin is uninstalled via the WordPress admin.
 

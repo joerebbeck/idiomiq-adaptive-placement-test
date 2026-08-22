@@ -2,7 +2,7 @@
 if (!defined('ABSPATH')) {
     exit;
 }
-// All queries in this file target the plugin's own tables ($wpdb->prefix . 'adaptive_*').
+// All queries in this file target the plugin's own tables ($wpdb->prefix . 'iiqapt_*').
 // Table names come from $wpdb->prefix (site-owner-controlled, not user input) so interpolation
 // is safe. dbDelta() manages schema creation; direct queries are the only API for these operations.
 // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.InterpolatedNotPrepared

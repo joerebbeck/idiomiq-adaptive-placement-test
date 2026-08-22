@@ -2,7 +2,7 @@
 if (!defined('ABSPATH')) {
     exit;
 }
-// Plugin uses its own custom tables ($wpdb->prefix . 'adaptive_*'). Direct queries are
+// Plugin uses its own custom tables ($wpdb->prefix . 'iiqapt_*'). Direct queries are
 // unavoidable: WP_Filesystem has no equivalent for streaming CSV output or batch inserts.
 // Table names are built from $wpdb->prefix (site-owner-controlled, not user input), so
 // interpolation is safe. NoCaching is suppressed because these are admin-only write paths

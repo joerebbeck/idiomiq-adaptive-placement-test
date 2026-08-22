@@ -1,5 +1,5 @@
 /**
- * Adaptive Level Test Logic
+ * Adaptive Placement Test Logic
  * Handles UI interactions for option selection and progress updates.
  */
 document.addEventListener('DOMContentLoaded', function() {
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
         startTest: function() {
             // Ensure global ajax object exists
             if (typeof iiqapt_ajax === 'undefined') {
-                console.error('Adaptive Level Test: AJAX configuration missing.');
+                console.error('Adaptive Placement Test: AJAX configuration missing.');
                 return;
             }
 

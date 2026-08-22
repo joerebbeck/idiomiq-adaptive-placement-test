@@ -3,7 +3,7 @@
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
-// AJAX handlers query the plugin's own tables ($wpdb->prefix . 'adaptive_*'). Table names are
+// AJAX handlers query the plugin's own tables ($wpdb->prefix . 'iiqapt_*'). Table names are
 // built from $wpdb->prefix (site-owner-controlled, not user input) so interpolation is safe.
 // All user-supplied values (IDs, answers) use $wpdb->prepare(); the table name is the only flag.
 // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQL.InterpolatedNotPrepared

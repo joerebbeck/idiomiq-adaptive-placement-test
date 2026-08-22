@@ -1,7 +1,7 @@
 <?php
 /**
  * Template: Quiz Container
- * Description: Main wrapper for the adaptive test interface.
+ * Description: Main wrapper for the adaptive placement test interface.
  * Location: templates/quiz-container.php
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 // template scope and not exposed as true globals; prefixing would harm readability without
 // any safety benefit.
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-$bank_id       = get_query_var('adaptive_bank_id', 1);
+$bank_id       = get_query_var('iiqapt_bank_id', 1);
 $title         = get_option( 'iiqapt_start_title',    __( 'Start Your Level Test', 'idiomiq-adaptive-placement-test' ) );
 $subtitle      = get_option( 'iiqapt_start_subtitle', __( 'Enter your email address to begin the test.', 'idiomiq-adaptive-placement-test' ) );
 $body          = get_option( 'iiqapt_start_body',     __( 'By starting the test, you agree for your results to be sent to the email address that you provide.', 'idiomiq-adaptive-placement-test' ) );
