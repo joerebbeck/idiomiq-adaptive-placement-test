@@ -245,6 +245,9 @@ function iiqapt_submit_answers() {
     if ( $next_level_index < 0 ) {
         $next_level_index = 0;
     }
+    if ( $next_level_index >= count( $levels ) ) {
+        $next_level_index = count( $levels ) - 1;
+    }
 
     // Build IRT item set from the full answer log and run the Bayesian EAP estimator.
     // Uses per-question difficulty if set, otherwise falls back to the level midpoint.
@@ -268,18 +271,19 @@ function iiqapt_submit_answers() {
     // SE as a percentage of the 4-logit CEFR scale (A2 centre −2 to C2 centre +2)
     $error_pct = round( $se / 4.0 * 100.0, 1 );
 
-    // Stopping conditions (in priority order):
-    //   1. Ceiling: algorithm wants to go above C2
-    //   2. Convergence: SE has fallen below the admin-configured target
-    //   3. Maximum batches reached
+    // Stopping conditions (whichever comes first):
+    //   1. Convergence: SE has fallen below the admin-configured target
+    //   2. Maximum batches reached
+    // The ability index is clamped to the A2–C2 range above, so a student at
+    // either extreme (floor A2 or ceiling C2) keeps receiving questions at that
+    // level until the test converges or the batch limit is reached — symmetric.
     $target_error = max( 1.0, (float) get_option( 'iiqapt_target_error', 8.0 ) );
     $se_threshold = $target_error / 100.0 * 4.0;
 
-    $ceiling_hit = $next_level_index >= count( $levels );
     $converged   = $se <= $se_threshold;
     $max_reached = $batch_number >= $max_batches;
 
-    if ( $ceiling_hit || $converged || $max_reached ) {
+    if ( $converged || $max_reached ) {
         $final_level = $levels[ min( $next_level_index, count( $levels ) - 1 ) ] ?? $levels[ $current_level_index ];
         $sub_level   = iiqapt_sub_level( $theta, $final_level );
 
