@@ -1009,10 +1009,10 @@ function iiqapt_settings_page_html() {
     $is_admin = current_user_can( 'manage_options' );
 
     // phpcs:disable WordPress.Security.NonceVerification.Recommended -- all GET reads in this function are display-only (tab, sub-tab, filter, sort, message params); all data-mutating paths are handled by iiqapt_handle_question_actions() which calls check_admin_referer()
-    $allowed_tabs = [ 'general', 'quiz', 'messages', 'questions', 'logs' ];
+    $allowed_tabs = [ 'logs', 'quiz', 'messages', 'questions', 'general' ];
     $active_tab   = ( isset( $_GET['tab'] ) && in_array( $_GET['tab'], $allowed_tabs, true ) )
         ? sanitize_key( wp_unslash( $_GET['tab'] ) )
-        : 'general';
+        : 'logs';
     if ( ! $is_admin ) {
         $active_tab = 'logs';
     }
@@ -1062,11 +1062,11 @@ function iiqapt_settings_page_html() {
 
         <?php if ( $is_admin ) : ?>
         <nav class="nav-tab-wrapper">
-            <a href="?page=iiqapt&tab=general" class="nav-tab <?php echo 'general' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'General Settings', 'idiomiq-adaptive-placement-test' ); ?></a>
+            <a href="?page=iiqapt&tab=logs" class="nav-tab <?php echo 'logs' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Attempt Logs', 'idiomiq-adaptive-placement-test' ); ?></a>
             <a href="?page=iiqapt&tab=quiz" class="nav-tab <?php echo 'quiz' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Quiz Settings', 'idiomiq-adaptive-placement-test' ); ?></a>
             <a href="?page=iiqapt&tab=messages" class="nav-tab <?php echo 'messages' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Messages', 'idiomiq-adaptive-placement-test' ); ?></a>
             <a href="?page=iiqapt&tab=questions" class="nav-tab <?php echo 'questions' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Questions', 'idiomiq-adaptive-placement-test' ); ?></a>
-            <a href="?page=iiqapt&tab=logs" class="nav-tab <?php echo 'logs' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Attempt Logs', 'idiomiq-adaptive-placement-test' ); ?></a>
+            <a href="?page=iiqapt&tab=general" class="nav-tab <?php echo 'general' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'General Settings', 'idiomiq-adaptive-placement-test' ); ?></a>
         </nav>
         <?php endif; ?>
 
