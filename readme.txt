@@ -116,6 +116,8 @@ Site owners should include the following information in their own Privacy Policy
 = 1.3.2 =
 * Standardised all internal code naming to a single `iiqapt` prefix (functions, options, database tables, CSS/JS, hooks).
 * The shortcode is now `[iiqapt]` (previously `[adaptive_level_test]`).
+* Reordered the settings tabs — Attempt Logs first, General Settings last.
+* Adaptive algorithm: a top-level (C2) student now continues until the confidence target or batch limit, symmetric with the A2 floor.
 
 = 1.3.1 =
 * Renamed plugin to IdiomIQ Adaptive Placement Test.
