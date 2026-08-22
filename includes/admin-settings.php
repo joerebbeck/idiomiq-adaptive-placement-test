@@ -1077,7 +1077,7 @@ function iiqapt_settings_page_html() {
                 <?php settings_fields('iiqapt_options'); ?>
 
 
-                <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
+                <div class="iiqapt-card">
                     <h2 style="margin-top:0;"><?php esc_html_e( 'Plugin Settings', 'idiomiq-adaptive-placement-test' ); ?></h2>
                     <?php do_settings_sections('iiqapt-general-settings'); ?>
                 </div>
@@ -1316,17 +1316,17 @@ function iiqapt_settings_page_html() {
             <form action="options.php" method="post" style="margin-top:20px;">
                 <?php settings_fields('iiqapt_msg_options'); ?>
 
-                <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
+                <div class="iiqapt-card">
                     <h2><?php esc_html_e( 'Student Email', 'idiomiq-adaptive-placement-test' ); ?></h2>
                     <?php do_settings_sections('iiqapt-msg-student'); ?>
                 </div>
 
-                <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
+                <div class="iiqapt-card">
                     <h2><?php esc_html_e( 'Admin Notification Email', 'idiomiq-adaptive-placement-test' ); ?></h2>
                     <?php do_settings_sections('iiqapt-msg-admin'); ?>
                 </div>
 
-                <div style="background:#fff; border:1px solid #ccd0d4; box-shadow:0 1px 1px rgba(0,0,0,.04); padding:20px; margin-bottom:20px;">
+                <div class="iiqapt-card">
                     <h2><?php esc_html_e( 'Email Footer', 'idiomiq-adaptive-placement-test' ); ?></h2>
                     <?php do_settings_sections('iiqapt-msg-footer'); ?>
                 </div>
