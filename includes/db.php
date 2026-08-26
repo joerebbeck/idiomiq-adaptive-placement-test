@@ -29,7 +29,8 @@ function iiqapt_create_questions_table() {
         level varchar(5) NOT NULL,
         difficulty float DEFAULT NULL,
         type varchar(20) NOT NULL DEFAULT 'multiple_choice',
-        PRIMARY KEY  (id)
+        PRIMARY KEY  (id),
+        KEY idx_bank_level (bank_id,level)
     ) $charset_collate;" );
 
     dbDelta( "CREATE TABLE $banks_table (
@@ -54,10 +55,9 @@ function iiqapt_create_questions_table() {
         PRIMARY KEY  (id)
     ) $charset_collate;" );
 
-    // Compound index used by every question-fetch query (WHERE bank_id = ? AND level = ? ORDER BY RAND()).
-    // IF NOT EXISTS keeps this idempotent on repeated calls (e.g. db-version upgrades).
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared
-    $wpdb->query( "CREATE INDEX IF NOT EXISTS idx_bank_level ON {$table_name} (bank_id, level)" );
+    // The compound index (bank_id, level) is declared in the CREATE TABLE above so
+    // dbDelta() adds it idempotently. It backs every question-fetch query
+    // (WHERE bank_id = ? AND level = ? ORDER BY RAND()).
 
     // Fix for existing questions: Ensure they belong to the default bank (ID 1)
     // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared

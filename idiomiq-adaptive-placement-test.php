@@ -3,7 +3,7 @@
  * Plugin Name: IdiomIQ Adaptive Placement Test
  * Plugin URI:  https://idiomiq.com/iiqapt/
  * Description: Adaptive CEFR placement test (A2–C2) for schools and educators. Preconfigured English bank; Bayesian IRT for efficiency and more accurate results.
- * Version:     1.3.3
+ * Version:     1.3.4
  * Author:      IdiomIQ
  * Author URI:  https://idiomiq.com
  * License:     GPLv2 or later
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'IIQAPT_VERSION', '1.3.3' );
+define( 'IIQAPT_VERSION', '1.3.4' );
 define( 'IIQAPT_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
 require_once IIQAPT_PLUGIN_PATH . 'includes/cefr-colors.php';

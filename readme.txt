@@ -4,7 +4,7 @@ Tags: quiz, english, esl, cefr, adaptive
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -113,6 +113,9 @@ Site owners should include the following information in their own Privacy Policy
 
 == Changelog ==
 
+= 1.3.4 =
+* Fixed a MySQL syntax error logged on activation — the questions index is now declared in the table schema (dbDelta) instead of an unsupported `CREATE INDEX IF NOT EXISTS` statement.
+
 = 1.3.3 =
 * Security: added explicit capability and nonce verification to the settings save-tracking notice before any state is written.
 * Fixed the Plugin URI to point to the live plugin page.
@@ -143,6 +146,9 @@ Site owners should include the following information in their own Privacy Policy
 * Option to delete all plugin data on uninstall.
 
 == Upgrade Notice ==
+
+= 1.3.4 =
+Fixes a database error logged on activation. No action required.
 
 = 1.3.3 =
 Security hardening for the settings save-tracking notice and a corrected Plugin URI.
