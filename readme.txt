@@ -4,7 +4,7 @@ Tags: quiz, english, esl, cefr, adaptive
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -113,6 +113,10 @@ Site owners should include the following information in their own Privacy Policy
 
 == Changelog ==
 
+= 1.3.3 =
+* Security: added explicit capability and nonce verification to the settings save-tracking notice before any state is written.
+* Fixed the Plugin URI to point to the live plugin page.
+
 = 1.3.2 =
 * Standardised all internal code naming to a single `iiqapt` prefix (functions, options, database tables, CSS/JS, hooks).
 * The shortcode is now `[iiqapt]` (previously `[adaptive_level_test]`).
@@ -139,6 +143,9 @@ Site owners should include the following information in their own Privacy Policy
 * Option to delete all plugin data on uninstall.
 
 == Upgrade Notice ==
+
+= 1.3.3 =
+Security hardening for the settings save-tracking notice and a corrected Plugin URI.
 
 = 1.3.2 =
 Internal naming standardised. The shortcode is now `[iiqapt]` — update any pages that used the old `[adaptive_level_test]` shortcode.

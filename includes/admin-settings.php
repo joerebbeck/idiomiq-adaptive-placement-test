@@ -12,8 +12,15 @@ if (!defined('ABSPATH')) {
 // ── SAVE CHANGE TRACKING ──────────────────────────────────────────────────────
 
 function iiqapt_save_tracking_init() {
-    if ( ! isset( $_POST['option_page'] ) ) return; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hook fires on load-options.php; WP Settings API verifies the nonce before that action runs
-    $group = sanitize_key( wp_unslash( $_POST['option_page'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- same: nonce already verified upstream by WP Settings API
+    // load-options.php fires before options.php runs its own nonce check, so we must
+    // verify capability and nonce here before reading input or writing the transient.
+    if ( ! current_user_can( 'manage_options' ) ) return;
+    if ( ! isset( $_POST['option_page'], $_POST['_wpnonce'] ) ) return;
+
+    $group = sanitize_key( wp_unslash( $_POST['option_page'] ) );
+
+    // Verify the Settings API nonce for this option group before writing anything.
+    if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), $group . '-options' ) ) return;
 
     $labels = [
         'iiqapt_options' => 'General settings',
@@ -41,6 +48,7 @@ function iiqapt_save_tracking_init() {
 add_action( 'load-options.php', 'iiqapt_save_tracking_init' );
 
 function iiqapt_suppress_default_settings_notice() {
+    if ( ! current_user_can( 'manage_options' ) ) return;
     if ( ! isset( $_GET['settings-updated'], $_GET['page'] ) ) return; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only: only deletes a transient to suppress WP's generic "Settings saved" notice; no data is written or mutated
     if ( 'iiqapt' !== sanitize_key( wp_unslash( $_GET['page'] ) ) ) return; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- same: read-only display check
     // Delete the transient before admin-header.php reads it, so WordPress never
