@@ -12,6 +12,8 @@ Built for language schools, English tutors, and course providers, the Adaptive P
 
 == Description ==
 
+Built for language schools, English tutors, and course providers, the Adaptive Placement Test turns website visitors into pre-qualified leads.
+
 Students take a short, adaptive CEFR test on your page, and you receive their email address together with an accurate A2–C2 level — notified by email and logged in your WordPress dashboard. Give visitors something genuinely useful, an instant read on their language level, and get something valuable back: a lead you can actually act on, with no wasted discovery calls.
 
 **How it works**
