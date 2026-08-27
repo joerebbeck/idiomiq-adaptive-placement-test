@@ -94,14 +94,14 @@ function iiqaptBind(selectors, update) {
     function update() {
         // Content
         var t = document.getElementById('iiqapt-start-title');
-        if (t && prevTitle) prevTitle.textContent = t.value;
+        if (t && prevTitle) prevTitle.innerHTML = t.value;
 
         var s = document.getElementById('iiqapt-start-subtitle');
-        if (s && prevSubtitle) prevSubtitle.textContent = s.value;
+        if (s && prevSubtitle) prevSubtitle.innerHTML = s.value;
 
         var b = document.getElementById('iiqapt-start-body');
         if (b && prevBody) {
-            prevBody.textContent = b.value;
+            prevBody.innerHTML = b.value;
             prevBody.style.display = b.value.trim() ? '' : 'none';
         }
 
@@ -115,7 +115,7 @@ function iiqaptBind(selectors, update) {
         var gm = document.getElementById('iiqapt-start-gdpr2');
         if (cb && prevGdpr) {
             prevGdpr.style.display = cb.checked ? 'flex' : 'none';
-            if (gm && prevGdprMsg) prevGdprMsg.textContent = gm.value;
+            if (gm && prevGdprMsg) prevGdprMsg.innerHTML = gm.value;
         }
 
         // Title
